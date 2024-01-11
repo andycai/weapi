@@ -38,7 +38,10 @@ func main() {
 	}
 	// dao.SetDefault(db)
 	dbs := []*gorm.DB{db}
-	core.AutoMigrate(dbs)
+	err = core.AutoMultiMigrate(dbs)
+	if err != nil {
+		panic(err)
+	}
 	core.SetupDatabase(dbs)
 	authentication.SessionStart()
 	core.SetZoneOffset(viper.GetInt("app.zoneoffset"))

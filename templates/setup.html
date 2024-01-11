@@ -2,7 +2,7 @@
 <html class="h-full bg-gray-50">
 
 <head>
-    <title>RestContent Installer</title>
+    <title>Weapi Installer</title>
     <link rel="stylesheet" href="" />
     <link rel="stylesheet" href="/static/inter.css" />
     <script src="/static/tailwind-3.3.2.js"></script>
@@ -22,8 +22,8 @@
         dbDriver: 'mysql',
         dbHost: '127.0.0.1',
         dbPort: '3306',
-        dbName: 'restcontent',
-        dbFilename: 'data/restcontent.db',
+        dbName: 'weapi',
+        dbFilename: 'data/weapi.db',
         dbCharset: 'utf8mb4',
         dbUser: 'root',
         dbPassword: '',
@@ -31,11 +31,11 @@
         gitCommit: '{{gitCommit|default:"dev"}}',
         osVersion: '{{osVersion}}',
         cwd: '{{cwd}}',
-        superUsername: 'root@restcontent',
+        superUsername: 'root@weapi',
         superPassword: '',
         showProgress: false,
         steps: [],
-        envLogFile: 'data/restcontent.log',
+        envLogFile: 'data/weapi.log',
         envSalt: randText(32),
         envCookieSecret: randText(32),
         enableSqlite: '{{enableSqlite}}' == 'True',
@@ -268,7 +268,7 @@
                 <div class="flex  justify-between px-4 py-5 sm:px-6 items-center">
                     <div>
                         <h2 class="text-lg leading-6 font-medium text-gray-900">
-                            RestContent Setup
+                            Weapi Setup
                         </h2>
                         <p class="mt-1 text-sm text-gray-500">
                             Configure the database and environment variables to complete the setup.
@@ -496,9 +496,9 @@
                     </div>
                 </div>
             </div>
-            <a class="flex items-center px-4 py-4 text-sm text-gray-400 space-x-3" href="https://restcontent.com">
-                <span>The <strong>RestContent</strong> is headless cms for developers.</span>
-            </a>
+            <div class="flex items-center px-4 py-4 text-sm text-gray-400 space-x-3">
+                <span>The <strong>Weapi</strong> is headless cms for developers.</span>
+            </div>
         </form>
     </div>
 </body>
