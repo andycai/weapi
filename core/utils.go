@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/andycai/werite/library/utils"
+	"github.com/andycai/weapi/library/utils"
 	"github.com/spf13/cast"
 	"golang.org/x/crypto/bcrypt"
 

@@ -6,43 +6,48 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"time"
 
-	"github.com/andycai/werite/core"
-	"github.com/andycai/werite/library/database"
+	"github.com/andycai/weapi/components/user"
+	"github.com/andycai/weapi/core"
+	"github.com/andycai/weapi/library/database"
+	"github.com/andycai/weapi/library/renderer"
+	"github.com/andycai/weapi/middlewares"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/adaptor"
+	"github.com/spf13/viper"
 	"gorm.io/gorm"
 )
 
-var GitCommit string
-var BuildTime string
+var GitCommit string = ""
+var BuildTime string = ""
 var setupDoneFlag string = ".weapi_setup_done"
 
 type SetupDBForm struct {
-	Driver   string `json:"dbDriver"`
-	Host     string `json:"dbHost"`
-	Port     string `json:"dbPort"`
-	Name     string `json:"dbName"`
-	Filename string `json:"dbFilename"`
-	Charset  string `json:"dbCharset"`
-	User     string `json:"dbUser"`
-	Password string `json:"dbPassword"`
+	Driver   string `json:"dbDriver" form:"dbDriver"`
+	Host     string `json:"dbHost" form:"dbHost"`
+	Port     string `json:"dbPort" form:"dbPort"`
+	Name     string `json:"dbName" form:"dbName"`
+	Filename string `json:"dbFilename" form:"dbFilename"`
+	Charset  string `json:"dbCharset" form:"dbCharset"`
+	User     string `json:"dbUser" form:"dbUser"`
+	Password string `json:"dbPassword" form:"dbPassword"`
 }
 
 type SetupSuperUserForm struct {
 	DBConfig SetupDBForm `json:"dbConfig" binding:"required"`
-	Username string      `json:"superUsername" binding:"required"`
-	Password string      `json:"superPassword" binding:"required"`
+	Username string      `json:"superUsername" form:"superUsername" binding:"required"`
+	Password string      `json:"superPassword" form:"superPassword" binding:"required"`
 }
 
 type SetupSuperEnvForm struct {
 	DBConfig     SetupDBForm `json:"dbConfig" binding:"required"`
-	Salt         string      `json:"salt" binding:"required"`
-	CookieSecret string      `json:"cookieSecret" binding:"required"`
-	LogFile      string      `json:"logFile"`
+	Salt         string      `json:"salt" form:"salt" inding:"required"`
+	CookieSecret string      `json:"cookieSecret" form:"cookieSecret" binding:"required"`
+	LogFile      string      `json:"logFile" form:"logFile"`
 }
 
 func (f *SetupDBForm) DSN() string {
@@ -70,7 +75,14 @@ func fail(c *fiber.Ctx, data string) error {
 	})
 }
 
+func RunSetup(addr string) {
+	if _, err := os.Stat(setupDoneFlag); err != nil {
+		runSetupMode(addr)
+	}
+}
+
 func runSetupMode(addr string) {
+	// var err error
 	// carrot.Warning("Run setup mode")
 	ln, err := net.Listen("tcp", addr)
 	if err != nil {
@@ -79,7 +91,14 @@ func runSetupMode(addr string) {
 
 	// carrot.Warning("Please visit http://", addr, "/setup to complete install")
 
-	app := fiber.New()
+	engine := renderer.ViewEngineStart()
+	app := fiber.New(fiber.Config{
+		Views: engine,
+	})
+
+	// Middleware
+	middlewares.Use(app)
+	app.Static("/static", filepath.Join("", viper.GetString("app.static")))
 
 	srv := &http.Server{Handler: adaptor.FiberApp(app)}
 
@@ -102,7 +121,7 @@ func runSetupMode(addr string) {
 			"cwd":          cwd,
 			"enableSqlite": enableSqlite,
 		}
-		return core.Render(c, "setup", data)
+		return c.Render("setup", data)
 	})
 
 	app.Post("/setup/ping_database", func(c *fiber.Ctx) error {
@@ -164,8 +183,8 @@ func runSetupMode(addr string) {
 		envFile := ".env"
 
 		lines := []string{
-			// fmt.Sprintf("%s=%s", carrot.ENV_SALT, form.Salt),
-			// fmt.Sprintf("%s=%s", carrot.ENV_SESSION_SECRET, form.CookieSecret),
+			fmt.Sprintf("%s=%s", "PASSWORD_SALT", form.Salt),
+			fmt.Sprintf("%s=%s", "SESSION_SECRET", form.CookieSecret),
 			fmt.Sprintf("LOG_FILE=%s", form.LogFile),
 			fmt.Sprintf("DSN=%s", form.DBConfig.DSN()),
 			fmt.Sprintf("DB_DRIVER=%s", form.DBConfig.Driver),
@@ -206,21 +225,22 @@ func runSetupMode(addr string) {
 			return fail(c, err.Error())
 		}
 
-		// u, err := carrot.GetUserByEmail(db, form.Username)
-		// if err == nil && u != nil {
-		// 	carrot.SetPassword(db, u, form.Password)
-		// 	carrot.Warning("Update super with new password")
-		// } else {
-		// 	u, err = carrot.CreateUser(db, form.Username, form.Password)
-		// 	if err != nil {
-		// 		panic(err)
-		// 	}
-		// }
+		core.SetupDatabase([]*gorm.DB{db})
+
+		err, u := user.Dao.GetByEmail(form.Username)
+		if err == nil && u != nil {
+			user.Dao.UpdatePassword(u, form.Password)
+		} else {
+			err = user.Dao.Create(u)
+			if err != nil {
+				panic(err)
+			}
+		}
 		// u.IsStaff = true
 		// u.Activated = true
 		// u.Enabled = true
-		// u.IsSuperUser = true
-		// db.Save(u)
+		u.IsSuperUser = true
+		db.Save(u)
 		// carrot.Warning("Create super user:", form.Username)
 
 		return ok(c)
@@ -235,6 +255,9 @@ func runSetupMode(addr string) {
 
 		return ok(c)
 	})
-
+	// err = app.Listen(viper.GetString("httpserver.addr"))
+	// if err != nil {
+	// 	panic(err)
+	// }
 	srv.Serve(ln)
 }

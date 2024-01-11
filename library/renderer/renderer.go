@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/andycai/werite/core"
-	"github.com/andycai/werite/library/authentication"
+	"github.com/andycai/weapi/core"
+	"github.com/andycai/weapi/library/authentication"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
 	"github.com/gomarkdown/markdown"

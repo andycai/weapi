@@ -1,7 +1,7 @@
 package core
 
 import (
-	"github.com/andycai/werite/middlewares"
+	"github.com/andycai/weapi/middlewares"
 	"github.com/gofiber/fiber/v2"
 )
 

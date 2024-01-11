@@ -3,15 +3,15 @@ package main
 import (
 	"path/filepath"
 
-	_ "github.com/andycai/werite/administrator/components"
-	_ "github.com/andycai/werite/components"
-	"github.com/andycai/werite/conf"
-	"github.com/andycai/werite/core"
-	"github.com/andycai/werite/library/authentication"
-	"github.com/andycai/werite/library/database"
-	"github.com/andycai/werite/library/renderer"
-	"github.com/andycai/werite/log"
-	"github.com/andycai/werite/middlewares"
+	_ "github.com/andycai/weapi/administrator/components"
+	_ "github.com/andycai/weapi/components"
+	"github.com/andycai/weapi/conf"
+	"github.com/andycai/weapi/core"
+	"github.com/andycai/weapi/library/authentication"
+	"github.com/andycai/weapi/library/database"
+	"github.com/andycai/weapi/library/renderer"
+	"github.com/andycai/weapi/log"
+	"github.com/andycai/weapi/middlewares"
 	"gorm.io/gorm"
 
 	"github.com/gofiber/fiber/v2"
@@ -27,16 +27,27 @@ func main() {
 	log.Setup()
 	conf.ReadConf()
 
+	addr := viper.GetString("httpserver.addr")
+	debug := viper.GetBool("debug")
+	dbtype := viper.GetString("db.type")
+	dsn := viper.GetString("db.dsn")
+
+	RunSetup(addr)
+
 	// database open and init
-	db, err := database.InitRDBMS(viper.GetString("db.type"),
-		viper.GetString("db.dsn"),
+	db, err := database.InitRDBMS(dbtype, dsn,
 		viper.GetInt("db.active"),
 		viper.GetInt("db.idle"),
 		viper.GetInt("db.idletimeout"))
+
 	if err != nil {
 		panic(err)
 	}
-	// dao.SetDefault(db)
+
+	if debug {
+		db = db.Debug()
+	}
+
 	dbs := []*gorm.DB{db}
 	err = core.AutoMultiMigrate(dbs)
 	if err != nil {

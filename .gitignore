@@ -18,6 +18,9 @@
 # vendor/
 bin/
 .idea/
+*.db
+.env
+.weapi_setup_done
 
 # Go workspace file
 go.work

@@ -1,4 +1,4 @@
-module github.com/andycai/werite
+module github.com/andycai/weapi
 
 go 1.19.0
 

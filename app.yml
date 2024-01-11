@@ -13,7 +13,7 @@ log:
 db:
   type: "sqlite"
   # dsn: "devel:i18n@tcp(127.0.0.1:3306)/weapi_db?timeout=5s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8,utf8mb4"
-  dsn: "./wepai.db"
+  dsn: "file:weapi.db"
   active: 32
   idle: 30
   idletimeout: 14400

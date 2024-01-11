@@ -23,24 +23,24 @@
         dbHost: '127.0.0.1',
         dbPort: '3306',
         dbName: 'weapi',
-        dbFilename: 'data/weapi.db',
+        dbFilename: 'weapi.db',
         dbCharset: 'utf8mb4',
         dbUser: 'root',
         dbPassword: '',
-        buildTime: '{{buildTime}}',
-        gitCommit: '{{gitCommit|default:"dev"}}',
-        osVersion: '{{osVersion}}',
-        cwd: '{{cwd}}',
-        superUsername: 'root@weapi',
+        buildTime: '{{ .buildTime }}',
+        gitCommit: '{{ if .gitCommit }} {{ .gitCommit }} {{ else }} "dev" {{ end }}',
+        osVersion: '{{ .osVersion }}',
+        cwd: '{{ .cwd }}',
+        superUsername: 'weapi',
         superPassword: '',
         showProgress: false,
         steps: [],
-        envLogFile: 'data/weapi.log',
+        envLogFile: 'weapi.log',
         envSalt: randText(32),
         envCookieSecret: randText(32),
-        enableSqlite: '{{enableSqlite}}' == 'True',
+        enableSqlite: '{{ .enableSqlite }}' == 'true',
         setupResult: {
-            next: '{{next|default:"/admin/"}}',
+            next: '/admin/',
             success: false,
             failed: false,
             timeout: 10,
@@ -56,7 +56,8 @@
             let st = new Date()
             let resp = await fetch(url, {
                 method: 'POST',
-                body: JSON.stringify(params)
+                body: JSON.stringify(params),
+                headers: { 'content-type': 'application/json; charset=utf-8' }
             })
 
             this.setupResult.failed = false
