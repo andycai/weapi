@@ -115,7 +115,7 @@ func runSetupMode(addr string) {
 		// current working directory
 		cwd, _ := os.Getwd()
 		data := map[string]any{
-			"buildTime":    BuildTime,
+			"buildTime":    core.DateFormat(core.Now(), "2006-01-02 15:04:05"),
 			"gitCommit":    GitCommit,
 			"osVersion":    osVersion,
 			"cwd":          cwd,
