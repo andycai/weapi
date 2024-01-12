@@ -3,6 +3,7 @@ package main
 import (
 	"path/filepath"
 
+	"github.com/andycai/weapi"
 	_ "github.com/andycai/weapi/administrator/components"
 	_ "github.com/andycai/weapi/components"
 	"github.com/andycai/weapi/conf"
@@ -49,7 +50,7 @@ func main() {
 	}
 
 	dbs := []*gorm.DB{db}
-	err = core.AutoMultiMigrate(dbs)
+	err = weapi.AutoMultiMigrate(dbs)
 	if err != nil {
 		panic(err)
 	}

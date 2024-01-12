@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/andycai/weapi"
 	"github.com/andycai/weapi/components/user"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/library/database"
@@ -167,7 +168,7 @@ func runSetupMode(addr string) {
 			return fail(c, err.Error())
 		}
 
-		err = core.AutoMigrate(db)
+		err = weapi.AutoMigrate(db)
 		if err != nil {
 			return fail(c, err.Error())
 		}
@@ -220,7 +221,7 @@ func runSetupMode(addr string) {
 		if err != nil {
 			return fail(c, err.Error())
 		}
-		err = core.AutoMigrate(db)
+		err = weapi.AutoMigrate(db)
 		if err != nil {
 			return fail(c, err.Error())
 		}
