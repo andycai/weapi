@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ .favicon_url }}" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .title }}{{ .sitename }}</title>
+    <meta name="description" content="{{ .description }}">
+    <meta name="keywords" content="{{ .keywords }}">
+    <link rel="stylesheet" href="/static/inter.css">
+    {{ .extra_css }}
+</head>
+<style>
+    :root {
+        font-family: 'Inter', sans-serif;
+    }
+
+    @supports (font-variation-settings: normal) {
+        :root {
+            font-family: 'Inter var', sans-serif;
+        }
+    }
+</style>
+
+<body>
+    {{ embed }}
+    {{ template "footer" . }}
+</body>
+{{ if .maincss_url }}
+<link href="{{ .maincss_url }}" rel="stylesheet" type="text/css">
+{{ else }}
+<script src="/static/tailwind-3.3.2.js"></script>
+{{ end }}
+
+{{ .extra_js }}
+
+</html>
