@@ -52,6 +52,11 @@ func main() {
 	flag.StringVar(&dsn, "dsn", dsn, "database dsn")
 	flag.BoolVar(&debug, "debug", debug, "debug mode")
 	flag.StringVar(&staticDir, "static", staticDir, "static file directory")
+	flag.StringVar(&lang, "en", lang, "language")
+	flag.IntVar(&zoneOffset, "zone", zoneOffset, "timezone offset")
+	flag.IntVar(&dbActive, "db-active", dbActive, "database max active connection")
+	flag.IntVar(&dbIdle, "db-idle", dbIdle, "database max idle connection")
+	flag.IntVar(&dbTimeout, "db-timeout", dbTimeout, "database connection timeout")
 
 	// setup
 	if dsn == "" {
