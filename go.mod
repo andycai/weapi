@@ -50,6 +50,7 @@ require (
 	github.com/google/uuid v1.3.1 // indirect
 	github.com/gosimple/slug v1.13.1
 	github.com/hashicorp/go-version v1.6.0 // indirect
+	github.com/hashicorp/golang-lru/v2 v2.0.7
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.13.0 // indirect

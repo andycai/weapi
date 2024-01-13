@@ -12,7 +12,7 @@ var logger *zap.Logger
 var sugar *zap.SugaredLogger
 
 // init setup logger
-func Setup() {
+func Setup(debug bool, logFile string) {
 	// Define log level
 	level := zap.NewAtomicLevel()
 	level.SetLevel(zap.DebugLevel)
@@ -20,7 +20,7 @@ func Setup() {
 	// Create new zap logger
 	logger = zap.New(zapcore.NewCore(
 		getEncoder(),
-		getLogWriter(),
+		getLogWriter(logFile),
 		level,
 	), zap.AddCaller())
 	sugar = logger.Sugar()
@@ -40,9 +40,12 @@ func getEncoder() zapcore.Encoder {
 	return zapcore.NewJSONEncoder(encoderCfg)
 }
 
-func getLogWriter() zapcore.WriteSyncer {
-	// file, _ := os.Create("./test.log")
-	// return zapcore.AddSync(file)
+func getLogWriter(logFile string) zapcore.WriteSyncer {
+	if logFile != "" {
+		if file, err := os.Create(logFile); err == nil {
+			return zapcore.AddSync(file)
+		}
+	}
 	return zapcore.Lock(os.Stdout)
 }
 
