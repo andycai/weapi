@@ -9,59 +9,61 @@ import (
 	"github.com/andycai/weapi/components/post"
 	"github.com/andycai/weapi/components/user"
 	"github.com/andycai/weapi/core"
+	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/library/authentication"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
-func LoginPage(c *fiber.Ctx) error {
+func SigninPage(c *fiber.Ctx) error {
 	isAuthenticated, _ := authentication.AuthGet(c)
 
 	if isAuthenticated {
 		return c.Redirect("/admin/dashboard")
 	}
 
-	return core.Render(c, "admin/login", fiber.Map{})
+	return core.Render(c, "signin", fiber.Map{
+		"signup_url":  "/auth/register",
+		"signuptext":  "Sign up",
+		"login_next":  "/admin/dashboard",
+		"sitename":    "WeAPI",
+		"logo_url":    "/static/img/logo.svg",
+		"favicon_url": "/static/img/favicon.png",
+		"title":       "Sign in",
+	}, "layout/app")
 }
 
-func LoginAction(c *fiber.Ctx) error {
-	var userVo *model.User
-	email := c.FormValue("email")
-	password := c.FormValue("password")
+func SigninAction(c *fiber.Ctx) error {
+	userVo := &model.User{}
+
+	err := user.BindLogin(c, userVo)
+	if err != nil {
+		return core.Err(c, enum.ErrUserEmailOrPasswordError)
+	}
+	email := userVo.Email
+	password := userVo.Password
 
 	if email == "" || password == "" {
-		return core.Render(c, "admin/login", fiber.Map{
-			"Errors": []string{
-				"Email or password cannot be null.",
-			},
-		})
+		return core.Err(c, enum.ErrUserEmailOrPasswordIsEmpty)
 	}
 
-	err, userVo := user.Dao.GetByEmail(email)
+	err, userVo = user.Dao.GetByEmail(email)
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return core.Render(c, "admin/login", fiber.Map{
-				"Errors": []string{
-					"Email and password did not match.",
-				},
-			})
+			return core.Err(c, enum.ErrUserEmailOrPasswordError)
 		}
 	}
 
 	if !core.CheckPassword(userVo.Password, password) {
-		return core.Render(c, "admin/login", fiber.Map{
-			"Errors": []string{
-				"Email and password did not match.",
-			},
-		})
+		return core.Err(c, enum.ErrUserEmailOrPasswordError)
 	}
 
 	user.Dao.UpdateLoginTime(uint(userVo.ID))
 	authentication.AuthStore(c, uint(userVo.ID))
 
-	return c.Redirect("/admin/dashboard")
+	return core.Push(c, enum.Success)
 }
 
 func LogoutAction(c *fiber.Ctx) error {
@@ -76,6 +78,14 @@ func LogoutAction(c *fiber.Ctx) error {
 	return core.Render(c, "admin/login", fiber.Map{})
 }
 
+func SignupPage(c *fiber.Ctx) error {
+	return nil
+}
+
+func SignupAction(c *fiber.Ctx) error {
+	return nil
+}
+
 func DashBoardPage(c *fiber.Ctx) error {
 	var userVo *model.User
 	isAuthenticated, userID := authentication.AuthGet(c)
@@ -88,8 +98,8 @@ func DashBoardPage(c *fiber.Ctx) error {
 	loginAt := time.Now()
 	if isAuthenticated {
 		userVo = user.Dao.GetByID(userID)
-		name = userVo.Name
-		loginAt = userVo.LoginAt
+		name = userVo.FirstName
+		loginAt = *userVo.LastLogin
 	}
 
 	return core.Render(c, "admin/dashboard", fiber.Map{
@@ -120,12 +130,12 @@ func ProfilePage(c *fiber.Ctx) error {
 		"PageTitle":    "Profile",
 		"NavBarActive": "users",
 		"Path":         "/admin/users/profile",
-		"UserName":     userVo.Name,
+		"UserName":     userVo.FirstName,
 		"User":         userVo,
 		"Info": fiber.Map{
 			"BlogName":     "Werite",
 			"BlogSubTitle": "Content Management System",
-			"LoginAt":      userVo.LoginAt,
+			"LoginAt":      userVo.LastLogin,
 		},
 	}, "admin/layouts/app")
 }
@@ -142,11 +152,11 @@ func SecurityPage(c *fiber.Ctx) error {
 		"PageTitle":    "Security",
 		"NavBarActive": "users",
 		"Path":         "/admin/users/security",
-		"UserName":     userVo.Name,
+		"UserName":     userVo.FirstName,
 		"Info": fiber.Map{
 			"BlogName":     "Werite",
 			"BlogSubTitle": "Content Management System",
-			"LoginAt":      userVo.LoginAt,
+			"LoginAt":      userVo.LastLogin,
 		},
 	}, "admin/layouts/app")
 }
@@ -163,11 +173,11 @@ func BlogPage(c *fiber.Ctx) error {
 		"PageTitle":    "Blog",
 		"NavBarActive": "users",
 		"Path":         "/admin/users/blog",
-		"UserName":     userVo.Name,
+		"UserName":     userVo.FirstName,
 		"Info": fiber.Map{
 			"BlogName":     "Werite",
 			"BlogSubTitle": "Content Management System",
-			"LoginAt":      userVo.LoginAt,
+			"LoginAt":      userVo.LastLogin,
 		},
 	}, "admin/layouts/app")
 }
@@ -185,7 +195,11 @@ func ProfileSave(c *fiber.Ctx) error {
 		return err
 	}
 
-	db.Model(userVo).Updates(map[string]interface{}{"gender": userVo.Gender, "phone": userVo.Phone, "email": userVo.Email, "addr": userVo.Addr})
+	db.Model(userVo).Updates(map[string]interface{}{
+		"gender": userVo.Profile.Gender,
+		"phone":  userVo.Phone,
+		"email":  userVo.Email,
+		"addr":   userVo.Profile.City})
 
 	core.PushMessages(fmt.Sprintf("Updated profile"))
 

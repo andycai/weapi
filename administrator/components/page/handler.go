@@ -97,7 +97,7 @@ func Create(c *fiber.Ctx) error {
 	}
 
 	_, userID := authentication.AuthGet(c)
-	pageVo.UserID = userID
+	pageVo.CreatorID = userID
 
 	db.Create(&pageVo)
 

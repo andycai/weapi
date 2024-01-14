@@ -1,6 +1,7 @@
 package page
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/andycai/weapi/core"
@@ -27,20 +28,20 @@ func Bind(c *fiber.Ctx, page *model.Page) error {
 		return err
 	}
 
-	page.ID = r.ID
+	// page.ID = r.ID
 	page.Title = r.Title
 	page.Body = r.Body
 
 	if r.Slug != "" {
-		page.Slug = r.Slug
+		page.ID = r.Slug
 	} else {
-		page.Slug = slug.Make(r.Title)
+		page.ID = slug.Make(r.Title)
 	}
 
 	if r.PublishedAt != "" {
-		page.PublishedAt = core.ParseDate(r.PublishedAt)
+		page.PublishedAt = sql.NullTime{Time: core.ParseDate(r.PublishedAt), Valid: true} // core.ParseDate(r.PublishedAt)
 	} else {
-		page.PublishedAt = time.Now()
+		page.PublishedAt = sql.NullTime{Time: time.Now(), Valid: true} // time.Now()
 	}
 
 	return nil

@@ -12,5 +12,5 @@ func AuthorizePage(c *fiber.Ctx) error {
 		return c.Next()
 	}
 
-	return c.Redirect("/admin/login")
+	return c.Redirect("/auth/login")
 }

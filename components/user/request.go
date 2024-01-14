@@ -2,6 +2,7 @@ package user
 
 import (
 	"errors"
+	"strconv"
 
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/model"
@@ -24,6 +25,26 @@ type requestProfile struct {
 type requestBlog struct {
 	Name        string `json:"name" validate:"required"`
 	Description string `json:"description" validate:"required"`
+}
+
+type requestLogin struct {
+	Email    string `json:"email" validate:"required"`
+	Password string `json:"password" validate:"required"`
+}
+
+func BindLogin(c *fiber.Ctx, user *model.User) error {
+	var r requestLogin
+	if err := c.BodyParser(&r); err != nil {
+		return err
+	}
+	if err := core.Validate(r); err != nil {
+		return err
+	}
+
+	user.Email = r.Email
+	user.Password = r.Password
+
+	return nil
 }
 
 func BindPassword(c *fiber.Ctx, user *model.User) error {
@@ -55,10 +76,10 @@ func BindProfile(c *fiber.Ctx, user *model.User) error {
 		return err
 	}
 
-	user.Gender = r.Gender
+	user.Profile.Gender = strconv.Itoa(int(r.Gender))
 	user.Phone = r.Phone
 	user.Email = r.Email
-	user.Addr = r.Addr
+	user.Profile.City = r.Addr
 
 	return nil
 }

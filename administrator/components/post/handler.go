@@ -132,7 +132,7 @@ func Create(c *fiber.Ctx) error {
 	}
 
 	_, userID := authentication.AuthGet(c)
-	postVo.UserID = userID
+	postVo.CreatorID = userID
 
 	db.Create(&postVo)
 
@@ -333,7 +333,7 @@ func CreateCategory(c *fiber.Ctx) error {
 
 	db.Create(&categoryVo)
 
-	core.PushMessages(fmt.Sprintf("Created category id:%d, name:%s", categoryVo.ID, categoryVo.Name))
+	core.PushMessages(fmt.Sprintf("Created category id:%s, name:%s", categoryVo.UUID, categoryVo.Name))
 
 	return c.Redirect("/admin/categories/manager")
 }
@@ -358,7 +358,7 @@ func UpdateCategory(c *fiber.Ctx) error {
 
 	db.Save(&categoryVo)
 
-	core.PushMessages(fmt.Sprintf("Updated category id:%d, name:%s", categoryVo.ID, categoryVo.Name))
+	core.PushMessages(fmt.Sprintf("Updated category id:%s, name:%s", categoryVo.UUID, categoryVo.Name))
 
 	return c.Redirect("/admin/categories/manager")
 }

@@ -30,12 +30,12 @@ func BlogPage(c *fiber.Ctx) error {
 		"PageTitle":    "Blog",
 		"NavBarActive": "settings",
 		"Path":         "/admin/settings/blog",
-		"UserName":     userVo.Name,
+		"UserName":     userVo.FirstName,
 		"Blog":         blogVo,
 		"Info": fiber.Map{
 			"BlogName":     "Werite",
 			"BlogSubTitle": "Content Management System",
-			"LoginAt":      userVo.LoginAt,
+			"LoginAt":      userVo.LastLogin,
 		},
 	}, "admin/layouts/app")
 }

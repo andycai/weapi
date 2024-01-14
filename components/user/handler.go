@@ -125,7 +125,7 @@ func HTMXSignUpAction(c *fiber.Ctx) error {
 		}, "layouts/app-htmx")
 	}
 
-	userVo := model.User{Username: username, Email: email, Password: password, Name: username}
+	userVo := model.User{Email: email, Password: password, FirstName: username}
 	userVo.Password = core.HashPassword(userVo.Password)
 
 	err := Dao.Create(&userVo)

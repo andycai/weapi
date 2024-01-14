@@ -1,6 +1,7 @@
 package post
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/andycai/weapi/core"
@@ -16,7 +17,7 @@ type requestCreate struct {
 	Description string `json:"description" validate:"required"`
 	Body        string `json:"body" validate:"required"`
 	Action      string `json:"action" form:"action"`
-	CategoryID  uint   `json:"category_id" form:"category_id"`
+	CategoryID  string `json:"category_id" form:"category_id"`
 	PublishedAt string `json:"published_at" form:"published_at" validate:"required"`
 }
 
@@ -30,28 +31,28 @@ func Bind(c *fiber.Ctx, post *model.Post) error {
 		return err
 	}
 
-	post.ID = r.ID
+	// post.ID = r.ID
 	post.Title = r.Title
 	post.Description = r.Description
 	post.Body = r.Body
 	post.CategoryID = r.CategoryID
 
 	if r.Action == "draft" {
-		post.IsDraft = 1
+		post.IsDraft = true
 	} else {
-		post.IsDraft = 0
+		post.IsDraft = false
 	}
 
 	if r.Slug != "" {
-		post.Slug = r.Slug
+		post.ID = r.Slug
 	} else {
-		post.Slug = slug.Make(r.Title)
+		post.ID = slug.Make(r.Title)
 	}
 
 	if r.PublishedAt != "" {
-		post.PublishedAt = core.ParseDate(r.PublishedAt)
+		post.PublishedAt = sql.NullTime{Time: core.ParseDate(r.PublishedAt), Valid: true} // core.ParseDate(r.PublishedAt)
 	} else {
-		post.PublishedAt = time.Now()
+		post.PublishedAt = sql.NullTime{Time: time.Now(), Valid: true} // time.Now()
 	}
 
 	return nil
@@ -74,14 +75,14 @@ func BindCategory(c *fiber.Ctx, category *model.Category) error {
 		return err
 	}
 
-	category.ID = r.ID
+	// category.ID = r.ID
 	category.Name = r.Name
-	category.Description = r.Description
+	// category.Description = r.Description
 
 	if r.Slug != "" {
-		category.Slug = r.Slug
+		category.UUID = r.Slug
 	} else {
-		category.Slug = slug.Make(r.Name)
+		category.UUID = slug.Make(r.Name)
 	}
 
 	return nil

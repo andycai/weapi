@@ -56,13 +56,13 @@ func (ud UserDao) UpdatePassword(user *model.User, password string) error {
 }
 
 func (ud UserDao) UpdateLoginTime(userID uint) error {
-	db.Model(&model.User{}).Where("id = ?", userID).Update("login_at", time.Now())
+	db.Model(&model.User{}).Where("id = ?", userID).Update("last_login", time.Now())
 
 	return nil
 }
 
 func (ud UserDao) UpdateLogoutTime(userID uint) error {
-	db.Model(&model.User{}).Where("id = ?", userID).Update("logout_at", time.Now())
+	// db.Model(&model.User{}).Where("id = ?", userID).Update("logout_at", time.Now())
 
 	return nil
 }

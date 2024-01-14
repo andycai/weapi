@@ -6,7 +6,7 @@
     <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
     <p class="mt-2 text-center text-sm text-gray-600">
       Or
-      <a href="{{ .signup_url }}?next={{ .login_next }}" class="font-medium text-indigo-600 hover:text-indigo-500">
+      <a href="{{ .signup_url }}" class="font-medium text-indigo-600 hover:text-indigo-500">
         {{ .signuptext }}
       </a>
     </p>
@@ -108,7 +108,7 @@
     hideError('password')
     hideError('email')
     var password = document.querySelector('#password').value
-    if (password.length <= 5) {
+    if (password.length <= 3) {
       showError('password')
       return
     }
@@ -119,9 +119,11 @@
       body: JSON.stringify({
         'email': document.querySelector('#email').value,
         'password': password,
-      })
+      }),
+      headers: { 'content-type': 'application/json; charset=utf-8' }
     }).then((resp) => {
       toggleLoading();
+      console.log(resp)
       if (resp.status == 200) {
         resp.json().then((data) => {
           window.location = '{{ .login_next }}';
