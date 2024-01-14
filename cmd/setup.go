@@ -28,27 +28,27 @@ var BuildTime string = ""
 var setupDoneFlag string = ".weapi_setup_done"
 
 type SetupDBForm struct {
-	Driver   string `json:"dbDriver" form:"dbDriver"`
-	Host     string `json:"dbHost" form:"dbHost"`
-	Port     string `json:"dbPort" form:"dbPort"`
-	Name     string `json:"dbName" form:"dbName"`
-	Filename string `json:"dbFilename" form:"dbFilename"`
-	Charset  string `json:"dbCharset" form:"dbCharset"`
-	User     string `json:"dbUser" form:"dbUser"`
-	Password string `json:"dbPassword" form:"dbPassword"`
+	Driver   string `json:"dbDriver"`
+	Host     string `json:"dbHost"`
+	Port     string `json:"dbPort"`
+	Name     string `json:"dbName"`
+	Filename string `json:"dbFilename"`
+	Charset  string `json:"dbCharset"`
+	User     string `json:"dbUser"`
+	Password string `json:"dbPassword"`
 }
 
 type SetupSuperUserForm struct {
 	DBConfig SetupDBForm `json:"dbConfig" binding:"required"`
-	Username string      `json:"superUsername" form:"superUsername" binding:"required"`
-	Password string      `json:"superPassword" form:"superPassword" binding:"required"`
+	Username string      `json:"superUsername" binding:"required"`
+	Password string      `json:"superPassword" binding:"required"`
 }
 
 type SetupSuperEnvForm struct {
 	DBConfig     SetupDBForm `json:"dbConfig" binding:"required"`
-	Salt         string      `json:"salt" form:"salt" inding:"required"`
-	CookieSecret string      `json:"cookieSecret" form:"cookieSecret" binding:"required"`
-	LogFile      string      `json:"logFile" form:"logFile"`
+	Salt         string      `json:"salt" binding:"required"`
+	CookieSecret string      `json:"cookieSecret" binding:"required"`
+	LogFile      string      `json:"logFile"`
 }
 
 func (f *SetupDBForm) DSN() string {

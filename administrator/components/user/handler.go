@@ -27,7 +27,7 @@ func SigninPage(c *fiber.Ctx) error {
 		"signup_url":  "/auth/register",
 		"signuptext":  "Sign up",
 		"login_next":  "/admin/dashboard",
-		"sitename":    "WeAPI",
+		"sitename":    "Weapi",
 		"logo_url":    "/static/img/logo.svg",
 		"favicon_url": "/static/img/favicon.png",
 		"title":       "Sign in",
@@ -102,7 +102,7 @@ func DashBoardPage(c *fiber.Ctx) error {
 		loginAt = *userVo.LastLogin
 	}
 
-	return core.Render(c, "admin/dashboard", fiber.Map{
+	return core.Render(c, "admin/index", fiber.Map{
 		"PageTitle":    "DashBoard",
 		"NavBarActive": "dashboard",
 		"Path":         "/admin/dashboard",
@@ -115,7 +115,7 @@ func DashBoardPage(c *fiber.Ctx) error {
 			"BlogSubTitle": "Content Management System",
 			"LoginAt":      loginAt,
 		},
-	}, "admin/layouts/app")
+	})
 }
 
 func ProfilePage(c *fiber.Ctx) error {
