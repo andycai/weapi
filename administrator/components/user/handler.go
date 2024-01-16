@@ -12,9 +12,14 @@ import (
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/library/authentication"
 	"github.com/andycai/weapi/model"
+	"github.com/andycai/weapi/object"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
+
+func superAccessCheck(c *fiber.Ctx, obj *object.AdminObject) error {
+	return nil
+}
 
 func SigninPage(c *fiber.Ctx) error {
 	isAuthenticated, _ := authentication.AuthGet(c)

@@ -1,6 +1,7 @@
 package core
 
 import (
+	"github.com/andycai/weapi/object"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -10,6 +11,7 @@ var dbMap = map[string]func([]*gorm.DB){}
 var routerNoCheckMap = map[string]func(fiber.Router){}
 var routerCheckMap = map[string]func(fiber.Router){}
 var routerAdminCheckMap = map[string]func(fiber.Router){}
+var adminObjects = []object.AdminObject{}
 
 func RegisterDatabase(dbType string, f func([]*gorm.DB)) {
 	if _, ok := dbMap[dbType]; ok {
@@ -37,4 +39,8 @@ func RegisterAdminCheckRouter(routerType string, f func(fiber.Router)) {
 		panic("duplicate router type: " + routerType)
 	}
 	routerAdminCheckMap[routerType] = f
+}
+
+func RegisterAdminObject(objs []object.AdminObject) {
+	adminObjects = append(adminObjects, objs...)
 }
