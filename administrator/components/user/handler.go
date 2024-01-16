@@ -8,6 +8,7 @@ import (
 	"github.com/andycai/weapi/components/page"
 	"github.com/andycai/weapi/components/post"
 	"github.com/andycai/weapi/components/user"
+	"github.com/andycai/weapi/conf"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/library/authentication"
@@ -229,4 +230,46 @@ func PasswordSave(c *fiber.Ctx) error {
 	core.PushMessages(fmt.Sprintf("Updated password"))
 
 	return c.Redirect("/admin/users/security")
+}
+
+func CurrentUser(c *fiber.Ctx) *model.User {
+	var userVo *model.User
+	isAuthenticated, userID := authentication.AuthGet(c)
+
+	if isAuthenticated {
+		userVo = user.Dao.GetByID(userID)
+	}
+
+	return userVo
+}
+
+func JsonAction(c *fiber.Ctx) error {
+	return c.JSON(fiber.Map{
+		"objects": core.GetAdminObjects(),
+		"user":    CurrentUser(c),
+		"site":    getPageContext(),
+	})
+}
+
+func getPageContext() map[string]any {
+	return map[string]any{
+		"siteurl":            conf.GetValue(db, enum.KEY_SITE_URL),
+		"sitename":           conf.GetValue(db, enum.KEY_SITE_NAME),
+		"copyright":          conf.GetValue(db, enum.KEY_SITE_COPYRIGHT),
+		"siteadmin":          conf.GetValue(db, enum.KEY_SITE_ADMIN),
+		"keywords":           conf.GetValue(db, enum.KEY_SITE_KEYWORDS),
+		"description":        conf.GetValue(db, enum.KEY_SITE_DESCRIPTION),
+		"ga":                 conf.GetValue(db, enum.KEY_SITE_GA),
+		"logo_url":           conf.GetValue(db, enum.KEY_SITE_LOGO_URL),
+		"favicon_url":        conf.GetValue(db, enum.KEY_SITE_FAVICON_URL),
+		"terms_url":          conf.GetValue(db, enum.KEY_SITE_TERMS_URL),
+		"privacy_url":        conf.GetValue(db, enum.KEY_SITE_PRIVACY_URL),
+		"signin_url":         conf.GetValue(db, enum.KEY_SITE_SIGNIN_URL),
+		"signup_url":         conf.GetValue(db, enum.KEY_SITE_SIGNUP_URL),
+		"logout_url":         conf.GetValue(db, enum.KEY_SITE_LOGOUT_URL),
+		"reset_password_url": conf.GetValue(db, enum.KEY_SITE_RESET_PASSWORD_URL),
+		"login_next":         conf.GetValue(db, enum.KEY_SITE_LOGIN_NEXT),
+		"slogan":             conf.GetValue(db, enum.KEY_SITE_SLOGAN),
+		"user_id_type":       conf.GetValue(db, enum.KEY_SITE_USER_ID_TYPE),
+	}
 }

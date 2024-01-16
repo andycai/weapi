@@ -33,6 +33,8 @@ func initNoCheckRouter(r fiber.Router) {
 }
 
 func initCheckRouter(r fiber.Router) {
+	r.Post("/json", JsonAction)
+
 	r.Get("/logout", LogoutAction)
 	r.Get("/dashboard", DashBoardPage)
 

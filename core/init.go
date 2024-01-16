@@ -44,3 +44,7 @@ func RegisterAdminCheckRouter(routerType string, f func(fiber.Router)) {
 func RegisterAdminObject(objs []object.AdminObject) {
 	adminObjects = append(adminObjects, objs...)
 }
+
+func GetAdminObjects() []object.AdminObject {
+	return adminObjects
+}

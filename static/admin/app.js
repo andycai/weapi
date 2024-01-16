@@ -635,7 +635,7 @@ const adminapp = () => ({
         Alpine.store('editobj', new EditObject({}))
 
         this.$router.config({ mode: 'hash', base: '/admin/' })
-        let resp = await fetch('./admin.json', {
+        let resp = await fetch('./admin/json', {
             method: 'POST',
             cache: "no-store",
         })
