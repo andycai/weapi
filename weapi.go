@@ -29,7 +29,7 @@ var EnabledPageContentTypes = []object.AdminSelectOption{
 }
 
 func ReadIcon(name string) *object.AdminIcon {
-	data, err := EmbedAssets.ReadFile(filepath.Join("admin", name))
+	data, err := EmbedAssets.ReadFile(filepath.Join("/static/admin/", name))
 	if err != nil {
 		// carrot.Warning("Read icon failed:", name, err)
 		return nil

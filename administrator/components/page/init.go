@@ -42,6 +42,8 @@ func initAdminObject() []object.AdminObject {
 			Model:       &model.Page{},
 			Group:       "Contents",
 			Name:        "Page",
+			PluralName:  "Pages",
+			Path:        "/admin/page/",
 			Desc:        "The page data of the website can only be in JSON/YAML format",
 			Shows:       []string{"ID", "Site", "Title", "Author", "IsDraft", "Published", "PublishedAt", "CategoryID", "Tags", "CreatedAt"},
 			Editables:   []string{"ID", "Site", "CategoryID", "CategoryPath", "Author", "IsDraft", "Draft", "Published", "PublishedAt", "ContentType", "Thumbnail", "Tags", "Title", "Alt", "Description", "Keywords", "Draft", "Remark"},
@@ -49,14 +51,14 @@ func initAdminObject() []object.AdminObject {
 			Orderables:  []string{"UpdatedAt", "PublishedAt"},
 			Searchables: []string{"ID", "Tags", "Title", "Alt", "Description", "Keywords", "Body"},
 			Requireds:   []string{"ID", "Site", "CategoryID", "ContentType", "Body"},
-			Icon:        weapi.ReadIcon("./icon/piece.svg"),
+			Icon:        weapi.ReadIcon("/icon/piece.svg"),
 			Styles: []string{
-				"./css/jsoneditor-9.10.2.min.css",
+				"/static/admin/css/jsoneditor-9.10.2.min.css",
 			},
 			Scripts: []object.AdminScript{
-				{Src: "./js/cms_widget.js"},
-				{Src: "./js/jsoneditor-9.10.2.min.js"},
-				{Src: "./js/cms_page.js", Onload: true}},
+				{Src: "/static/admin/js/cms_widget.js"},
+				{Src: "/static/admin/js/jsoneditor-9.10.2.min.js"},
+				{Src: "/static/admin/js/cms_page.js", Onload: true}},
 			Attributes: map[string]object.AdminAttribute{
 				"ContentType": {Choices: weapi.EnabledPageContentTypes, Default: enum.ContentTypeJson},
 				"Draft":       {Default: "{}"},

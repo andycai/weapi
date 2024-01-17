@@ -34,6 +34,8 @@ func initAdminObject() []object.AdminObject {
 			Model:       &model.Media{},
 			Group:       "Contents",
 			Name:        "Media",
+			PluralName:  "Media",
+			Path:        "/admin/media/",
 			Desc:        "All kinds of media files, such as images, videos, audios, etc.",
 			Shows:       []string{"Name", "ContentType", "Author", "Published", "Size", "Dimensions", "UpdatedAt"},
 			Editables:   []string{"External", "PublicUrl", "Author", "Published", "PublishedAt", "Title", "Alt", "Description", "Keywords", "ContentType", "Size", "Path", "Name", "Dimensions", "StorePath", "UpdatedAt", "Ext", "Size", "StorePath", "Remark"},
@@ -41,15 +43,15 @@ func initAdminObject() []object.AdminObject {
 			Orderables:  []string{"UpdatedAt", "PublishedAt", "Size"},
 			Searchables: []string{"Title", "Alt", "Description", "Keywords", "Path", "Path", "Name", "StorePath"},
 			Requireds:   []string{"ContentType", "Size", "Path", "Name", "Dimensions", "StorePath"},
-			Icon:        weapi.ReadIcon("./icon/image.svg"),
+			Icon:        weapi.ReadIcon("/icon/image.svg"),
 			Attributes: map[string]object.AdminAttribute{
 				"ContentType": {Choices: weapi.ContentTypes},
 				"Size":        {Widget: "humanize-size"},
 				"Site":        {SingleChoice: true},
 			},
 			Scripts: []object.AdminScript{
-				{Src: "./js/cms_widget.js"},
-				{Src: "./js/cms_media.js", Onload: true},
+				{Src: "/static/admin/js/cms_widget.js"},
+				{Src: "/static/admin/js/cms_media.js", Onload: true},
 			},
 			EditPage: "./edit_media.html",
 			Orders: []object.Order{
