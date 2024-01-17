@@ -45,11 +45,6 @@ func initCheckRouter(r fiber.Router) {
 }
 
 func initAdminObject() []object.AdminObject {
-	iconUser, _ := weapi.EmbedAssets.ReadFile("static/admin/icon_user.svg")
-	iconGroup, _ := weapi.EmbedAssets.ReadFile("static/admin/icon_group.svg")
-	iconMembers, _ := weapi.EmbedAssets.ReadFile("static/admin/icon_members.svg")
-	iconConfig, _ := weapi.EmbedAssets.ReadFile("static/admin/icon_config.svg")
-
 	return []object.AdminObject{
 		{
 			Model:       &model.User{},
@@ -64,7 +59,7 @@ func initAdminObject() []object.AdminObject {
 			Orderables:  []string{"CreatedAt", "UpdatedAt", "Enabled", "Activated"},
 			Searchables: []string{"Username", "Email", "FirstName", "ListName"},
 			Orders:      []object.Order{{Name: "UpdatedAt", Op: object.OrderOpDesc}},
-			Icon:        &object.AdminIcon{SVG: string(iconUser)},
+			Icon:        weapi.ReadIcon("/icon/user.svg"),
 			AccessCheck: superAccessCheck,
 			BeforeCreate: func(db *gorm.DB, c *fiber.Ctx, obj any) error {
 				user := obj.(*model.User)
@@ -123,7 +118,7 @@ func initAdminObject() []object.AdminObject {
 			Orderables:  []string{"UpdatedAt"},
 			Searchables: []string{"Name"},
 			Requireds:   []string{"Name"},
-			Icon:        &object.AdminIcon{SVG: string(iconGroup)},
+			Icon:        weapi.ReadIcon("/icon/group.svg"),
 			AccessCheck: superAccessCheck,
 		},
 		{
@@ -139,7 +134,7 @@ func initAdminObject() []object.AdminObject {
 			Orderables:  []string{"CreatedAt"},
 			Searchables: []string{"User", "Group"},
 			Requireds:   []string{"User", "Group", "Role"},
-			Icon:        &object.AdminIcon{SVG: string(iconMembers)},
+			Icon:        weapi.ReadIcon("/icon/members.svg"),
 			AccessCheck: superAccessCheck,
 			Attributes: map[string]object.AdminAttribute{
 				"Role": {
@@ -160,7 +155,7 @@ func initAdminObject() []object.AdminObject {
 			Orderables:  []string{"Key"},
 			Searchables: []string{"Key", "Value", "Desc"},
 			Requireds:   []string{"Key", "Value"},
-			Icon:        &object.AdminIcon{SVG: string(iconConfig)},
+			Icon:        weapi.ReadIcon("/icon/confg.svg"),
 			AccessCheck: superAccessCheck,
 		},
 	}
