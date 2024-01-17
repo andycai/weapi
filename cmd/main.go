@@ -32,6 +32,7 @@ func main() {
 	var dsn string = conf.GetEnv(enum.ENV_DSN)
 	var debug bool = conf.GetEnv(enum.ENV_DEBUG) != ""
 	var staticDir string = conf.GetEnv(enum.ENV_STATIC_DIR)
+	var htmlDir string = conf.GetEnv(enum.ENV_HTML_DIR)
 	var dbActive = conf.GetIntEnv(enum.ENV_DB_ACTIVE)
 	var dbIdle = conf.GetIntEnv(enum.ENV_DB_IDLE)
 	var dbTimeout = conf.GetIntEnv(enum.ENV_DB_TIMEOUT)
@@ -52,6 +53,7 @@ func main() {
 	flag.StringVar(&dsn, "dsn", dsn, "database dsn")
 	flag.BoolVar(&debug, "debug", debug, "debug mode")
 	flag.StringVar(&staticDir, "static", staticDir, "static file directory")
+	flag.StringVar(&htmlDir, "html", htmlDir, "html file directory")
 	flag.StringVar(&lang, "en", lang, "language")
 	flag.IntVar(&zoneOffset, "zone", zoneOffset, "timezone offset")
 	flag.IntVar(&dbActive, "db-active", dbActive, "database max active connection")
@@ -94,6 +96,7 @@ func main() {
 	middlewares.Use(app)
 
 	app.Static("/static", filepath.Join("", staticDir))
+	app.Static("/admin", filepath.Join("", htmlDir))
 
 	// router
 	core.SetupRouter(app)

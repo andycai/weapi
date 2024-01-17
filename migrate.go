@@ -16,6 +16,11 @@ func AutoMultiMigrate(dbs []*gorm.DB) error {
 			&model.Tag{},
 			&model.Comment{},
 			&model.Blog{},
+			&model.Config{},
+			&model.Group{},
+			&model.GroupMember{},
+			&model.Site{},
+			&model.Media{},
 		}); err != nil {
 			return err
 		}

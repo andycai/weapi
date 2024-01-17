@@ -56,6 +56,8 @@ func initAdminObject() []object.AdminObject {
 			Group:       "Settings",
 			Name:        "User",
 			Desc:        "Builtin user management system",
+			PluralName:  "Users",
+			Path:        "/admin/user/",
 			Shows:       []string{"ID", "Email", "Username", "FirstName", "ListName", "IsStaff", "IsSuperUser", "Enabled", "Activated", "UpdatedAt", "LastLogin", "LastLoginIP", "Source", "Locale", "Timezone"},
 			Editables:   []string{"Email", "Password", "Username", "FirstName", "ListName", "IsStaff", "IsSuperUser", "Enabled", "Activated", "Profile", "Source", "Locale", "Timezone"},
 			Filterables: []string{"CreatedAt", "UpdatedAt", "Username", "IsStaff", "IsSuperUser", "Enabled", "Activated "},
@@ -114,6 +116,8 @@ func initAdminObject() []object.AdminObject {
 			Group:       "Settings",
 			Name:        "Group",
 			Desc:        "A group describes a group of users. One user can be part of many groups and one group can have many users", //
+			PluralName:  "Groups",
+			Path:        "/admin/group/",
 			Shows:       []string{"ID", "Name", "Extra", "UpdatedAt", "CreatedAt"},
 			Editables:   []string{"ID", "Name", "Extra", "UpdatedAt"},
 			Orderables:  []string{"UpdatedAt"},
@@ -127,6 +131,8 @@ func initAdminObject() []object.AdminObject {
 			Group:       "Settings",
 			Name:        "GroupMember",
 			Desc:        "Group members", //
+			PluralName:  "GroupMembers",
+			Path:        "/admin/groupmember/",
 			Shows:       []string{"ID", "User", "Group", "Role", "CreatedAt"},
 			Filterables: []string{"Group", "Role", "CreatedAt"},
 			Editables:   []string{"ID", "User", "Group", "Role"},
@@ -147,6 +153,8 @@ func initAdminObject() []object.AdminObject {
 			Group:       "Settings",
 			Name:        "Config",
 			Desc:        "System config with database backend, You can change it in admin page, and it will take effect immediately without restarting the server", //
+			PluralName:  "Configs",
+			Path:        "/admin/config/",
 			Shows:       []string{"Key", "Value", "Desc"},
 			Editables:   []string{"Key", "Value", "Desc"},
 			Orderables:  []string{"Key"},

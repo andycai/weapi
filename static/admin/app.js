@@ -258,6 +258,7 @@ class QueryResult {
         fetch(current.path, {
             method: 'POST',
             body: JSON.stringify(query),
+            headers: { 'content-type': 'application/json; charset=utf-8' }
         }).then(resp => {
             resp.json().then(data => {
                 this.attach(data).then()
@@ -572,6 +573,7 @@ class AdminObject {
         let resp = await fetch(`${this.path}?${params}`, {
             method: 'PATCH',
             body: JSON.stringify(values),
+            headers: { 'content-type': 'application/json; charset=utf-8' }
         })
         if (resp.status != 200) {
             throw new Error(await parseResponseError(resp))
@@ -588,6 +590,7 @@ class AdminObject {
         let resp = await fetch(`${this.path}`, {
             method: 'PUT',
             body: JSON.stringify(values),
+            headers: { 'content-type': 'application/json; charset=utf-8' }
         })
         if (resp.status != 200) {
             throw new Error(await parseResponseError(resp))
@@ -635,7 +638,7 @@ const adminapp = () => ({
         Alpine.store('editobj', new EditObject({}))
 
         this.$router.config({ mode: 'hash', base: '/admin/' })
-        let resp = await fetch('./admin/json', {
+        let resp = await fetch('./json', {
             method: 'POST',
             cache: "no-store",
         })
