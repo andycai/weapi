@@ -16,7 +16,8 @@ func SetupRouter(app *fiber.App) {
 		f(api)
 	}
 
-	admin := app.Group("/admin", middlewares.AuthorizePage)
+	// admin := app.Group("/admin", middlewares.AuthorizePage)
+	admin := app.Group("/")
 	for _, f := range routerAdminCheckMap {
 		f(admin)
 	}

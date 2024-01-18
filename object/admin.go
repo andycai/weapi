@@ -19,7 +19,7 @@ type AdminQueryResult struct {
 	Limit      int              `json:"limit,omitempty"`
 	Keyword    string           `json:"keyword,omitempty"`
 	Items      []map[string]any `json:"items"`
-	objects    []any            `json:"-"`
+	Objects    []any            `json:"-"`
 }
 
 // Access control
@@ -42,8 +42,8 @@ type AdminAttribute struct {
 type AdminForeign struct {
 	Path       string `json:"path"`
 	Field      string `json:"field"`
-	fieldName  string `json:"-"`
-	foreignKey string `json:"-"`
+	FieldName  string `json:"-"`
+	ForeignKey string `json:"-"`
 }
 type AdminValue struct {
 	Value any    `json:"value"`
@@ -69,8 +69,8 @@ type AdminField struct {
 	Foreign     *AdminForeign   `json:"foreign,omitempty"`
 	IsAutoID    bool            `json:"isAutoId,omitempty"`
 	IsPtr       bool            `json:"isPtr,omitempty"`
-	elemType    reflect.Type    `json:"-"`
-	fieldName   string          `json:"-"`
+	ElemType    reflect.Type    `json:"-"`
+	FieldName   string          `json:"-"`
 }
 type AdminScript struct {
 	Src    string `json:"src"`
@@ -119,11 +119,11 @@ type AdminObject struct {
 	BeforeRender     BeforeRenderFunc          `json:"-"`
 	BeforeUpdate     BeforeUpdateFunc          `json:"-"`
 	BeforeDelete     BeforeDeleteFunc          `json:"-"`
-	tableName        string                    `json:"-"`
-	modelElem        reflect.Type              `json:"-"`
-	ignores          map[string]bool           `json:"-"`
-	primaryKeyMaping map[string]string         `json:"-"`
-	markDeletedField string                    `json:"-"`
+	TableName        string                    `json:"-"`
+	ModelElem        reflect.Type              `json:"-"`
+	Ignores          map[string]bool           `json:"-"`
+	PrimaryKeyMaping map[string]string         `json:"-"`
+	MarkDeletedField string                    `json:"-"`
 }
 
 type ContentIcon AdminIcon
