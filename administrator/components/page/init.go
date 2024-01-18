@@ -80,42 +80,37 @@ func initAdminObject() []object.AdminObject {
 					WithoutObject: true,
 					Path:          "save_draft",
 					Name:          "Safe Draft",
-					Handler: func(db *gorm.DB, c *fiber.Ctx, obj any) (any, error) {
-						// return m.handleSaveDraft(db, c, obj)
-						return nil, nil
+					Handler: func(c *fiber.Ctx, obj any) (any, error) {
+						return HandleSaveDraft(c, obj)
 					},
 				},
 				{
 					Path: "duplicate",
 					Name: "Duplicate",
-					Handler: func(db *gorm.DB, c *fiber.Ctx, obj any) (any, error) {
-						// return m.handleMakePageDuplicate(db, c, obj)
-						return nil, nil
+					Handler: func(c *fiber.Ctx, obj any) (any, error) {
+						return HandleMakePageDuplicate(c, obj)
 					},
 				},
 				{
 					Path: "make_publish",
 					Name: "Make Publish",
-					Handler: func(db *gorm.DB, c *fiber.Ctx, obj any) (any, error) {
-						// return m.handleMakePagePublish(db, c, obj, true)
-						return nil, nil
+					Handler: func(c *fiber.Ctx, obj any) (any, error) {
+						return HandleMakePagePublish(c, obj, true)
 					},
 				},
 				{
 					Path: "make_un_publish",
 					Name: "Make UnPublish",
-					Handler: func(db *gorm.DB, c *fiber.Ctx, obj any) (any, error) {
-						// return m.handleMakePagePublish(db, c, obj, false)
-						return nil, nil
+					Handler: func(c *fiber.Ctx, obj any) (any, error) {
+						return HandleMakePagePublish(c, obj, false)
 					},
 				},
 				{
 					WithoutObject: true,
 					Path:          "tags",
 					Name:          "Query All Tags",
-					Handler: func(db *gorm.DB, c *fiber.Ctx, obj any) (any, error) {
-						// return m.handleQueryTags(db, c, obj, "pages")
-						return nil, nil
+					Handler: func(c *fiber.Ctx, obj any) (any, error) {
+						return HandleQueryTags(c, obj, "pages")
 					},
 				},
 			},

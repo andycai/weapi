@@ -6,7 +6,6 @@ import (
 	"reflect"
 
 	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm"
 )
 
 const KEY_ADMIN_DASHBOARD = "ADMIN_DASHBOARD"
@@ -24,7 +23,7 @@ type AdminQueryResult struct {
 
 // Access control
 type AdminAccessCheck func(c *fiber.Ctx, obj *AdminObject) error
-type AdminActionHandler func(db *gorm.DB, c *fiber.Ctx, obj any) (any, error)
+type AdminActionHandler func(c *fiber.Ctx, obj any) (any, error)
 
 type AdminSelectOption struct {
 	Label string `json:"label"`
@@ -134,4 +133,17 @@ func (s ContentIcon) Value() (driver.Value, error) {
 
 func (s *ContentIcon) Scan(input interface{}) error {
 	return json.Unmarshal(input.([]byte), &s)
+}
+
+type UploadResult struct {
+	PublicUrl   string `json:"publicUrl"`
+	Thumbnail   string `json:"thumbnail"`
+	Path        string `json:"path"`
+	Name        string `json:"name"`
+	External    bool   `json:"external"`
+	StorePath   string `json:"storePath"`
+	Dimensions  string `json:"dimensions"`
+	Ext         string `json:"ext"`
+	Size        int64  `json:"size"`
+	ContentType string `json:"contentType"`
 }

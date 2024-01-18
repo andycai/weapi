@@ -2,6 +2,7 @@ package post
 
 import (
 	"github.com/andycai/weapi"
+	"github.com/andycai/weapi/administrator/components/page"
 	"github.com/andycai/weapi/administrator/components/user"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/enum"
@@ -93,42 +94,37 @@ func initAdminObject() []object.AdminObject {
 					WithoutObject: true,
 					Path:          "save_draft",
 					Name:          "Safe Draft",
-					Handler: func(db *gorm.DB, c *fiber.Ctx, obj any) (any, error) {
-						// return m.handleSaveDraft(db, c, obj)
-						return nil, nil
+					Handler: func(c *fiber.Ctx, obj any) (any, error) {
+						return page.HandleSaveDraft(c, obj)
 					},
 				},
 				{
 					Path: "duplicate",
 					Name: "Duplicate",
-					Handler: func(db *gorm.DB, c *fiber.Ctx, obj any) (any, error) {
-						// return m.handleMakePageDuplicate(db, c, obj)
-						return nil, nil
+					Handler: func(c *fiber.Ctx, obj any) (any, error) {
+						return page.HandleMakePageDuplicate(c, obj)
 					},
 				},
 				{
 					Path: "make_publish",
 					Name: "Make Publish",
-					Handler: func(db *gorm.DB, c *fiber.Ctx, obj any) (any, error) {
-						// return m.handleMakePagePublish(db, c, obj, true)
-						return nil, nil
+					Handler: func(c *fiber.Ctx, obj any) (any, error) {
+						return page.HandleMakePagePublish(c, obj, true)
 					},
 				},
 				{
 					Path: "make_un_publish",
 					Name: "Make UnPublish",
-					Handler: func(db *gorm.DB, c *fiber.Ctx, obj any) (any, error) {
-						// return m.handleMakePagePublish(db, c, obj, false)
-						return nil, nil
+					Handler: func(c *fiber.Ctx, obj any) (any, error) {
+						return page.HandleMakePagePublish(c, obj, false)
 					},
 				},
 				{
 					WithoutObject: true,
 					Path:          "tags",
 					Name:          "Query All Tags",
-					Handler: func(db *gorm.DB, c *fiber.Ctx, obj any) (any, error) {
-						// return m.handleQueryTags(db, c, obj, "posts")
-						return nil, nil
+					Handler: func(c *fiber.Ctx, obj any) (any, error) {
+						return page.HandleQueryTags(c, obj, "posts")
 					},
 				},
 			},

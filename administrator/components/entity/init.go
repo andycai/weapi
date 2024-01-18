@@ -31,6 +31,9 @@ func initCheckRouter(r fiber.Router) {
 	r.Post("/admin/json", func(c *fiber.Ctx) error {
 		return JsonAction(c, adminObjects)
 	})
+
+	r.Post("/admin/summary", HandleAdminSummary)
+	r.Post("/admin/tags/:content_type", handleGetTags)
 }
 
 func initAdminObject() []object.AdminObject {

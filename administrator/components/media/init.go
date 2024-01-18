@@ -83,42 +83,40 @@ func initAdminObject() []object.AdminObject {
 				{
 					Path: "make_publish",
 					Name: "Make Publish",
-					Handler: func(db *gorm.DB, c *fiber.Ctx, obj any) (any, error) {
-						// return m.handleMakeMediaPublish(db, c, obj, true)
-						return nil, nil
+					Handler: func(c *fiber.Ctx, obj any) (any, error) {
+						return handleMakeMediaPublish(c, obj, true)
 					},
 				},
 				{
 					Path: "make_un_publish",
 					Name: "Make UnPublish",
-					Handler: func(db *gorm.DB, c *fiber.Ctx, obj any) (any, error) {
-						// return m.handleMakeMediaPublish(db, c, obj, false)
-						return nil, nil
+					Handler: func(c *fiber.Ctx, obj any) (any, error) {
+						return handleMakeMediaPublish(c, obj, false)
 					},
 				},
 				{
 					WithoutObject: true,
 					Path:          "folders",
 					Name:          "Folders",
-					// Handler:       m.handleListFolders,
+					Handler:       handleListFolders,
 				},
 				{
 					WithoutObject: true,
 					Path:          "new_folder",
 					Name:          "New Folder",
-					// Handler:       m.handleNewFolder,
+					Handler:       handleNewFolder,
 				},
 				{
 					WithoutObject: true,
 					Path:          "upload",
 					Name:          "Upload",
-					// Handler:       m.handleUpload,
+					Handler:       handleUpload,
 				},
 				{
 					WithoutObject: true,
 					Path:          "remove_dir",
 					Name:          "Remove directory",
-					// Handler:       m.handleRemoveDirectory,
+					Handler:       handleRemoveDirectory,
 				},
 			},
 		},

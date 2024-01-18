@@ -2,6 +2,7 @@ package site
 
 import (
 	"github.com/andycai/weapi"
+	"github.com/andycai/weapi/administrator/components/entity"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/model"
 	"github.com/andycai/weapi/object"
@@ -73,7 +74,7 @@ func initAdminObject() []object.AdminObject {
 					WithoutObject: true,
 					Path:          "query_with_count",
 					Name:          "Query with item count",
-					// Handler:       m.handleQueryCategoryWithCount,
+					Handler:       entity.HandleQueryCategoryWithCount,
 				},
 			},
 		},

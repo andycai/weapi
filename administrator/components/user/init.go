@@ -84,7 +84,7 @@ func initAdminObject() []object.AdminObject {
 					Path:  "toggle_enabled",
 					Name:  "Toggle enabled",
 					Label: "Toggle user enabled/disabled",
-					Handler: func(db *gorm.DB, c *fiber.Ctx, obj any) (any, error) {
+					Handler: func(c *fiber.Ctx, obj any) (any, error) {
 						userVo := obj.(*model.User)
 						err := user.Dao.UpdateFields(userVo, map[string]any{"Enabled": !userVo.Enabled})
 						return userVo.Enabled, err
@@ -94,7 +94,7 @@ func initAdminObject() []object.AdminObject {
 					Path:  "toggle_staff",
 					Name:  "Toggle staff",
 					Label: "Toggle user is staff or not",
-					Handler: func(db *gorm.DB, c *fiber.Ctx, obj any) (any, error) {
+					Handler: func(c *fiber.Ctx, obj any) (any, error) {
 						userVo := obj.(*model.User)
 						err := user.Dao.UpdateFields(userVo, map[string]any{"IsStaff": !userVo.IsStaff})
 						return userVo.IsStaff, err

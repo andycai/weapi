@@ -927,7 +927,7 @@ func handleAction(obj *object.AdminObject, c *fiber.Ctx) error {
 
 		// db := getDbConnection(c, obj.GetDB, false)
 		if action.WithoutObject {
-			r, err := action.Handler(db, c, nil)
+			r, err := action.Handler(c, nil)
 			if err != nil {
 				// AbortWithJSONError(c, http.StatusInternalServerError, err)
 				return err
@@ -952,7 +952,7 @@ func handleAction(obj *object.AdminObject, c *fiber.Ctx) error {
 				return result.Error
 			}
 		}
-		r, err := action.Handler(db, c, modelObj)
+		r, err := action.Handler(c, modelObj)
 		if err != nil {
 			// AbortWithJSONError(c, http.StatusInternalServerError, err)
 			return err
@@ -980,4 +980,34 @@ func DefaultPrepareQuery(db *gorm.DB, c *fiber.Ctx) (*gorm.DB, *object.QueryForm
 	}
 
 	return db, &form, nil
+}
+
+func HandleQueryCategoryWithCount(c *fiber.Ctx, obj any) (any, error) {
+	siteId := c.Query("site_id")
+	current := strings.ToLower(c.Query("current"))
+	return model.QueryCategoryWithCount(db, siteId, current)
+}
+
+func HandleAdminSummary(c *fiber.Ctx) error {
+	result := model.GetSummary(db)
+	// result.BuildTime = m.BuildTime
+	result.CanExport = user.CurrentUser(c).IsSuperUser
+	return c.JSON(result)
+}
+
+func handleGetTags(c *fiber.Ctx) error {
+	contentType := c.Params("content_type")
+	var form model.TagsForm
+	if err := c.BodyParser(&form); err != nil {
+		// carrot.AbortWithJSONError(c, http.StatusBadRequest, err)
+		return err
+	}
+
+	tags, err := model.GetTagsByCategory(db, contentType, &form)
+	if err != nil {
+		// carrot.AbortWithJSONError(c, http.StatusInternalServerError, err)
+		return err
+	}
+
+	return c.JSON(tags)
 }

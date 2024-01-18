@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"html/template"
 
-	"github.com/andycai/weapi/administrator/enum"
 	"github.com/andycai/weapi/administrator/utils"
 	"github.com/andycai/weapi/components/page"
 	"github.com/andycai/weapi/core"
+	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/library/authentication"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
@@ -37,10 +37,10 @@ func ManagerPage(c *fiber.Ctx) error {
 
 	switch status {
 	case "trash":
-		voList = page.Dao.GetTrashListByPage(CurrentPagination, enum.NUM_PER_PAGE, q)
+		voList = page.Dao.GetTrashListByPage(CurrentPagination, 20, q)
 		total = totalTrash
 	default:
-		voList = page.Dao.GetListByPage(CurrentPagination, enum.NUM_PER_PAGE, q)
+		voList = page.Dao.GetListByPage(CurrentPagination, 20, q)
 		total = totalAll
 	}
 
@@ -179,3 +179,50 @@ func Restore(c *fiber.Ctx) error {
 
 	return c.Redirect("/admin/pages/manager")
 }
+
+//#region action handler
+
+func HandleMakePagePublish(c *fiber.Ctx, obj any, publish bool) (any, error) {
+	siteId := c.Query("site_id")
+	id := c.Query("id")
+	if err := model.MakePublish(db, siteId, id, obj, publish); err != nil {
+		// carrot.Warning("make publish failed:", siteId, id, publish, err)
+		return false, err
+	}
+	return true, nil
+}
+
+func HandleMakePageDuplicate(c *fiber.Ctx, obj any) (any, error) {
+	if err := model.MakeDuplicate(db, obj); err != nil {
+		// carrot.Warning("make duplicate failed:", obj, err)
+		return false, err
+	}
+	return true, nil
+}
+
+func HandleSaveDraft(c *fiber.Ctx, obj any) (any, error) {
+	siteId := c.Query("site_id")
+	id := c.Query("id")
+
+	var formData map[string]string
+	if err := c.BodyParser(&formData); err != nil {
+		return nil, err
+	}
+
+	draft, ok := formData["draft"]
+	if !ok {
+		return nil, enum.ErrDraftIsInvalid
+	}
+
+	if err := model.SafeDraft(db, siteId, id, obj, draft); err != nil {
+		// carrot.Warning("safe draft failed:", siteId, id, err)
+		return false, err
+	}
+	return true, nil
+}
+
+func HandleQueryTags(c *fiber.Ctx, obj any, tableName string) (any, error) {
+	return model.QueryTags(db.Table(tableName))
+}
+
+//#endregion

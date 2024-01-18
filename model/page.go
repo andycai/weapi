@@ -114,13 +114,6 @@ func QueryTags(db *gorm.DB) ([]string, error) {
 	return vals, r.Error
 }
 
-func MakeMediaPublish(db *gorm.DB, siteID, path, name string, obj any, publish bool) error {
-	tx := db.Model(obj).Where("site_id", siteID).Where("path", path).Where("name", name)
-	vals := map[string]any{"published": publish}
-	vals["published"] = publish
-	return tx.Updates(vals).Error
-}
-
 func NewRenderContentFromPage(db *gorm.DB, page *Page) *RenderContent {
 	var data any
 	if page.ContentType == enum.ContentTypeJson {
