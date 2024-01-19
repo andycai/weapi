@@ -38,6 +38,11 @@ func AutoMigrate(db *gorm.DB) error {
 		&model.Tag{},
 		&model.Comment{},
 		&model.Blog{},
+		&model.Config{},
+		&model.Group{},
+		&model.GroupMember{},
+		&model.Site{},
+		&model.Media{},
 	})
 }
 
