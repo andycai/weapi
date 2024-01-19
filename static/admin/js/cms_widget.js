@@ -435,7 +435,7 @@ class CategoryWidget extends window.AdminWidgets.string {
     static async loadCategories() {
         const path = Alpine.store('objects').find(obj => /Category/i.test(obj.name)).path
         let resp = await fetch(`${path}`, {
-            method: 'POST', body: '{}'
+            method: 'POST', body: '{}', headers: { 'content-type': 'application/json; charset=utf-8' },
         })
         let data = await resp.json()
         return data.items || []

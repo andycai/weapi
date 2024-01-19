@@ -187,6 +187,7 @@ async function loadForeignValues(path) {
         body: JSON.stringify({
             foreign: true
         }),
+        headers: { 'content-type': 'application/json; charset=utf-8' },
     })
     let data = await req.json()
     if (!data.items) {

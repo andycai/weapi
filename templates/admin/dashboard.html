@@ -63,7 +63,7 @@
         }
 
         this.status = 'pending'     
-        let resp = await fetch('./export/start', {method:'POST', body:JSON.stringify({options})})
+        let resp = await fetch('./export/start', {method:'POST', body:JSON.stringify({options}), headers: { 'content-type': 'application/json; charset=utf-8' }, })
         if (resp.status != 200) {
             this.status = 'error'
             this.reason = await resp.text()
@@ -125,7 +125,7 @@
 
         this.status = 'pending'
 
-        let resp = await fetch('./import/start', {method:'POST', body:JSON.stringify({key:this.importKey, options})})
+        let resp = await fetch('./import/start', {method:'POST', body:JSON.stringify({key:this.importKey, options}), headers: { 'content-type': 'application/json; charset=utf-8' }, })
         if (resp.status != 200) {
             this.status = 'error'
             this.reason = await resp.text()
@@ -166,7 +166,7 @@
         let formData = new FormData()
         formData.append('file', file)
 
-        let resp = await fetch('./import/upload', {method:'POST', body:formData})
+        let resp = await fetch('./import/upload', {method:'POST', body:formData, headers: { 'content-type': 'application/json; charset=utf-8' }, })
         if (resp.status != 200) {
             this.status = 'error'
             this.reason = await resp.text()

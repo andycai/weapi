@@ -139,7 +139,8 @@ Alpine.store('media', {
         try {
             let upload = await fetch(url, {
                 method: 'POST',
-                body: form
+                body: form,
+                headers: { 'content-type': 'application/json; charset=utf-8' },
             })
 
             if (upload.status != 200) {
