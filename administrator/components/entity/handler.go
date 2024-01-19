@@ -56,6 +56,7 @@ func GetPageContext() map[string]any {
 		"login_next":         conf.GetValue(db, enum.KEY_SITE_LOGIN_NEXT),
 		"slogan":             conf.GetValue(db, enum.KEY_SITE_SLOGAN),
 		"user_id_type":       conf.GetValue(db, enum.KEY_SITE_USER_ID_TYPE),
+		"dashboard":          conf.GetValue(db, enum.KEY_ADMIN_DASHBOARD),
 	}
 }
 

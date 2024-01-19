@@ -8,8 +8,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-const KEY_ADMIN_DASHBOARD = "ADMIN_DASHBOARD"
-
 type AdminBuildContext func(*fiber.Ctx, map[string]any) map[string]any
 
 type AdminQueryResult struct {
