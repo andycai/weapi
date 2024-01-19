@@ -128,7 +128,7 @@ func initAdminObject() []object.AdminObject {
 					},
 				},
 			},
-			BeforeCreate: func(db *gorm.DB, ctx *fiber.Ctx, vptr any) error {
+			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
 				post := vptr.(*model.Post)
 				if post.ContentType == "" {
 					post.ContentType = enum.ContentTypeMarkdown
@@ -137,7 +137,7 @@ func initAdminObject() []object.AdminObject {
 				post.IsDraft = true
 				return nil
 			},
-			BeforeUpdate: func(db *gorm.DB, ctx *fiber.Ctx, vptr any, vals map[string]any) error {
+			BeforeUpdate: func(ctx *fiber.Ctx, vptr any, vals map[string]any) error {
 				post := vptr.(*model.Post)
 				post.IsDraft = true
 				if _, ok := vals["published"]; ok {

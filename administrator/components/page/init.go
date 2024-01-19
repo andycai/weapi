@@ -114,14 +114,14 @@ func initAdminObject() []object.AdminObject {
 					},
 				},
 			},
-			BeforeCreate: func(db *gorm.DB, ctx *fiber.Ctx, vptr any) error {
+			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
 				page := vptr.(*model.Page)
 				page.ContentType = enum.ContentTypeJson
 				page.Creator = *user.CurrentUser(ctx)
 				page.IsDraft = true
 				return nil
 			},
-			BeforeUpdate: func(db *gorm.DB, ctx *fiber.Ctx, vptr any, vals map[string]any) error {
+			BeforeUpdate: func(ctx *fiber.Ctx, vptr any, vals map[string]any) error {
 				page := vptr.(*model.Page)
 				page.IsDraft = true
 				if _, ok := vals["published"]; ok {

@@ -62,7 +62,7 @@ func initAdminObject() []object.AdminObject {
 			Orders:      []object.Order{{Name: "UpdatedAt", Op: object.OrderOpDesc}},
 			Icon:        weapi.ReadIcon("/icon/user.svg"),
 			AccessCheck: SuperAccessCheck,
-			BeforeCreate: func(db *gorm.DB, c *fiber.Ctx, obj any) error {
+			BeforeCreate: func(c *fiber.Ctx, obj any) error {
 				user := obj.(*model.User)
 				if user.Password != "" {
 					user.Password = core.HashPassword(user.Password)
@@ -70,7 +70,7 @@ func initAdminObject() []object.AdminObject {
 				user.Source = "admin"
 				return nil
 			},
-			BeforeUpdate: func(db *gorm.DB, c *fiber.Ctx, obj any, vals map[string]any) error {
+			BeforeUpdate: func(c *fiber.Ctx, obj any, vals map[string]any) error {
 				userVo := obj.(*model.User)
 				if err, dbUser := user.Dao.GetByEmail(userVo.Email); err == nil {
 					if dbUser.Password != userVo.Password {

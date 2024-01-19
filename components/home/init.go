@@ -1,4 +1,4 @@
-package page
+package home
 
 import (
 	"github.com/andycai/weapi/core"

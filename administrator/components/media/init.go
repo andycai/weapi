@@ -60,19 +60,19 @@ func initAdminObject() []object.AdminObject {
 					Op:   object.OrderOpAsc,
 				},
 			},
-			BeforeRender: func(db *gorm.DB, ctx *fiber.Ctx, vptr any) (any, error) {
+			BeforeRender: func(ctx *fiber.Ctx, vptr any) (any, error) {
 				media := vptr.(*model.Media)
 				mediaHost := conf.GetValue(db, enum.KEY_CMS_MEDIA_HOST)
 				mediaPrefix := conf.GetValue(db, enum.KEY_CMS_MEDIA_PREFIX)
 				media.BuildPublicUrls(mediaHost, mediaPrefix)
 				return vptr, nil
 			},
-			BeforeCreate: func(db *gorm.DB, ctx *fiber.Ctx, vptr any) error {
+			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
 				media := vptr.(*model.Media)
 				media.Creator = *user.CurrentUser(ctx)
 				return nil
 			},
-			BeforeDelete: func(db *gorm.DB, ctx *fiber.Ctx, vptr any) error {
+			BeforeDelete: func(ctx *fiber.Ctx, vptr any) error {
 				media := vptr.(*model.Media)
 				if err := RemoveFile(media.Path, media.Name); err != nil {
 					// object.Warning("Delete file failed: ", media.StorePath, err)

@@ -591,7 +591,7 @@ func handleGetOne(obj *object.AdminObject, c *fiber.Ctx) {
 	}
 
 	if obj.BeforeRender != nil {
-		rr, err := obj.BeforeRender(db, c, modelObj)
+		rr, err := obj.BeforeRender(c, modelObj)
 		if err != nil {
 			// AbortWithJSONError(c, http.StatusInternalServerError, err)
 			return
@@ -706,7 +706,7 @@ func QueryObjects(obj *object.AdminObject, session *gorm.DB, form *object.QueryF
 		r.Objects = append(r.Objects, modelObj)
 		if obj.BeforeRender != nil {
 			// db := getDbConnection(ctx, obj.GetDB, false)
-			rr, err := obj.BeforeRender(db, ctx, modelObj)
+			rr, err := obj.BeforeRender(ctx, modelObj)
 			if err != nil {
 				return r, err
 			}
@@ -791,7 +791,7 @@ func handleCreate(obj *object.AdminObject, c *fiber.Ctx) error {
 	}
 	// db := getDbConnection(c, obj.GetDB, true)
 	if obj.BeforeCreate != nil {
-		if err := obj.BeforeCreate(db, c, elm); err != nil {
+		if err := obj.BeforeCreate(c, elm); err != nil {
 			// AbortWithJSONError(c, http.StatusBadRequest, err)
 			return err
 		}
@@ -803,7 +803,7 @@ func handleCreate(obj *object.AdminObject, c *fiber.Ctx) error {
 		return result.Error
 	}
 	if obj.BeforeRender != nil {
-		rr, err := obj.BeforeRender(db, c, elm)
+		rr, err := obj.BeforeRender(c, elm)
 		if err != nil {
 			// AbortWithJSONError(c, http.StatusInternalServerError, err)
 			return err
@@ -845,7 +845,7 @@ func handleUpdate(obj *object.AdminObject, c *fiber.Ctx) error {
 	}
 
 	if obj.BeforeUpdate != nil {
-		if err := obj.BeforeUpdate(db, c, val, inputVals); err != nil {
+		if err := obj.BeforeUpdate(c, val, inputVals); err != nil {
 			// AbortWithJSONError(c, http.StatusBadRequest, err)
 			return err
 		}
@@ -904,7 +904,7 @@ func handleDelete(obj *object.AdminObject, c *fiber.Ctx) error {
 	}
 
 	if obj.BeforeDelete != nil {
-		if err := obj.BeforeDelete(db, c, val); err != nil {
+		if err := obj.BeforeDelete(c, val); err != nil {
 			// AbortWithJSONError(c, http.StatusBadRequest, err)
 			return err
 		}
