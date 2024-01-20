@@ -25,13 +25,13 @@ func SigninPage(c *fiber.Ctx) error {
 	isAuthenticated, _ := authentication.AuthGet(c)
 
 	if isAuthenticated {
-		return c.Redirect("/admin/dashboard")
+		return c.Redirect("/admin")
 	}
 
 	return core.Render(c, "signin", fiber.Map{
 		"signup_url":  "/auth/register",
 		"signuptext":  "Sign up",
-		"login_next":  "/admin/dashboard",
+		"login_next":  "/admin",
 		"sitename":    "Weapi",
 		"logo_url":    "/static/img/logo.svg",
 		"favicon_url": "/static/img/favicon.png",
