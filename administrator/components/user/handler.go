@@ -25,13 +25,13 @@ func SigninPage(c *fiber.Ctx) error {
 	isAuthenticated, _ := authentication.AuthGet(c)
 
 	if isAuthenticated {
-		return c.Redirect("/admin")
+		return c.Redirect("/admin/")
 	}
 
 	return core.Render(c, "signin", fiber.Map{
 		"signup_url":  "/auth/register",
 		"signuptext":  "Sign up",
-		"login_next":  "/admin",
+		"login_next":  "/admin/",
 		"sitename":    "Weapi",
 		"logo_url":    "/static/img/logo.svg",
 		"favicon_url": "/static/img/favicon.png",
@@ -74,13 +74,13 @@ func SigninAction(c *fiber.Ctx) error {
 func LogoutAction(c *fiber.Ctx) error {
 	isAuthenticated, userID := authentication.AuthGet(c)
 	if !isAuthenticated {
-		return core.Render(c, "admin/login", fiber.Map{})
+		return c.Redirect("/auth/login/")
 	}
 
 	user.Dao.UpdateLogoutTime(userID)
 	authentication.AuthDestroy(c)
 
-	return core.Render(c, "admin/login", fiber.Map{})
+	return c.Redirect("/auth/login/")
 }
 
 func SignupPage(c *fiber.Ctx) error {

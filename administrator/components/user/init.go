@@ -29,20 +29,21 @@ func initNoCheckRouter(r fiber.Router) {
 		auth.Post("/login", SigninAction)
 		auth.Get("/register", SigninPage)
 		auth.Post("/register", SigninAction)
+		auth.Get("/logout", LogoutAction)
 	}
 }
 
 func initCheckRouter(r fiber.Router) {
-	admin := r.Group("/admin")
-	{
-		admin.Get("/logout", LogoutAction)
-		admin.Get("/dashboard", DashBoardPage)
+	// admin := r.Group("/admin")
+	// {
+	// admin.Get("/logout", LogoutAction)
+	// admin.Get("/dashboard", DashBoardPage)
 
-		admin.Get("/users/profile", ProfilePage)
-		admin.Post("/users/profile", ProfileSave)
-		admin.Get("/users/security", SecurityPage)
-		admin.Post("/users/password", PasswordSave)
-	}
+	// 	admin.Get("/users/profile", ProfilePage)
+	// 	admin.Post("/users/profile", ProfileSave)
+	// 	admin.Get("/users/security", SecurityPage)
+	// 	admin.Post("/users/password", PasswordSave)
+	// }
 }
 
 func initAdminObject() []object.AdminObject {
