@@ -74,6 +74,7 @@ func main() {
 
 	if debug {
 		db = db.Debug()
+		db.DB()
 	}
 
 	dbs := []*gorm.DB{db}
@@ -83,7 +84,8 @@ func main() {
 	}
 
 	core.SetupDatabase(dbs)
-	authentication.SessionStart()
+	sqlDb, _ := db.DB()
+	authentication.SessionSetup(dbDriver, sqlDb, dsn, "auth_session")
 
 	if superUserEmail != "" && superUserPassword != "" {
 		// create super user
