@@ -182,7 +182,7 @@ class StructWidget extends BaseWidget {
 }
 
 async function loadForeignValues(path) {
-    let req = await fetch(path, {
+    let resp = await fetch(path, {
         method: 'POST',
         body: JSON.stringify({
             foreign: true
@@ -192,7 +192,7 @@ async function loadForeignValues(path) {
     if (unauth(resp)) {
         return
     }
-    let data = await req.json()
+    let data = await resp.json()
     if (!data.items) {
         return
     }
