@@ -9,6 +9,14 @@ async function parseResponseError(resp) {
     }
 }
 
+function unauth(resp) {
+    if (resp.status === 302 || resp.status === 401) {
+        window.location.href = '/auth/login/'
+        return true
+    }
+    return false
+}
+
 class ConfirmAction {
     constructor() {
         this.reset()
@@ -260,6 +268,9 @@ class QueryResult {
             body: JSON.stringify(query),
             headers: { 'content-type': 'application/json; charset=utf-8' }
         }).then(resp => {
+            if (unauth(resp)) {
+                return
+            }
             resp.json().then(data => {
                 this.attach(data).then()
             })
@@ -575,6 +586,9 @@ class AdminObject {
             body: JSON.stringify(values),
             headers: { 'content-type': 'application/json; charset=utf-8' }
         })
+        if (unauth(resp)) {
+            return {}
+        }
         if (resp.status != 200) {
             throw new Error(await parseResponseError(resp))
         }
@@ -592,6 +606,9 @@ class AdminObject {
             body: JSON.stringify(values),
             headers: { 'content-type': 'application/json; charset=utf-8' }
         })
+        if (unauth(resp)) {
+            return {}
+        }
         if (resp.status != 200) {
             throw new Error(await parseResponseError(resp))
         }
@@ -605,6 +622,9 @@ class AdminObject {
             let resp = await fetch(`${action.path}?${params}`, {
                 method: action.method || 'POST',
             })
+            if (unauth(resp)) {
+                return {}
+            }
             if (resp.status != 200) {
                 let reason = await parseResponseError(resp)
                 Alpine.store('toasts').error(`${action.name} fail : ${reason}`)
@@ -642,6 +662,9 @@ const adminapp = () => ({
             method: 'POST',
             cache: "no-store",
         })
+        if (unauth(resp)) {
+            return
+        }
         let meta = await resp.json()
         this.site = meta.site
         let objects = meta.objects.map(obj => new AdminObject(obj))

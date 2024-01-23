@@ -189,6 +189,9 @@ async function loadForeignValues(path) {
         }),
         headers: { 'content-type': 'application/json; charset=utf-8' },
     })
+    if (unauth(resp)) {
+        return
+    }
     let data = await req.json()
     if (!data.items) {
         return

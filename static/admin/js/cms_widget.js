@@ -437,6 +437,9 @@ class CategoryWidget extends window.AdminWidgets.string {
         let resp = await fetch(`${path}`, {
             method: 'POST', body: '{}', headers: { 'content-type': 'application/json; charset=utf-8' },
         })
+        if (unauth(resp)) {
+            return
+        }
         let data = await resp.json()
         return data.items || []
     }

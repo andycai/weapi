@@ -48,6 +48,9 @@ Alpine.store('media', {
         let req = await fetch(url, {
             method: 'POST',
         })
+        if (unauth(resp)) {
+            return
+        }
         let path = await req.json()
         this._folders.push({ path, name, foldersCount: 0, filesCount: 0 })
     },
@@ -75,6 +78,9 @@ Alpine.store('media', {
         let req = await fetch(url, {
             method: 'POST',
         })
+        if (unauth(resp)) {
+            return
+        }
 
         let data = await req.json()
         this._folders = []
@@ -142,6 +148,9 @@ Alpine.store('media', {
                 body: form,
                 headers: { 'content-type': 'application/json; charset=utf-8' },
             })
+            if (unauth(resp)) {
+                return
+            }
 
             if (upload.status != 200) {
                 Alpine.store('toasts').error(upload.statusText)
