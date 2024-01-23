@@ -28,12 +28,12 @@ func initNoCheckRouter(r fiber.Router) {
 func initCheckRouter(r fiber.Router) {
 	adminObjects := BuildAdminObjects(r, core.GetAdminObjects())
 
-	r.Post("/admin/json", func(c *fiber.Ctx) error {
+	r.Post("/json", func(c *fiber.Ctx) error {
 		return JsonAction(c, adminObjects)
 	})
 
-	r.Post("/admin/summary", HandleAdminSummary)
-	r.Post("/admin/tags/:content_type", handleGetTags)
+	r.Post("/summary", HandleAdminSummary)
+	r.Post("/tags/:content_type", handleGetTags)
 }
 
 func initAdminObject() []object.AdminObject {

@@ -19,8 +19,8 @@ func initDB(dbs []*gorm.DB) {
 }
 
 func initCheckRouter(r fiber.Router) {
-	r.Get("/settings/blog", BlogPage)
-	r.Post("/settings/blog", BlogSave)
+	// r.Get("/settings/blog", BlogPage)
+	// r.Post("/settings/blog", BlogSave)
 }
 
 func init() {
