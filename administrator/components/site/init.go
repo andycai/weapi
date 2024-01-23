@@ -33,7 +33,6 @@ func initAdminObject() []object.AdminObject {
 			Group:      "Contents",
 			Name:       "Site",
 			PluralName: "Sites",
-			Path:       "/admin/site/",
 			Shows:      []string{"Domain", "Name", "Preview", "Disallow", "UpdatedAt", "CreatedAt"},
 			Orders: []object.Order{
 				{
@@ -56,7 +55,6 @@ func initAdminObject() []object.AdminObject {
 			Group:       "Contents",
 			Name:        "Category",
 			PluralName:  "Categories",
-			Path:        "/admin/category/",
 			Desc:        "The category of articles and pages can be multi-level",
 			Shows:       []string{"Name", "UUID", "Site", "Items"},
 			Editables:   []string{"Name", "UUID", "Site", "Items"},

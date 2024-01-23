@@ -44,7 +44,6 @@ func initAdminObject() []object.AdminObject {
 			Name:        "Group",
 			Desc:        "A group describes a group of users. One user can be part of many groups and one group can have many users", //
 			PluralName:  "Groups",
-			Path:        "/admin/group/",
 			Shows:       []string{"ID", "Name", "Extra", "UpdatedAt", "CreatedAt"},
 			Editables:   []string{"ID", "Name", "Extra", "UpdatedAt"},
 			Orderables:  []string{"UpdatedAt"},
@@ -59,7 +58,6 @@ func initAdminObject() []object.AdminObject {
 			Name:        "GroupMember",
 			Desc:        "Group members", //
 			PluralName:  "GroupMembers",
-			Path:        "/admin/groupmember/",
 			Shows:       []string{"ID", "User", "Group", "Role", "CreatedAt"},
 			Filterables: []string{"Group", "Role", "CreatedAt"},
 			Editables:   []string{"ID", "User", "Group", "Role"},
@@ -81,13 +79,12 @@ func initAdminObject() []object.AdminObject {
 			Name:        "Config",
 			Desc:        "System config with database backend, You can change it in admin page, and it will take effect immediately without restarting the server", //
 			PluralName:  "Configs",
-			Path:        "/admin/config/",
 			Shows:       []string{"Key", "Value", "Desc"},
 			Editables:   []string{"Key", "Value", "Desc"},
 			Orderables:  []string{"Key"},
 			Searchables: []string{"Key", "Value", "Desc"},
 			Requireds:   []string{"Key", "Value"},
-			Icon:        weapi.ReadIcon("/icon/confg.svg"),
+			Icon:        weapi.ReadIcon("/icon/config.svg"),
 			AccessCheck: user.SuperAccessCheck,
 		},
 	}
