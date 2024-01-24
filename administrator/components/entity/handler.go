@@ -86,7 +86,7 @@ func BuildAdminObjects(r fiber.Router, objs []object.AdminObject) []*object.Admi
 			f.Foreign.Path = path.Join("", f.Foreign.Path) + "/"
 		}
 
-		RegisterAdmin(obj, objr)
+		RegisterAdminRouter(obj, objr)
 		handledObjects = append(handledObjects, obj)
 	}
 	return handledObjects
@@ -136,14 +136,14 @@ func BuildPermissions(obj *object.AdminObject, user *model.User) {
 	obj.Permissions["can_action"] = true
 }
 
-// RegisterAdmin registers admin routes
+// RegisterAdminRouter registers admin routes
 //
 //   - POST /admin/{objectslug} -> Query objects
 //   - PUT /admin/{objectslug} -> Create One
 //   - PATCH /admin/{objectslug}} -> Update One
 //   - DELETE /admin/{objectslug} -> Delete One
 //   - POST /admin/{objectslug}/:name -> Action
-func RegisterAdmin(obj *object.AdminObject, r fiber.Router) {
+func RegisterAdminRouter(obj *object.AdminObject, r fiber.Router) {
 	r = r.Use(func(ctx *fiber.Ctx) error {
 		if obj.AccessCheck != nil {
 			err := obj.AccessCheck(ctx, obj)

@@ -25,7 +25,6 @@ func initDB(dbs []*gorm.DB) {
 }
 
 func initCheckRouter(r fiber.Router) {
-	// r.Get("/posts/manager", ManagerPage)
 }
 
 func initAdminObject() []object.AdminObject {

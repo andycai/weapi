@@ -34,16 +34,6 @@ func initNoCheckRouter(r fiber.Router) {
 }
 
 func initCheckRouter(r fiber.Router) {
-	// admin := r.Group("/admin")
-	// {
-	// admin.Get("/logout", LogoutAction)
-	// admin.Get("/dashboard", DashBoardPage)
-
-	// 	admin.Get("/users/profile", ProfilePage)
-	// 	admin.Post("/users/profile", ProfileSave)
-	// 	admin.Get("/users/security", SecurityPage)
-	// 	admin.Post("/users/password", PasswordSave)
-	// }
 }
 
 func initAdminObject() []object.AdminObject {

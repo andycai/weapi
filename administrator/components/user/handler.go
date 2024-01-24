@@ -2,11 +2,7 @@ package user
 
 import (
 	"errors"
-	"fmt"
-	"time"
 
-	"github.com/andycai/weapi/components/page"
-	"github.com/andycai/weapi/components/post"
 	"github.com/andycai/weapi/components/user"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/enum"
@@ -18,7 +14,11 @@ import (
 )
 
 func SuperAccessCheck(c *fiber.Ctx, obj *object.AdminObject) error {
-	return nil
+	isAuthenticated, _ := authentication.AuthGet(c)
+	if isAuthenticated {
+		return nil
+	}
+	return errors.New("not authorized")
 }
 
 func SigninPage(c *fiber.Ctx) error {
@@ -89,146 +89,6 @@ func SignupPage(c *fiber.Ctx) error {
 
 func SignupAction(c *fiber.Ctx) error {
 	return nil
-}
-
-func DashBoardPage(c *fiber.Ctx) error {
-	var userVo *model.User
-	isAuthenticated, userID := authentication.AuthGet(c)
-
-	userTotal := user.Dao.Count()
-	postTotal := post.Dao.Count()
-	pageTotal := page.Dao.Count()
-
-	name := ""
-	loginAt := time.Now()
-	if isAuthenticated {
-		userVo = user.Dao.GetByID(userID)
-		name = userVo.FirstName
-		loginAt = *userVo.LastLogin
-	}
-
-	return core.Render(c, "admin/index", fiber.Map{
-		"PageTitle":    "DashBoard",
-		"NavBarActive": "dashboard",
-		"Path":         "/admin/dashboard",
-		"UserName":     name,
-		"UserTotal":    userTotal,
-		"PostTotal":    postTotal,
-		"PageTotal":    pageTotal,
-		"Info": fiber.Map{
-			"BlogName":     "Werite",
-			"BlogSubTitle": "Content Management System",
-			"LoginAt":      loginAt,
-		},
-	})
-}
-
-func ProfilePage(c *fiber.Ctx) error {
-	var userVo *model.User
-	isAuthenticated, userID := authentication.AuthGet(c)
-
-	if isAuthenticated {
-		userVo = user.Dao.GetByID(userID)
-	}
-
-	return core.Render(c, "admin/users/profile", fiber.Map{
-		"PageTitle":    "Profile",
-		"NavBarActive": "users",
-		"Path":         "/admin/users/profile",
-		"UserName":     userVo.FirstName,
-		"User":         userVo,
-		"Info": fiber.Map{
-			"BlogName":     "Werite",
-			"BlogSubTitle": "Content Management System",
-			"LoginAt":      userVo.LastLogin,
-		},
-	}, "admin/layouts/app")
-}
-
-func SecurityPage(c *fiber.Ctx) error {
-	var userVo *model.User
-	isAuthenticated, userID := authentication.AuthGet(c)
-
-	if isAuthenticated {
-		userVo = user.Dao.GetByID(userID)
-	}
-
-	return core.Render(c, "admin/users/security", fiber.Map{
-		"PageTitle":    "Security",
-		"NavBarActive": "users",
-		"Path":         "/admin/users/security",
-		"UserName":     userVo.FirstName,
-		"Info": fiber.Map{
-			"BlogName":     "Werite",
-			"BlogSubTitle": "Content Management System",
-			"LoginAt":      userVo.LastLogin,
-		},
-	}, "admin/layouts/app")
-}
-
-func BlogPage(c *fiber.Ctx) error {
-	var userVo *model.User
-	isAuthenticated, userID := authentication.AuthGet(c)
-
-	if isAuthenticated {
-		userVo = user.Dao.GetByID(userID)
-	}
-
-	return core.Render(c, "admin/users/blog", fiber.Map{
-		"PageTitle":    "Blog",
-		"NavBarActive": "users",
-		"Path":         "/admin/users/blog",
-		"UserName":     userVo.FirstName,
-		"Info": fiber.Map{
-			"BlogName":     "Werite",
-			"BlogSubTitle": "Content Management System",
-			"LoginAt":      userVo.LastLogin,
-		},
-	}, "admin/layouts/app")
-}
-
-func ProfileSave(c *fiber.Ctx) error {
-	var userVo *model.User
-	isAuthenticated, userID := authentication.AuthGet(c)
-
-	if isAuthenticated {
-		userVo = user.Dao.GetByID(userID)
-	}
-
-	err := user.BindProfile(c, userVo)
-	if err != nil {
-		return err
-	}
-
-	db.Model(userVo).Updates(map[string]interface{}{
-		"gender": userVo.Profile.Gender,
-		"phone":  userVo.Phone,
-		"email":  userVo.Email,
-		"addr":   userVo.Profile.City})
-
-	core.PushMessages(fmt.Sprintf("Updated profile"))
-
-	return c.Redirect("/admin/users/profile")
-}
-
-func PasswordSave(c *fiber.Ctx) error {
-	var userVo *model.User
-	isAuthenticated, userID := authentication.AuthGet(c)
-
-	if isAuthenticated {
-		userVo = user.Dao.GetByID(userID)
-	}
-
-	err := user.BindPassword(c, userVo)
-	if err != nil {
-		return err
-	}
-
-	db.Model(userVo).Update("password", userVo.Password)
-
-	core.PushMessages(fmt.Sprintf("Updated password"))
-
-	return c.Redirect("/admin/users/security")
 }
 
 func CurrentUser(c *fiber.Ctx) *model.User {

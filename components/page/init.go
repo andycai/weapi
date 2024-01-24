@@ -19,10 +19,6 @@ func initDB(dbs []*gorm.DB) {
 }
 
 func initNoCheckRouter(r fiber.Router) {
-	r.Get("/pages/:slug", PageDetailPage)
-
-	// HTMX
-
 }
 
 func initCheckRouter(r fiber.Router) {

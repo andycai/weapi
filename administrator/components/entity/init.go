@@ -11,9 +11,9 @@ import (
 )
 
 const (
-	KeyDB            = "admin.object.gorm.db"
-	KeyNoCheckRouter = "admin.object.router.nocheck"
-	KeyCheckRouter   = "admin.object.router.check"
+	KeyDB            = "admin.entity.gorm.db"
+	KeyNoCheckRouter = "admin.entity.router.nocheck"
+	KeyCheckRouter   = "admin.entity.router.check"
 )
 
 var db *gorm.DB

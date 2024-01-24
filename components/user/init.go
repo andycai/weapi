@@ -19,16 +19,6 @@ func initDB(dbs []*gorm.DB) {
 }
 
 func initNoCheckRouter(r fiber.Router) {
-	r.Get("/sign-in", SignInPage)
-	r.Get("/sign-up", SignUpPage)
-
-	// HTMX
-	r.Get("/htmx/sign-in", HTMXSignInPage)
-	r.Post("/htmx/sign-in", HTMXSignInAction)
-	r.Post("/htmx/sign-out", HTMXSignOut)
-
-	r.Get("/htmx/sign-up", HTMXSignUpPage)
-	r.Post("/htmx/sign-up", HTMXSignUpAction)
 }
 
 func initCheckRouter(r fiber.Router) {
