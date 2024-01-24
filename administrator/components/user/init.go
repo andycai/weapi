@@ -106,6 +106,7 @@ func initAdminObject() []object.AdminObject {
 					Widget: "password",
 				},
 			},
+			Weight: 21,
 		},
 	}
 }

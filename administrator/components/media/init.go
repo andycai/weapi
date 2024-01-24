@@ -118,6 +118,7 @@ func initAdminObject() []object.AdminObject {
 					Handler:       handleRemoveDirectory,
 				},
 			},
+			Weight: 14,
 		},
 	}
 }

@@ -121,6 +121,7 @@ type AdminObject struct {
 	Ignores          map[string]bool           `json:"-"`
 	PrimaryKeyMaping map[string]string         `json:"-"`
 	MarkDeletedField string                    `json:"-"`
+	Weight           int                       `json:"-"`
 }
 
 type ContentIcon AdminIcon

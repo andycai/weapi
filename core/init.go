@@ -1,6 +1,8 @@
 package core
 
 import (
+	"sort"
+
 	"github.com/andycai/weapi/object"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -46,5 +48,8 @@ func RegisterAdminObject(objs []object.AdminObject) {
 }
 
 func GetAdminObjects() []object.AdminObject {
+	sort.SliceStable(adminObjects, func(i, j int) bool {
+		return adminObjects[i].Weight < adminObjects[j].Weight
+	})
 	return adminObjects
 }

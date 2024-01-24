@@ -49,6 +49,7 @@ func initAdminObject() []object.AdminObject {
 			Scripts: []object.AdminScript{
 				{Src: "/static/admin/js/cms_site.js", Onload: true},
 			},
+			Weight: 10,
 		},
 		{
 			Model:       &model.Category{},
@@ -75,6 +76,7 @@ func initAdminObject() []object.AdminObject {
 					Handler:       entity.HandleQueryCategoryWithCount,
 				},
 			},
+			Weight: 11,
 		},
 	}
 }

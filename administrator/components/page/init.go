@@ -132,6 +132,7 @@ func initAdminObject() []object.AdminObject {
 				}
 				return nil
 			},
+			Weight: 12,
 		},
 	}
 }
