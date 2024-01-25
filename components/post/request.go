@@ -87,31 +87,3 @@ func BindCategory(c *fiber.Ctx, category *model.Category) error {
 
 	return nil
 }
-
-type requestTagCreate struct {
-	ID   uint   `json:"id"`
-	Name string `json:"name" validate:"required"`
-	Slug string `json:"slug"`
-}
-
-func BindTag(c *fiber.Ctx, tag *model.Tag) error {
-	var r requestTagCreate
-	if err := c.BodyParser(&r); err != nil {
-		return err
-	}
-
-	if err := core.Validate(r); err != nil {
-		return err
-	}
-
-	tag.ID = r.ID
-	tag.Name = r.Name
-
-	if r.Slug != "" {
-		tag.Slug = r.Slug
-	} else {
-		tag.Slug = slug.Make(r.Name)
-	}
-
-	return nil
-}

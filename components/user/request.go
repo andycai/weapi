@@ -2,7 +2,6 @@ package user
 
 import (
 	"errors"
-	"strconv"
 
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/model"
@@ -62,40 +61,6 @@ func BindPassword(c *fiber.Ctx, user *model.User) error {
 	}
 
 	user.Password = core.HashPassword(r.NewPassword)
-
-	return nil
-}
-
-func BindProfile(c *fiber.Ctx, user *model.User) error {
-	var r requestProfile
-	if err := c.BodyParser(&r); err != nil {
-		return err
-	}
-
-	if err := core.Validate(r); err != nil {
-		return err
-	}
-
-	user.Profile.Gender = strconv.Itoa(int(r.Gender))
-	user.Phone = r.Phone
-	user.Email = r.Email
-	user.Profile.City = r.Addr
-
-	return nil
-}
-
-func BindBlog(c *fiber.Ctx, blog *model.Blog) error {
-	var r requestBlog
-	if err := c.BodyParser(&r); err != nil {
-		return err
-	}
-
-	if err := core.Validate(r); err != nil {
-		return err
-	}
-
-	blog.Name = r.Name
-	blog.Description = r.Description
 
 	return nil
 }
