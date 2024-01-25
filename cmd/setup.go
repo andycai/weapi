@@ -188,6 +188,20 @@ func runSetupMode(addr string) {
 			fmt.Sprintf("LOG_FILE=%s", form.LogFile),
 			fmt.Sprintf("DSN=%s", form.DBConfig.DSN()),
 			fmt.Sprintf("DB_DRIVER=%s", form.DBConfig.Driver),
+			fmt.Sprintf("DB_ACTIVE=%d", 32),
+			fmt.Sprintf("DB_IDLE=%d", 30),
+			fmt.Sprintf("DB_TIMEOUT=%d", 14400),
+			fmt.Sprintf("DEBUG=%s", "true"),
+			fmt.Sprintf("LANG=%s", "en"),
+			fmt.Sprintf("ZONE_OFFSET=%d", 8),
+			fmt.Sprintf("STATIC_DIR=%s", "static"),
+			fmt.Sprintf("HTML_DIR=%s", "templates/admin"),
+			fmt.Sprintf("LOG_DIR=%s", "log"),
+			fmt.Sprintf("CACHE_DIR=%s", "cache"),
+			fmt.Sprintf("MEDIA_DIR=%s", "media"),
+			fmt.Sprintf("REDIS_ADDR=%s", "127.0.0.1:6379"),
+			fmt.Sprintf("REDIS_PASSWORD=%s", "i18n!@"),
+			fmt.Sprintf("REDIS_DB=%d", 0),
 		}
 		data := strings.Join(lines, "\n") + "\n"
 		if _, err := os.Stat(envFile); err == nil {
