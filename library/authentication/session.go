@@ -9,17 +9,17 @@ import (
 	"github.com/gofiber/storage/sqlite3"
 )
 
-var StoredAuthenticationSession *session.Store
+var storedAuthenticationSession *session.Store
 
 func SessionSetup(dbDriver string, db *sql.DB, dsn, tableName string) {
 	if dbDriver == "mysql" {
-		SessionMySQLStart(db, tableName)
+		sessionMySQLStart(db, tableName)
 	} else {
-		SessionStart(dsn, tableName)
+		sessionStart(dsn, tableName)
 	}
 }
 
-func SessionMySQLStart(db *sql.DB, tableName string) {
+func sessionMySQLStart(db *sql.DB, tableName string) {
 	store := mysql.New(mysql.Config{
 		Db:    db,
 		Table: tableName,
@@ -29,10 +29,10 @@ func SessionMySQLStart(db *sql.DB, tableName string) {
 		Storage: store,
 	})
 
-	StoredAuthenticationSession = authSession
+	storedAuthenticationSession = authSession
 }
 
-func SessionStart(dsn, tableName string) {
+func sessionStart(dsn, tableName string) {
 	store := sqlite3.New(sqlite3.Config{
 		Database: dsn,
 		Table:    tableName,
@@ -42,11 +42,11 @@ func SessionStart(dsn, tableName string) {
 		Storage: store,
 	})
 
-	StoredAuthenticationSession = authSession
+	storedAuthenticationSession = authSession
 }
 
 func AuthStore(c *fiber.Ctx, userID uint) {
-	session, err := StoredAuthenticationSession.Get(c)
+	session, err := storedAuthenticationSession.Get(c)
 	if err != nil {
 		panic(err)
 	}
@@ -58,7 +58,7 @@ func AuthStore(c *fiber.Ctx, userID uint) {
 }
 
 func AuthGet(c *fiber.Ctx) (bool, uint) {
-	session, err := StoredAuthenticationSession.Get(c)
+	session, err := storedAuthenticationSession.Get(c)
 	if err != nil {
 		panic(err)
 	}
@@ -72,7 +72,7 @@ func AuthGet(c *fiber.Ctx) (bool, uint) {
 }
 
 func AuthDestroy(c *fiber.Ctx) {
-	session, err := StoredAuthenticationSession.Get(c)
+	session, err := storedAuthenticationSession.Get(c)
 	if err != nil {
 		panic(err)
 	}
