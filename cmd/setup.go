@@ -15,7 +15,6 @@ import (
 	"github.com/andycai/weapi/components/user"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/library/database"
-	"github.com/andycai/weapi/library/renderer"
 	"github.com/andycai/weapi/middlewares"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/adaptor"
@@ -92,7 +91,7 @@ func runSetupMode(addr string) {
 
 	// carrot.Warning("Please visit http://", addr, "/setup to complete install")
 
-	engine := renderer.ViewEngineStart()
+	engine := core.ViewEngineStart()
 	app := fiber.New(fiber.Config{
 		Views: engine,
 	})

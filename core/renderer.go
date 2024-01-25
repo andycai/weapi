@@ -1,4 +1,4 @@
-package renderer
+package core
 
 import (
 	"errors"
@@ -7,7 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/library/authentication"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
@@ -50,7 +49,7 @@ func ViewEngineStart() *html.Engine {
 	})
 
 	viewEngine.AddFunc("Lang", func(a []string, sep string) string {
-		return core.Lang()
+		return Lang()
 	})
 
 	viewEngine.AddFunc("Join", func(a []string, sep string) string {
@@ -58,15 +57,7 @@ func ViewEngineStart() *html.Engine {
 	})
 
 	viewEngine.AddFunc("DateFormat", func(t time.Time, layout string) string {
-		return core.DateFormat(t, layout)
-	})
-
-	viewEngine.AddFunc("GetErrors", func() []string {
-		return core.GetErrors()
-	})
-
-	viewEngine.AddFunc("GetMessages", func() []string {
-		return core.GetMessages()
+		return DateFormat(t, layout)
 	})
 
 	viewEngine.AddFunc("QueryUnescape", func(s string) string {

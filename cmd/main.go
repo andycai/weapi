@@ -12,7 +12,6 @@ import (
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/library/authentication"
 	"github.com/andycai/weapi/library/database"
-	"github.com/andycai/weapi/library/renderer"
 	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/middlewares"
 	"gorm.io/gorm"
@@ -21,7 +20,7 @@ import (
 )
 
 func main() {
-	engine := renderer.ViewEngineStart()
+	engine := core.ViewEngineStart()
 	app := fiber.New(fiber.Config{
 		Views: engine,
 	})
