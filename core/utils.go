@@ -45,8 +45,6 @@ func Validate(i interface{}) error {
 	return validator.Validate(i)
 }
 
-//#region I18n
-
 func SetLang(l string) {
 	lang = l
 }
@@ -55,10 +53,9 @@ func Lang() string {
 	return lang
 }
 
-//#endregion
-
 func init() {
 	rand.Seed(time.Now().UnixNano())
+	// r := rand.New(rand.NewSource(time.Now().UnixNano()))
 }
 
 var letterRunes = []rune("0123456789abcdefghijklmnopqrstuvwxyz")
