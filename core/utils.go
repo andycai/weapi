@@ -1,24 +1,23 @@
 package core
 
 import (
+	"errors"
 	"fmt"
+	"math/rand"
+	"reflect"
 	"time"
 
-	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/library/utils"
-	"github.com/spf13/cast"
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 var (
-	zoneUTC              = time.UTC
-	zone                 = time.FixedZone("CST", 3600)
-	validator            = utils.NewValidator()
-	lang                 = "en"
-	errorList   []string = make([]string, 0)
-	messageList []string = make([]string, 0)
+	zoneUTC   = time.UTC
+	zone      = time.FixedZone("CST", 3600)
+	validator = utils.NewValidator()
+	lang      = "en"
 )
 
 type Ctx = fiber.Ctx
@@ -26,63 +25,6 @@ type Ctx = fiber.Ctx
 // IP get remote IP
 func IP(c *Ctx) string {
 	return c.IP()
-}
-
-func Str(c *Ctx, key string, defaultValue ...string) string {
-	return c.Params(key, defaultValue...)
-}
-
-func Int(c *Ctx, key string, defaultValue ...string) int {
-	return cast.ToInt(c.Params(key, defaultValue...))
-}
-
-func Uint(c *Ctx, key string, defaultValue ...string) uint {
-	return cast.ToUint(c.Params(key, defaultValue...))
-}
-
-func U32(c *Ctx, key string, defaultValue ...string) uint32 {
-	return cast.ToUint32(c.Params(key, defaultValue...))
-}
-
-func I32(c *Ctx, key string, defaultValue ...string) int32 {
-	return cast.ToInt32(c.Params(key, defaultValue...))
-}
-
-func U64(c *Ctx, key string, defaultValue ...string) uint64 {
-	return cast.ToUint64(c.Params(key, defaultValue...))
-}
-
-func I64(c *Ctx, key string, defaultValue ...string) int64 {
-	return cast.ToInt64(c.Params(key, defaultValue...))
-}
-
-// Msg push common response
-func Msg(c *Ctx, code int, msg string) error {
-	return c.JSON(fiber.Map{
-		"code": code,
-		"msg":  msg,
-	})
-}
-
-func Ok(c *fiber.Ctx, data interface{}) error {
-	return c.JSON(fiber.Map{
-		"code": enum.Success,
-		"data": data,
-	})
-}
-
-func Push(c *fiber.Ctx, code int) error {
-	return c.JSON(fiber.Map{
-		"code": code,
-		"msg":  enum.CodeText(code),
-	})
-}
-
-func Err(c *Ctx, code int) error {
-	return c.Status(code).JSON(fiber.Map{
-		"code":  code,
-		"error": enum.CodeText(code),
-	})
 }
 
 func HashPassword(password string) string {
@@ -95,17 +37,6 @@ func CheckPassword(password, plain string) bool {
 	return err == nil
 }
 
-func HTMXRedirectTo(HXURL string, HXGETURL string, c *fiber.Ctx) error {
-	c.Append("HX-Replace-Url", HXURL)
-	c.Append("HX-Reswap", "none")
-
-	return Render(c, "components/redirect", fiber.Map{
-		"HXGet":     HXGETURL,
-		"HXTarget":  "#app-body",
-		"HXTrigger": "load",
-	}, "layouts/app-htmx")
-}
-
 func Render(c *Ctx, name string, bind interface{}, layouts ...string) error {
 	return c.Render(fmt.Sprintf("%s", name), bind, layouts...)
 }
@@ -113,30 +44,6 @@ func Render(c *Ctx, name string, bind interface{}, layouts ...string) error {
 func Validate(i interface{}) error {
 	return validator.Validate(i)
 }
-
-//#region Date, Time, Zone etc
-
-func ParseDate(date string) time.Time {
-	t, err := time.ParseInLocation("2006-01-02 15:04", date, zoneUTC)
-	if err == nil {
-		return t.In(zoneUTC)
-	}
-	return time.Now().In(zoneUTC)
-}
-
-func SetZoneOffset(offset int) {
-	zone = time.FixedZone("CST", offset*3600)
-}
-
-func DateFormat(t time.Time, layout string) string {
-	return t.In(zone).Format(layout)
-}
-
-func Now() time.Time {
-	return time.Now().In(zone)
-}
-
-//#endregion
 
 //#region I18n
 
@@ -150,24 +57,72 @@ func Lang() string {
 
 //#endregion
 
-func PushError(err string) {
-	errorList = append(errorList, err)
+func init() {
+	rand.Seed(time.Now().UnixNano())
 }
 
-func GetErrors() []string {
-	list := errorList[0:]
-	errorList = []string{}
+var letterRunes = []rune("0123456789abcdefghijklmnopqrstuvwxyz")
+var numberRunes = []rune("0123456789")
 
-	return list
+func randRunes(n int, source []rune) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = source[rand.Intn(len(source))]
+	}
+	return string(b)
 }
 
-func PushMessages(msg string) {
-	messageList = append(messageList, msg)
+func RandText(n int) string {
+	return randRunes(n, letterRunes)
 }
 
-func GetMessages() []string {
-	list := messageList[0:]
-	messageList = []string{}
+func RandNumberText(n int) string {
+	return randRunes(n, numberRunes)
+}
 
-	return list
+func SafeCall(f func() error, failHandle func(error)) error {
+	defer func() {
+		if err := recover(); err != nil {
+			if failHandle != nil {
+				eo, ok := err.(error)
+				if !ok {
+					es, ok := err.(string)
+					if ok {
+						eo = errors.New(es)
+					} else {
+						eo = errors.New("unknown error type")
+					}
+				}
+				failHandle(eo)
+			} else {
+				// Error(err)
+			}
+		}
+	}()
+	return f()
+}
+
+func StructAsMap(form any, fields []string) (vals map[string]any) {
+	vals = make(map[string]any)
+	v := reflect.ValueOf(form)
+	if v.Kind() == reflect.Ptr {
+		v = v.Elem()
+	}
+	if v.Kind() != reflect.Struct {
+		return vals
+	}
+	for i := 0; i < len(fields); i++ {
+		k := v.FieldByName(fields[i])
+		if !k.IsValid() || k.IsZero() {
+			continue
+		}
+		if k.Kind() == reflect.Ptr {
+			if !k.IsNil() {
+				vals[fields[i]] = k.Elem().Interface()
+			}
+		} else {
+			vals[fields[i]] = k.Interface()
+		}
+	}
+	return vals
 }
