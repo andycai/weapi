@@ -231,7 +231,7 @@ func RemoveFile(path, name string) error {
 		return err
 	}
 
-	if !media.External {
+	if media.External {
 		return nil
 	}
 
