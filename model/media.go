@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-const TableNameMedia = "medias"
+const TableNameMedia = "media"
 
 type Media struct {
 	BaseContent

@@ -24,7 +24,16 @@ func initDB(dbs []*gorm.DB) {
 	db = dbs[0]
 }
 
-func initCheckRouter(r fiber.Router) {
+func initRootNoCheckRouter(r fiber.Router) {
+	mediaPrefix := conf.GetValue(db, enum.KEY_CMS_MEDIA_PREFIX)
+	if mediaPrefix == "" {
+		mediaPrefix = "/media/"
+	}
+	g := r.Group(mediaPrefix)
+	g.Get("/*", handleMedia)
+}
+
+func initAdminCheckRouter(r fiber.Router) {
 }
 
 func initAdminObject() []object.AdminObject {
@@ -124,6 +133,7 @@ func initAdminObject() []object.AdminObject {
 
 func init() {
 	core.RegisterDatabase(KeyDB, initDB)
-	core.RegisterAdminCheckRouter(KeyCheckRouter, initCheckRouter)
+	core.RegisterRootNoCheckRouter(KeyNoCheckRouter, initRootNoCheckRouter)
+	core.RegisterAdminCheckRouter(KeyCheckRouter, initAdminCheckRouter)
 	core.RegisterAdminObject(initAdminObject())
 }

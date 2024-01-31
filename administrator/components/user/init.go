@@ -22,7 +22,7 @@ func initDB(dbs []*gorm.DB) {
 	db = dbs[0]
 }
 
-func initNoCheckRouter(r fiber.Router) {
+func initRootNoCheckRouter(r fiber.Router) {
 	auth := r.Group("/auth")
 	{
 		auth.Get("/login", SigninPage)
@@ -103,7 +103,7 @@ func initAdminObject() []object.AdminObject {
 
 func init() {
 	core.RegisterDatabase(KeyDB, initDB)
-	core.RegisterNoCheckRouter(KeyNoCheckRouter, initNoCheckRouter)
+	core.RegisterRootNoCheckRouter(KeyNoCheckRouter, initRootNoCheckRouter)
 	core.RegisterAdminCheckRouter(KeyCheckRouter, initCheckRouter)
 	core.RegisterAdminObject(initAdminObject())
 }

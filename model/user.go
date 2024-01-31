@@ -26,7 +26,7 @@ const (
 )
 
 const (
-	GroupTypeAdmin = "admin" // carrot admin, for /admin path with permissions check
+	GroupTypeAdmin = "admin" // admin, for /admin path with permissions check
 	GroupTypeApp   = "app"
 )
 

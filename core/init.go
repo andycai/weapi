@@ -10,8 +10,10 @@ import (
 
 var dbMap = map[string]func([]*gorm.DB){}
 
-var routerNoCheckMap = map[string]func(fiber.Router){}
-var routerCheckMap = map[string]func(fiber.Router){}
+var routerRootNoCheckMap = map[string]func(fiber.Router){}
+var routerRootCheckMap = map[string]func(fiber.Router){}
+var routerAPINoCheckMap = map[string]func(fiber.Router){}
+var routerAPICheckMap = map[string]func(fiber.Router){}
 var routerAdminCheckMap = map[string]func(fiber.Router){}
 var adminObjects = []object.AdminObject{}
 
@@ -22,18 +24,32 @@ func RegisterDatabase(dbType string, f func([]*gorm.DB)) {
 	dbMap[dbType] = f
 }
 
-func RegisterNoCheckRouter(routerType string, f func(fiber.Router)) {
-	if _, ok := routerNoCheckMap[routerType]; ok {
+func RegisterRootNoCheckRouter(routerType string, f func(fiber.Router)) {
+	if _, ok := routerRootNoCheckMap[routerType]; ok {
 		panic("duplicate router type: " + routerType)
 	}
-	routerNoCheckMap[routerType] = f
+	routerRootNoCheckMap[routerType] = f
 }
 
-func RegisterCheckRouter(routerType string, f func(fiber.Router)) {
-	if _, ok := routerCheckMap[routerType]; ok {
+func RegisterRootCheckRouter(routerType string, f func(fiber.Router)) {
+	if _, ok := routerRootCheckMap[routerType]; ok {
 		panic("duplicate router type: " + routerType)
 	}
-	routerCheckMap[routerType] = f
+	routerRootCheckMap[routerType] = f
+}
+
+func RegisterAPINoCheckRouter(routerType string, f func(fiber.Router)) {
+	if _, ok := routerAPINoCheckMap[routerType]; ok {
+		panic("duplicate router type: " + routerType)
+	}
+	routerAPINoCheckMap[routerType] = f
+}
+
+func RegisterAPICheckRouter(routerType string, f func(fiber.Router)) {
+	if _, ok := routerAPICheckMap[routerType]; ok {
+		panic("duplicate router type: " + routerType)
+	}
+	routerAPICheckMap[routerType] = f
 }
 
 func RegisterAdminCheckRouter(routerType string, f func(fiber.Router)) {

@@ -95,7 +95,7 @@ func initAdminObject() []object.AdminObject {
 
 func init() {
 	core.RegisterDatabase(KeyDB, initDB)
-	core.RegisterNoCheckRouter(KeyNoCheckRouter, initNoCheckRouter)
+	core.RegisterAPINoCheckRouter(KeyNoCheckRouter, initNoCheckRouter)
 	core.RegisterAdminCheckRouter(KeyCheckRouter, initCheckRouter)
 	core.RegisterAdminObject(initAdminObject())
 }

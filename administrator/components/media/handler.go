@@ -46,22 +46,26 @@ func handleMakeMediaPublish(c *fiber.Ctx, obj any, publish bool) (any, error) {
 	return true, nil
 }
 
-func handleMedia(c *fiber.Ctx) {
-	fullPath := c.Params("filepath")
+func handleMedia(c *fiber.Ctx) error {
+	fullPath := c.Params("*")
 	path, name := filepath.Split(fullPath)
+	if len(path) > 1 && path[0] != '/' {
+		path = "/" + path
+	}
 	img, err := GetMedia(path, name)
 	if err != nil {
 		// carrot.AbortWithJSONError(c, http.StatusNotFound, err)
-		return
+		return err
 	}
 
 	if img.External {
 		c.Redirect(img.StorePath)
-		return
+		return nil
 	}
 
-	// uploadDir := conf.GetValue(db, enum.KEY_CMS_UPLOAD_DIR)
-	// filepath := filepath.Join(uploadDir, img.StorePath)
+	uploadDir := conf.GetValue(db, enum.KEY_CMS_UPLOAD_DIR)
+	filepath := filepath.Join(uploadDir, img.StorePath)
+	return c.SendFile(filepath)
 	// http.ServeFile(c.Request().BodyWriter(), c.Request(), filepath)
 }
 

@@ -45,13 +45,13 @@ Alpine.store('media', {
             return
         }
         let url = `./media/new_folder?path=${this.current}&name=${name}`
-        let req = await fetch(url, {
+        let resp = await fetch(url, {
             method: 'POST',
         })
         if (unauth(resp)) {
             return
         }
-        let path = await req.json()
+        let path = await resp.json()
         this._folders.push({ path, name, foldersCount: 0, filesCount: 0 })
     },
 
@@ -75,14 +75,14 @@ Alpine.store('media', {
         this.current_dirs = dirs
         let url = `./media/folders?path=${this.current}`
 
-        let req = await fetch(url, {
+        let resp = await fetch(url, {
             method: 'POST',
         })
         if (unauth(resp)) {
             return
         }
 
-        let data = await req.json()
+        let data = await resp.json()
         this._folders = []
         if (path != '/') {
             let pos = path.lastIndexOf('/')
@@ -146,9 +146,8 @@ Alpine.store('media', {
             let upload = await fetch(url, {
                 method: 'POST',
                 body: form,
-                headers: { 'content-type': 'application/json; charset=utf-8' },
             })
-            if (unauth(resp)) {
+            if (unauth(upload)) {
                 return
             }
 

@@ -7,12 +7,12 @@ import (
 
 func SetupRouter(app *fiber.App) {
 	page := app.Group("/")
-	for _, f := range routerNoCheckMap {
+	for _, f := range routerRootNoCheckMap {
 		f(page)
 	}
 
-	api := app.Group("/api")
-	for _, f := range routerCheckMap {
+	api := app.Group("/api", middlewares.Authorize)
+	for _, f := range routerAPICheckMap {
 		f(api)
 	}
 
