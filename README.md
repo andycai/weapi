@@ -1,15 +1,17 @@
 # Weapi
 
-Weapi is the leading open-source headless CMS.
+Weapi is the lightweight open-source headless CMS.
 
-Golang + Go Fiber
+Golang + Go Fiber + Gorm + Alpine.js
 
 Module include: 
 
-- User
+- Site
+- Category
 - Post
 - Page
-- Category
-- Comment
-- Tag
-- Setting
+- Media
+- Group
+- GroupMember
+- User
+- Config
