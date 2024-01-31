@@ -82,7 +82,7 @@ func initAdminObject() []object.AdminObject {
 			BeforeDelete: func(ctx *fiber.Ctx, vptr any) error {
 				media := vptr.(*model.Media)
 				if err := RemoveFile(media.Path, media.Name); err != nil {
-					// object.Warning("Delete file failed: ", media.StorePath, err)
+					// log.Warningf("Delete file failed: ", media.StorePath, err)
 				}
 				return nil
 			},

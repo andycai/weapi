@@ -12,6 +12,10 @@ import (
 	"path/filepath"
 	"strings"
 
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
+
 	"github.com/andycai/weapi/administrator/components/user"
 	"github.com/andycai/weapi/conf"
 	"github.com/andycai/weapi/core"
