@@ -84,13 +84,13 @@ func RunSetup(addr string) {
 
 func runSetupMode(addr string) {
 	// var err error
-	// carrot.Warning("Run setup mode")
+	// log.Infof("Run setup mode")
 	ln, err := net.Listen("tcp", addr)
 	if err != nil {
 		panic(err)
 	}
 
-	// carrot.Warning("Please visit http://", addr, "/setup to complete install")
+	// log.Infof("Please visit http://%s/setup to complete install", addr)
 
 	engine := core.ViewEngineStart()
 	app := fiber.New(fiber.Config{
@@ -140,7 +140,7 @@ func runSetupMode(addr string) {
 			}
 		}()
 
-		// carrot.Warning("DSN", form.DSN())
+		// log.Infof("DSN: %s", form.DSN())
 		db, err = database.InitRDBMS(form.Driver, form.DSN(), 32, 30, 14400)
 		if err != nil {
 			return fail(c, err.Error())
@@ -199,7 +199,6 @@ func runSetupMode(addr string) {
 			fmt.Sprintf("HTML_DIR=%s", "templates/admin"),
 			fmt.Sprintf("LOG_DIR=%s", "log"),
 			fmt.Sprintf("CACHE_DIR=%s", "cache"),
-			fmt.Sprintf("MEDIA_DIR=%s", "media"),
 			fmt.Sprintf("REDIS_ADDR=%s", "127.0.0.1:6379"),
 			fmt.Sprintf("REDIS_PASSWORD=%s", "i18n!@"),
 			fmt.Sprintf("REDIS_DB=%d", 0),
@@ -251,12 +250,12 @@ func runSetupMode(addr string) {
 				panic(err)
 			}
 		}
-		// u.IsStaff = true
-		// u.Activated = true
-		// u.Enabled = true
+		u.IsStaff = true
+		u.Activated = true
+		u.Enabled = true
 		u.IsSuperUser = true
 		db.Save(u)
-		// carrot.Warning("Create super user:", form.Username)
+		// log.Infof("Create super user: %s", form.Username)
 
 		return ok(c)
 	})
@@ -264,7 +263,7 @@ func runSetupMode(addr string) {
 	app.Post("/setup/restart", func(c *fiber.Ctx) error {
 		os.WriteFile(setupDoneFlag, []byte("done"), 0644)
 		time.AfterFunc(500*time.Millisecond, func() {
-			// carrot.Warning("Restarting...")
+			// log.Infof("Restarting...")
 			srv.Shutdown(context.Background())
 		})
 
