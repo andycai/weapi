@@ -8,7 +8,6 @@ import (
 	_ "github.com/andycai/weapi/administrator/components"
 	"github.com/andycai/weapi/administrator/components/config"
 	_ "github.com/andycai/weapi/components"
-	"github.com/andycai/weapi/conf"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/lib/authentication"
@@ -28,17 +27,17 @@ func main() {
 	})
 
 	var addr string
-	var logFile string = conf.GetEnv(enum.ENV_LOG_FILE)
-	var dbDriver string = conf.GetEnv(enum.ENV_DB_DRIVER)
-	var dsn string = conf.GetEnv(enum.ENV_DSN)
-	var debug bool = conf.GetEnv(enum.ENV_DEBUG) != ""
-	var staticDir string = conf.GetEnv(enum.ENV_STATIC_DIR)
-	var htmlDir string = conf.GetEnv(enum.ENV_HTML_DIR)
-	var dbActive = conf.GetIntEnv(enum.ENV_DB_ACTIVE)
-	var dbIdle = conf.GetIntEnv(enum.ENV_DB_IDLE)
-	var dbTimeout = conf.GetIntEnv(enum.ENV_DB_TIMEOUT)
-	var lang = conf.GetEnv(enum.ENV_LANG)
-	var zoneOffset = conf.GetIntEnv(enum.ENV_ZONE_OFFSET)
+	var logFile string = config.GetEnv(enum.ENV_LOG_FILE)
+	var dbDriver string = config.GetEnv(enum.ENV_DB_DRIVER)
+	var dsn string = config.GetEnv(enum.ENV_DSN)
+	var debug bool = config.GetEnv(enum.ENV_DEBUG) != ""
+	var staticDir string = config.GetEnv(enum.ENV_STATIC_DIR)
+	var htmlDir string = config.GetEnv(enum.ENV_HTML_DIR)
+	var dbActive = config.GetIntEnv(enum.ENV_DB_ACTIVE)
+	var dbIdle = config.GetIntEnv(enum.ENV_DB_IDLE)
+	var dbTimeout = config.GetIntEnv(enum.ENV_DB_TIMEOUT)
+	var lang = config.GetEnv(enum.ENV_LANG)
+	var zoneOffset = config.GetIntEnv(enum.ENV_ZONE_OFFSET)
 
 	var superUserEmail string
 	var superUserPassword string

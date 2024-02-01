@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/andycai/weapi/conf"
+	"github.com/andycai/weapi/administrator/components/config"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
@@ -66,11 +66,11 @@ func BeforeQueryRenderPost(ctx *fiber.Ctx, queryResult *model.QueryResult) (any,
 		QueryResult: queryResult,
 	}
 
-	relationCount := conf.GetIntValue(db, enum.KEY_CMS_RELATION_COUNT, 3)
-	suggestionCount := conf.GetIntValue(db, enum.KEY_CMS_SUGGESTION_COUNT, 3)
+	relationCount := config.GetIntValue(enum.KEY_CMS_RELATION_COUNT, 3)
+	suggestionCount := config.GetIntValue(enum.KEY_CMS_SUGGESTION_COUNT, 3)
 
-	r.Suggestions, _ = model.GetSuggestions(db, siteId, categoryId, categoryPath, "", relationCount)
-	r.Relations, _ = model.GetRelations(db, siteId, categoryId, categoryPath, "", suggestionCount)
+	r.Suggestions, _ = GetSuggestions(siteId, categoryId, categoryPath, "", relationCount)
+	r.Relations, _ = GetRelations(siteId, categoryId, categoryPath, "", suggestionCount)
 
 	return r, nil
 }

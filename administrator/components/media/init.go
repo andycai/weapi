@@ -2,8 +2,8 @@ package media
 
 import (
 	"github.com/andycai/weapi"
+	"github.com/andycai/weapi/administrator/components/config"
 	"github.com/andycai/weapi/administrator/components/user"
-	"github.com/andycai/weapi/conf"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/model"
@@ -24,7 +24,7 @@ func initDB(dbs []*gorm.DB) {
 }
 
 func initRootNoCheckRouter(r fiber.Router) {
-	mediaPrefix := conf.GetValue(db, enum.KEY_CMS_MEDIA_PREFIX)
+	mediaPrefix := config.GetValue(enum.KEY_CMS_MEDIA_PREFIX)
 	if mediaPrefix == "" {
 		mediaPrefix = "/media/"
 	}
@@ -68,8 +68,8 @@ func initAdminObject() []model.AdminObject {
 			},
 			BeforeRender: func(ctx *fiber.Ctx, vptr any) (any, error) {
 				media := vptr.(*model.Media)
-				mediaHost := conf.GetValue(db, enum.KEY_CMS_MEDIA_HOST)
-				mediaPrefix := conf.GetValue(db, enum.KEY_CMS_MEDIA_PREFIX)
+				mediaHost := config.GetValue(enum.KEY_CMS_MEDIA_HOST)
+				mediaPrefix := config.GetValue(enum.KEY_CMS_MEDIA_PREFIX)
 				media.BuildPublicUrls(mediaHost, mediaPrefix)
 				return vptr, nil
 			},

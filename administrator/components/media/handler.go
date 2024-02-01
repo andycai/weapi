@@ -7,8 +7,8 @@ import (
 	_ "image/jpeg"
 	_ "image/png"
 
+	"github.com/andycai/weapi/administrator/components/config"
 	"github.com/andycai/weapi/administrator/components/user"
-	"github.com/andycai/weapi/conf"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/model"
@@ -56,7 +56,7 @@ func handleMedia(c *fiber.Ctx) error {
 		return nil
 	}
 
-	uploadDir := conf.GetValue(db, enum.KEY_CMS_UPLOAD_DIR)
+	uploadDir := config.GetValue(enum.KEY_CMS_UPLOAD_DIR)
 	filepath := filepath.Join(uploadDir, img.StorePath)
 	return c.SendFile(filepath)
 	// http.ServeFile(c.Request().BodyWriter(), c.Request(), filepath)
@@ -127,8 +127,8 @@ func handleUpload(c *fiber.Ctx, obj any) (any, error) {
 		}
 	}
 
-	mediaHost := conf.GetValue(db, enum.KEY_CMS_MEDIA_HOST)
-	mediaPrefix := conf.GetValue(db, enum.KEY_CMS_MEDIA_PREFIX)
+	mediaHost := config.GetValue(enum.KEY_CMS_MEDIA_HOST)
+	mediaPrefix := config.GetValue(enum.KEY_CMS_MEDIA_PREFIX)
 	media.BuildPublicUrls(mediaHost, mediaPrefix)
 
 	r.PublicUrl = media.PublicUrl

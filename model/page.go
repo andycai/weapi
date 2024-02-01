@@ -3,7 +3,6 @@ package model
 import (
 	"encoding/json"
 	"errors"
-	"math/rand"
 	"time"
 
 	"github.com/andycai/weapi/enum"
@@ -152,54 +151,4 @@ func NewRenderContentFromPost(db *gorm.DB, post *Post, relations bool) *RenderCo
 		// r.Suggestions, _ = GetSuggestions(db, post.SiteID, post.CategoryID, post.CategoryPath, post.ID, suggestionCount)
 	}
 	return r
-}
-
-func GetSuggestions(db *gorm.DB, siteId, categoryId, categoryPath, postId string, maxCount int) ([]RelationContent, error) {
-	return GetRelations(db, siteId, categoryId, categoryPath, postId, maxCount)
-}
-
-func GetRelations(db *gorm.DB, siteId, categoryId, categoryPath, postId string, maxCount int) ([]RelationContent, error) {
-	if maxCount <= 0 {
-		return nil, nil
-	}
-	var r []RelationContent
-	tx := db.Model(&Post{}).Where("site_id", siteId).Where("published", true)
-	if categoryId != "" {
-		tx = tx.Where("category_id", categoryId)
-	}
-
-	var totalCount int64
-	tx.Count(&totalCount)
-	if totalCount == 0 {
-		return nil, nil
-	}
-	excludeIds := []string{}
-	if postId != "" {
-		excludeIds = append(excludeIds, postId)
-	}
-	for i := 0; i < maxCount; i++ {
-		// random select
-		offset := rand.Intn(int(totalCount))
-		var val Post
-		subTx := tx
-		if len(excludeIds) > 0 {
-			subTx = subTx.Where("id NOT IN (?)", excludeIds)
-		}
-		result := subTx.Offset(offset).Limit(1).Take(&val)
-
-		if result.Error != nil {
-			if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-				continue
-			}
-			return nil, result.Error
-		}
-
-		excludeIds = append(excludeIds, val.ID)
-
-		r = append(r, RelationContent{
-			BaseContent: val.BaseContent,
-			SiteID:      val.SiteID,
-			ID:          val.ID})
-	}
-	return r, nil
 }

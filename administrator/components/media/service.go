@@ -16,7 +16,7 @@ import (
 	_ "image/jpeg"
 	_ "image/png"
 
-	"github.com/andycai/weapi/conf"
+	"github.com/andycai/weapi/administrator/components/config"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/model"
@@ -71,7 +71,7 @@ func RemoveDirectory(path string) (string, error) {
 		return "", r.Error
 	}
 
-	uploadDir := conf.GetValue(db, enum.KEY_CMS_UPLOAD_DIR)
+	uploadDir := config.GetValue(enum.KEY_CMS_UPLOAD_DIR)
 	for _, media := range files {
 		if media.Directory {
 			RemoveDirectory(filepath.Join(path, media.Name))
@@ -111,7 +111,7 @@ func RemoveFile(path, name string) error {
 		return nil
 	}
 
-	uploadDir := conf.GetValue(db, enum.KEY_CMS_UPLOAD_DIR)
+	uploadDir := config.GetValue(enum.KEY_CMS_UPLOAD_DIR)
 	fullPath := filepath.Join(uploadDir, media.StorePath)
 	if err := os.Remove(fullPath); err != nil {
 		return err
@@ -140,7 +140,7 @@ func MakeMediaPublish(siteID, path, name string, obj any, publish bool) error {
 }
 
 func PrepareStoreLocalDir() (string, error) {
-	uploadDir := conf.GetValue(db, enum.KEY_CMS_UPLOAD_DIR)
+	uploadDir := config.GetValue(enum.KEY_CMS_UPLOAD_DIR)
 	if uploadDir == "" {
 		return "", enum.ErrUploadsDirNotConfigured
 	}
@@ -224,7 +224,7 @@ func UploadFile(path, name string, reader io.Reader) (*model.UploadResult, error
 
 	r.Size = int64(len(data))
 
-	externalUploader := conf.GetValue(db, enum.KEY_CMS_EXTERNAL_UPLOADER)
+	externalUploader := config.GetValue(enum.KEY_CMS_EXTERNAL_UPLOADER)
 	if externalUploader != "" {
 		storePath, err := StoreExternal(externalUploader, path, name, data)
 		if err != nil {
