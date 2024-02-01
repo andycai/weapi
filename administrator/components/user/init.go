@@ -2,7 +2,6 @@ package user
 
 import (
 	"github.com/andycai/weapi"
-	"github.com/andycai/weapi/components/user"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
@@ -24,11 +23,11 @@ func initDB(dbs []*gorm.DB) {
 func initRootNoCheckRouter(r fiber.Router) {
 	auth := r.Group("/auth")
 	{
-		auth.Get("/login", SigninPage)
-		auth.Post("/login", SigninAction)
-		auth.Get("/register", SigninPage)
-		auth.Post("/register", SigninAction)
-		auth.Get("/logout", LogoutAction)
+		auth.Get("/login", handleSigin)
+		auth.Post("/login", handleSiginAction)
+		auth.Get("/register", handleSigup)
+		auth.Post("/register", handleSigupAction)
+		auth.Get("/logout", handleLogoutAction)
 	}
 }
 
@@ -61,7 +60,7 @@ func initAdminObject() []model.AdminObject {
 			},
 			BeforeUpdate: func(c *fiber.Ctx, obj any, vals map[string]any) error {
 				userVo := obj.(*model.User)
-				if err, dbUser := user.Dao.GetByEmail(userVo.Email); err == nil {
+				if err, dbUser := GetByEmail(userVo.Email); err == nil {
 					if dbUser.Password != userVo.Password {
 						userVo.Password = core.HashPassword(userVo.Password)
 					}
@@ -75,7 +74,7 @@ func initAdminObject() []model.AdminObject {
 					Label: "Toggle user enabled/disabled",
 					Handler: func(c *fiber.Ctx, obj any) (any, error) {
 						userVo := obj.(*model.User)
-						err := user.Dao.UpdateFields(userVo, map[string]any{"Enabled": !userVo.Enabled})
+						err := UpdateFields(userVo, map[string]any{"Enabled": !userVo.Enabled})
 						return userVo.Enabled, err
 					},
 				},
@@ -85,7 +84,7 @@ func initAdminObject() []model.AdminObject {
 					Label: "Toggle user is staff or not",
 					Handler: func(c *fiber.Ctx, obj any) (any, error) {
 						userVo := obj.(*model.User)
-						err := user.Dao.UpdateFields(userVo, map[string]any{"IsStaff": !userVo.IsStaff})
+						err := UpdateFields(userVo, map[string]any{"IsStaff": !userVo.IsStaff})
 						return userVo.IsStaff, err
 					},
 				},

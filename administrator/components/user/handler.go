@@ -3,24 +3,14 @@ package user
 import (
 	"errors"
 
-	"github.com/andycai/weapi/components/user"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/lib/authentication"
-	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
-func SuperAccessCheck(c *fiber.Ctx, obj *model.AdminObject) error {
-	isAuthenticated, _ := authentication.AuthGet(c)
-	if isAuthenticated {
-		return nil
-	}
-	return errors.New("not authorized")
-}
-
-func SigninPage(c *fiber.Ctx) error {
+func handleSigin(c *fiber.Ctx) error {
 	isAuthenticated, _ := authentication.AuthGet(c)
 
 	if isAuthenticated {
@@ -38,21 +28,18 @@ func SigninPage(c *fiber.Ctx) error {
 	}, "layout/app")
 }
 
-func SigninAction(c *fiber.Ctx) error {
-	userVo := &model.User{}
+func handleSiginAction(c *fiber.Ctx) error {
+	loginVo := &reqLogin{}
 
-	err := user.BindLogin(c, userVo)
-	if err != nil {
+	if err := c.BodyParser(&loginVo); err != nil {
+		return err
+	}
+
+	if loginVo.Email == "" || loginVo.Password == "" {
 		return core.Err(c, enum.ErrUserEmailOrPasswordError)
 	}
-	email := userVo.Email
-	password := userVo.Password
 
-	if email == "" || password == "" {
-		return core.Err(c, enum.ErrUserEmailOrPasswordIsEmpty)
-	}
-
-	err, userVo = user.Dao.GetByEmail(email)
+	err, userVo := GetByEmail(loginVo.Email)
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -60,43 +47,31 @@ func SigninAction(c *fiber.Ctx) error {
 		}
 	}
 
-	if !core.CheckPassword(userVo.Password, password) {
+	if !core.CheckPassword(userVo.Password, loginVo.Password) {
 		return core.Err(c, enum.ErrUserEmailOrPasswordError)
 	}
 
-	user.Dao.UpdateLoginTime(uint(userVo.ID))
+	UpdateLoginTime(uint(userVo.ID))
 	authentication.AuthStore(c, uint(userVo.ID))
 
 	return core.Push(c, enum.Success)
 }
 
-func LogoutAction(c *fiber.Ctx) error {
-	isAuthenticated, userID := authentication.AuthGet(c)
+func handleLogoutAction(c *fiber.Ctx) error {
+	isAuthenticated, _ := authentication.AuthGet(c)
 	if !isAuthenticated {
 		return c.Redirect("/auth/login/")
 	}
 
-	user.Dao.UpdateLogoutTime(userID)
 	authentication.AuthDestroy(c)
 
 	return c.Redirect("/auth/login/")
 }
 
-func SignupPage(c *fiber.Ctx) error {
+func handleSigup(c *fiber.Ctx) error {
 	return nil
 }
 
-func SignupAction(c *fiber.Ctx) error {
+func handleSigupAction(c *fiber.Ctx) error {
 	return nil
-}
-
-func CurrentUser(c *fiber.Ctx) *model.User {
-	var userVo *model.User
-	isAuthenticated, userID := authentication.AuthGet(c)
-
-	if isAuthenticated {
-		userVo = user.Dao.GetByID(userID)
-	}
-
-	return userVo
 }

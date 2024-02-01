@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/andycai/weapi"
-	"github.com/andycai/weapi/components/user"
+	"github.com/andycai/weapi/administrator/components/user"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/lib/database"
 	"github.com/andycai/weapi/middlewares"
@@ -241,11 +241,11 @@ func runSetupMode(addr string) {
 
 		core.SetupDatabase([]*gorm.DB{db})
 
-		err, u := user.Dao.GetByEmail(form.Username)
+		err, u := user.GetByEmail(form.Username)
 		if err == nil && u != nil {
-			user.Dao.UpdatePassword(u, form.Password)
+			user.UpdatePassword(u, form.Password)
 		} else {
-			err = user.Dao.Create(u)
+			err = user.CreateUser(u)
 			if err != nil {
 				panic(err)
 			}

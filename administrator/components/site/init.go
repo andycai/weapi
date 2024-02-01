@@ -24,7 +24,7 @@ func initAdminCheckRouter(r fiber.Router) {
 	adminObjects := BuildAdminObjects(r, core.GetAdminObjects())
 
 	r.Post("/json", func(c *fiber.Ctx) error {
-		return JsonAction(c, adminObjects)
+		return handleJson(c, adminObjects)
 	})
 
 	r.Post("/summary", HandleAdminSummary)
