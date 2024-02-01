@@ -5,7 +5,6 @@ import (
 	"github.com/andycai/weapi/administrator/components/user"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/model"
-	"github.com/andycai/weapi/object"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -25,8 +24,8 @@ func initDB(dbs []*gorm.DB) {
 func initCheckRouter(r fiber.Router) {
 }
 
-func initAdminObject() []object.AdminObject {
-	return []object.AdminObject{
+func initAdminObject() []model.AdminObject {
+	return []model.AdminObject{
 		{
 			Model:       &model.Group{},
 			Group:       "Settings",
@@ -56,10 +55,10 @@ func initAdminObject() []object.AdminObject {
 			Requireds:   []string{"User", "Group", "Role"},
 			Icon:        weapi.ReadIcon("/icon/members.svg"),
 			AccessCheck: user.SuperAccessCheck,
-			Attributes: map[string]object.AdminAttribute{
+			Attributes: map[string]model.AdminAttribute{
 				"Role": {
 					Default: model.GroupRoleMember,
-					Choices: []object.AdminSelectOption{{Label: "Admin", Value: model.GroupRoleAdmin}, {Label: "Member", Value: model.GroupRoleMember}},
+					Choices: []model.AdminSelectOption{{Label: "Admin", Value: model.GroupRoleAdmin}, {Label: "Member", Value: model.GroupRoleMember}},
 				},
 			},
 			Weight: 23,

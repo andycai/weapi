@@ -8,12 +8,11 @@ import (
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/lib/authentication"
 	"github.com/andycai/weapi/model"
-	"github.com/andycai/weapi/object"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
-func SuperAccessCheck(c *fiber.Ctx, obj *object.AdminObject) error {
+func SuperAccessCheck(c *fiber.Ctx, obj *model.AdminObject) error {
 	isAuthenticated, _ := authentication.AuthGet(c)
 	if isAuthenticated {
 		return nil

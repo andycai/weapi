@@ -6,18 +6,17 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/andycai/weapi/object"
 	"gorm.io/gorm"
 )
 
 const TableNameCategory = "categories"
 
 type CategoryItem struct {
-	Path     string              `json:"path"`
-	Name     string              `json:"name"`
-	Icon     *object.ContentIcon `json:"icon,omitempty"`
-	Children CategoryItems       `json:"children,omitempty"`
-	Count    int                 `json:"count" gorm:"-"`
+	Path     string        `json:"path"`
+	Name     string        `json:"name"`
+	Icon     *ContentIcon  `json:"icon,omitempty"`
+	Children CategoryItems `json:"children,omitempty"`
+	Count    int           `json:"count" gorm:"-"`
 }
 
 type Category struct {

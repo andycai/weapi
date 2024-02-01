@@ -4,7 +4,6 @@ import (
 	"github.com/andycai/weapi"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/model"
-	"github.com/andycai/weapi/object"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -32,18 +31,18 @@ func initAdminCheckRouter(r fiber.Router) {
 	r.Post("/tags/:content_type", handleGetTags)
 }
 
-func initAdminObject() []object.AdminObject {
-	return []object.AdminObject{
+func initAdminObject() []model.AdminObject {
+	return []model.AdminObject{
 		{
 			Model:      &model.Site{},
 			Group:      "Contents",
 			Name:       "Site",
 			PluralName: "Sites",
 			Shows:      []string{"Domain", "Name", "Preview", "Disallow", "UpdatedAt", "CreatedAt"},
-			Orders: []object.Order{
+			Orders: []model.Order{
 				{
 					Name: "UpdatedAt",
-					Op:   object.OrderOpDesc,
+					Op:   model.OrderOpDesc,
 				},
 			},
 			Editables:   []string{"Domain", "Name", "Preview", "Disallow"},
@@ -52,7 +51,7 @@ func initAdminObject() []object.AdminObject {
 			Searchables: []string{"Domain", "Name", "Preview"},
 			Requireds:   []string{"Domain"},
 			Icon:        weapi.ReadIcon("/icon/desktop.svg"),
-			Scripts: []object.AdminScript{
+			Scripts: []model.AdminScript{
 				{Src: "/static/admin/js/cms_site.js", Onload: true},
 			},
 			Weight: 10,
@@ -69,12 +68,12 @@ func initAdminObject() []object.AdminObject {
 			Searchables: []string{"UUID", "Site", "Items", "Name"},
 			Requireds:   []string{"UUID", "Site", "Items", "Name"},
 			Icon:        weapi.ReadIcon("/icon/swatch.svg"),
-			Attributes:  map[string]object.AdminAttribute{"Items": {Widget: "category-item"}},
-			Scripts: []object.AdminScript{
+			Attributes:  map[string]model.AdminAttribute{"Items": {Widget: "category-item"}},
+			Scripts: []model.AdminScript{
 				{Src: "/static/admin/js/cms_widget.js"},
 				{Src: "/static/admin/js/cms_category.js", Onload: true},
 			},
-			Actions: []object.AdminAction{
+			Actions: []model.AdminAction{
 				{
 					WithoutObject: true,
 					Path:          "query_with_count",

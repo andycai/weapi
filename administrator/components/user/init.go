@@ -5,7 +5,6 @@ import (
 	"github.com/andycai/weapi/components/user"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/model"
-	"github.com/andycai/weapi/object"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -36,8 +35,8 @@ func initRootNoCheckRouter(r fiber.Router) {
 func initCheckRouter(r fiber.Router) {
 }
 
-func initAdminObject() []object.AdminObject {
-	return []object.AdminObject{
+func initAdminObject() []model.AdminObject {
+	return []model.AdminObject{
 		{
 			Model:       &model.User{},
 			Group:       "Settings",
@@ -49,7 +48,7 @@ func initAdminObject() []object.AdminObject {
 			Filterables: []string{"CreatedAt", "UpdatedAt", "Username", "IsStaff", "IsSuperUser", "Enabled", "Activated "},
 			Orderables:  []string{"CreatedAt", "UpdatedAt", "Enabled", "Activated"},
 			Searchables: []string{"Username", "Email", "FirstName", "ListName"},
-			Orders:      []object.Order{{Name: "UpdatedAt", Op: object.OrderOpDesc}},
+			Orders:      []model.Order{{Name: "UpdatedAt", Op: model.OrderOpDesc}},
 			Icon:        weapi.ReadIcon("/icon/user.svg"),
 			AccessCheck: SuperAccessCheck,
 			BeforeCreate: func(c *fiber.Ctx, obj any) error {
@@ -69,7 +68,7 @@ func initAdminObject() []object.AdminObject {
 				}
 				return nil
 			},
-			Actions: []object.AdminAction{
+			Actions: []model.AdminAction{
 				{
 					Path:  "toggle_enabled",
 					Name:  "Toggle enabled",
@@ -91,7 +90,7 @@ func initAdminObject() []object.AdminObject {
 					},
 				},
 			},
-			Attributes: map[string]object.AdminAttribute{
+			Attributes: map[string]model.AdminAttribute{
 				"Password": {
 					Widget: "password",
 				},

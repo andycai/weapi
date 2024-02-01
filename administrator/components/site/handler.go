@@ -16,7 +16,6 @@ import (
 	"github.com/andycai/weapi/conf"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/model"
-	"github.com/andycai/weapi/object"
 	"github.com/gofiber/fiber/v2"
 	"github.com/jinzhu/inflection"
 	"golang.org/x/text/cases"
@@ -25,7 +24,7 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-func JsonAction(c *fiber.Ctx, adminObjects []*object.AdminObject) error {
+func JsonAction(c *fiber.Ctx, adminObjects []*model.AdminObject) error {
 	for _, obj := range adminObjects {
 		BuildPermissions(obj, user.CurrentUser(c))
 	}
@@ -60,8 +59,8 @@ func GetPageContext() map[string]any {
 	}
 }
 
-func BuildAdminObjects(r fiber.Router, objs []object.AdminObject) []*object.AdminObject {
-	handledObjects := make([]*object.AdminObject, 0)
+func BuildAdminObjects(r fiber.Router, objs []model.AdminObject) []*model.AdminObject {
+	handledObjects := make([]*model.AdminObject, 0)
 	exists := make(map[string]bool)
 	for idx := range objs {
 		obj := &objs[idx]
@@ -92,8 +91,8 @@ func BuildAdminObjects(r fiber.Router, objs []object.AdminObject) []*object.Admi
 	return handledObjects
 }
 
-func HandleAdminIndex(c *fiber.Ctx, objects []*object.AdminObject, buildContext object.AdminBuildContext) {
-	var viewObjects []object.AdminObject
+func HandleAdminIndex(c *fiber.Ctx, objects []*model.AdminObject, buildContext model.AdminBuildContext) {
+	var viewObjects []model.AdminObject
 	for _, obj := range objects {
 		if obj.AccessCheck != nil {
 			err := obj.AccessCheck(c, obj)
@@ -119,7 +118,7 @@ func HandleAdminIndex(c *fiber.Ctx, objects []*object.AdminObject, buildContext 
 	})
 }
 
-func BuildPermissions(obj *object.AdminObject, user *model.User) {
+func BuildPermissions(obj *model.AdminObject, user *model.User) {
 	obj.Permissions = map[string]bool{}
 	if user.IsSuperUser {
 		obj.Permissions["can_create"] = true
@@ -143,7 +142,7 @@ func BuildPermissions(obj *object.AdminObject, user *model.User) {
 //   - PATCH /admin/{objectslug}} -> Update One
 //   - DELETE /admin/{objectslug} -> Delete One
 //   - POST /admin/{objectslug}/:name -> Action
-func RegisterAdminRouter(obj *object.AdminObject, r fiber.Router) {
+func RegisterAdminRouter(obj *model.AdminObject, r fiber.Router) {
 	r = r.Use(func(ctx *fiber.Ctx) error {
 		if obj.AccessCheck != nil {
 			err := obj.AccessCheck(ctx, obj)
@@ -161,13 +160,13 @@ func RegisterAdminRouter(obj *object.AdminObject, r fiber.Router) {
 	r.Post("/:name", decorateHandler(obj, handleAction))
 }
 
-func decorateHandler(obj *object.AdminObject, handler func(obj *object.AdminObject, c *fiber.Ctx) error) fiber.Handler {
+func decorateHandler(obj *model.AdminObject, handler func(obj *model.AdminObject, c *fiber.Ctx) error) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		return handler(obj, c)
 	}
 }
 
-func asColNames(obj *object.AdminObject, db *gorm.DB, fields []string) []string {
+func asColNames(obj *model.AdminObject, db *gorm.DB, fields []string) []string {
 	for i := 0; i < len(fields); i++ {
 		fields[i] = db.NamingStrategy.ColumnName(obj.TableName, fields[i])
 	}
@@ -175,7 +174,7 @@ func asColNames(obj *object.AdminObject, db *gorm.DB, fields []string) []string 
 }
 
 // Build fill the properties of obj.
-func Build(obj *object.AdminObject) error {
+func Build(obj *model.AdminObject) error {
 	if obj.Path == "" {
 		obj.Path = strings.ToLower(obj.Name)
 	}
@@ -226,7 +225,7 @@ func Build(obj *object.AdminObject) error {
 	return nil
 }
 
-func parseFields(obj *object.AdminObject, db *gorm.DB, rt reflect.Type) error {
+func parseFields(obj *model.AdminObject, db *gorm.DB, rt reflect.Type) error {
 	for i := 0; i < rt.NumField(); i++ {
 		f := rt.Field(i)
 
@@ -240,7 +239,7 @@ func parseFields(obj *object.AdminObject, db *gorm.DB, rt reflect.Type) error {
 		}
 
 		gormTag := strings.ToLower(f.Tag.Get("gorm"))
-		field := object.AdminField{
+		field := model.AdminField{
 			Name:      db.NamingStrategy.ColumnName(obj.TableName, f.Name),
 			Tag:       gormTag,
 			ElemType:  f.Type,
@@ -325,7 +324,7 @@ func parseFields(obj *object.AdminObject, db *gorm.DB, rt reflect.Type) error {
 				}
 			}
 
-			field.Foreign = &object.AdminForeign{
+			field.Foreign = &model.AdminForeign{
 				Field:      db.NamingStrategy.ColumnName(obj.TableName, foreignKey),
 				Path:       strings.ToLower(f.Type.Name()),
 				ForeignKey: foreignKey,
@@ -453,7 +452,7 @@ func convertValue(ElemType reflect.Type, source any) (any, error) {
 	}
 }
 
-func UnmarshalFrom(obj *object.AdminObject, elemObj reflect.Value, keys, vals map[string]any) (any, error) {
+func UnmarshalFrom(obj *model.AdminObject, elemObj reflect.Value, keys, vals map[string]any) (any, error) {
 	if len(obj.Editables) > 0 {
 		editables := make(map[string]bool)
 		for _, v := range obj.Editables {
@@ -517,7 +516,7 @@ func UnmarshalFrom(obj *object.AdminObject, elemObj reflect.Value, keys, vals ma
 	return elemObj.Interface(), nil
 }
 
-func MarshalOne(obj *object.AdminObject, val interface{}) (map[string]any, error) {
+func MarshalOne(obj *model.AdminObject, val interface{}) (map[string]any, error) {
 	var result = make(map[string]any)
 	rv := reflect.ValueOf(val)
 	if rv.Kind() == reflect.Ptr {
@@ -526,7 +525,7 @@ func MarshalOne(obj *object.AdminObject, val interface{}) (map[string]any, error
 	for _, field := range obj.Fields {
 		var fieldVal any
 		if field.Foreign != nil {
-			v := object.AdminValue{
+			v := model.AdminValue{
 				Value: rv.FieldByName(field.Foreign.ForeignKey).Interface(),
 			}
 			fv := rv.FieldByName(field.Foreign.FieldName)
@@ -550,7 +549,7 @@ func MarshalOne(obj *object.AdminObject, val interface{}) (map[string]any, error
 	return result, nil
 }
 
-func getPrimaryValues(obj *object.AdminObject, c *fiber.Ctx) map[string]any {
+func getPrimaryValues(obj *model.AdminObject, c *fiber.Ctx) map[string]any {
 	var result = make(map[string]any)
 	hasPrimaryQuery := false
 	for _, field := range obj.PrimaryKeys {
@@ -575,7 +574,7 @@ func getPrimaryValues(obj *object.AdminObject, c *fiber.Ctx) map[string]any {
 	return result
 }
 
-func handleGetOne(obj *object.AdminObject, c *fiber.Ctx) {
+func handleGetOne(obj *model.AdminObject, c *fiber.Ctx) {
 	// db := getDbConnection(c, obj.GetDB, false)
 	modelObj := reflect.New(obj.ModelElem).Interface()
 	keys := getPrimaryValues(obj, c)
@@ -612,10 +611,10 @@ func handleGetOne(obj *object.AdminObject, c *fiber.Ctx) {
 	c.JSON(data)
 }
 
-func QueryObjects(obj *object.AdminObject, session *gorm.DB, form *object.QueryForm, ctx *fiber.Ctx) (r object.AdminQueryResult, err error) {
+func QueryObjects(obj *model.AdminObject, session *gorm.DB, form *model.QueryForm, ctx *fiber.Ctx) (r model.AdminQueryResult, err error) {
 	for _, v := range form.Filters {
 		if q := v.GetQuery(); q != "" {
-			if v.Op == object.FilterOpLike {
+			if v.Op == model.FilterOpLike {
 				if kws, ok := v.Value.([]any); ok {
 					qs := []string{}
 					for _, kw := range kws {
@@ -627,7 +626,7 @@ func QueryObjects(obj *object.AdminObject, session *gorm.DB, form *object.QueryF
 				} else {
 					session = session.Where(fmt.Sprintf("`%s`.%s", obj.TableName, q), fmt.Sprintf("%%%s%%", v.Value))
 				}
-			} else if v.Op == object.FilterOpBetween {
+			} else if v.Op == model.FilterOpBetween {
 				vt := reflect.ValueOf(v.Value)
 				if vt.Kind() != reflect.Slice && vt.Len() != 2 {
 					return r, fmt.Errorf("invalid between value, must be slice with 2 elements")
@@ -639,7 +638,7 @@ func QueryObjects(obj *object.AdminObject, session *gorm.DB, form *object.QueryF
 		}
 	}
 
-	var orders []object.Order
+	var orders []model.Order
 	if len(form.Orders) > 0 {
 		orders = form.Orders
 	} else {
@@ -726,7 +725,7 @@ func QueryObjects(obj *object.AdminObject, session *gorm.DB, form *object.QueryF
 }
 
 // Query many objects with filter/limit/offset/order/search
-func handleQueryOrGetOne(obj *object.AdminObject, c *fiber.Ctx) error {
+func handleQueryOrGetOne(obj *model.AdminObject, c *fiber.Ctx) error {
 	if c.Request().Header.ContentLength() <= 0 {
 		handleGetOne(obj, c)
 		return nil
@@ -777,7 +776,7 @@ func handleQueryOrGetOne(obj *object.AdminObject, c *fiber.Ctx) error {
 	return c.JSON(r)
 }
 
-func handleCreate(obj *object.AdminObject, c *fiber.Ctx) error {
+func handleCreate(obj *model.AdminObject, c *fiber.Ctx) error {
 	keys := getPrimaryValues(obj, c)
 	var vals map[string]any
 	if err := c.BodyParser(&vals); err != nil {
@@ -818,7 +817,7 @@ func handleCreate(obj *object.AdminObject, c *fiber.Ctx) error {
 	return c.JSON(elm)
 }
 
-func handleUpdate(obj *object.AdminObject, c *fiber.Ctx) error {
+func handleUpdate(obj *model.AdminObject, c *fiber.Ctx) error {
 	keys := getPrimaryValues(obj, c)
 	if len(keys) <= 0 {
 		// AbortWithJSONError(c, http.StatusBadRequest, errors.New("invalid primary key"))
@@ -883,7 +882,7 @@ func handleUpdate(obj *object.AdminObject, c *fiber.Ctx) error {
 	return c.JSON(true)
 }
 
-func handleDelete(obj *object.AdminObject, c *fiber.Ctx) error {
+func handleDelete(obj *model.AdminObject, c *fiber.Ctx) error {
 	keys := getPrimaryValues(obj, c)
 	if len(keys) <= 0 {
 		// AbortWithJSONError(c, http.StatusBadRequest, errors.New("invalid primary key"))
@@ -920,7 +919,7 @@ func handleDelete(obj *object.AdminObject, c *fiber.Ctx) error {
 	return c.JSON(true)
 }
 
-func handleAction(obj *object.AdminObject, c *fiber.Ctx) error {
+func handleAction(obj *model.AdminObject, c *fiber.Ctx) error {
 	for _, action := range obj.Actions {
 		if action.Path != c.Params("name") {
 			continue
@@ -965,8 +964,8 @@ func handleAction(obj *object.AdminObject, c *fiber.Ctx) error {
 }
 
 // DefaultPrepareQuery return default QueryForm.
-func DefaultPrepareQuery(db *gorm.DB, c *fiber.Ctx) (*gorm.DB, *object.QueryForm, error) {
-	var form object.QueryForm
+func DefaultPrepareQuery(db *gorm.DB, c *fiber.Ctx) (*gorm.DB, *model.QueryForm, error) {
+	var form model.QueryForm
 	if c.Request().Header.ContentLength() > 0 {
 		if err := c.BodyParser(&form); err != nil {
 			return nil, nil, err
@@ -976,8 +975,8 @@ func DefaultPrepareQuery(db *gorm.DB, c *fiber.Ctx) (*gorm.DB, *object.QueryForm
 	if form.Pos < 0 {
 		form.Pos = 0
 	}
-	if form.Limit <= 0 || form.Limit > object.DefaultQueryLimit {
-		form.Limit = object.DefaultQueryLimit
+	if form.Limit <= 0 || form.Limit > model.DefaultQueryLimit {
+		form.Limit = model.DefaultQueryLimit
 	}
 
 	return db, &form, nil

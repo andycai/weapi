@@ -7,7 +7,6 @@ import (
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/model"
-	"github.com/andycai/weapi/object"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -36,8 +35,8 @@ func initRootNoCheckRouter(r fiber.Router) {
 func initAdminCheckRouter(r fiber.Router) {
 }
 
-func initAdminObject() []object.AdminObject {
-	return []object.AdminObject{
+func initAdminObject() []model.AdminObject {
+	return []model.AdminObject{
 		{
 			Model:       &model.Media{},
 			Group:       "Contents",
@@ -51,20 +50,20 @@ func initAdminObject() []object.AdminObject {
 			Searchables: []string{"Title", "Alt", "Description", "Keywords", "Path", "Path", "Name", "StorePath"},
 			Requireds:   []string{"ContentType", "Size", "Path", "Name", "Dimensions", "StorePath"},
 			Icon:        weapi.ReadIcon("/icon/image.svg"),
-			Attributes: map[string]object.AdminAttribute{
+			Attributes: map[string]model.AdminAttribute{
 				"ContentType": {Choices: weapi.ContentTypes},
 				"Size":        {Widget: "humanize-size"},
 				"Site":        {SingleChoice: true},
 			},
-			Scripts: []object.AdminScript{
+			Scripts: []model.AdminScript{
 				{Src: "/static/admin/js/cms_widget.js"},
 				{Src: "/static/admin/js/cms_media.js", Onload: true},
 			},
 			EditPage: "./edit_media.html",
-			Orders: []object.Order{
+			Orders: []model.Order{
 				{
 					Name: "UpdatedAt",
-					Op:   object.OrderOpAsc,
+					Op:   model.OrderOpAsc,
 				},
 			},
 			BeforeRender: func(ctx *fiber.Ctx, vptr any) (any, error) {
@@ -86,7 +85,7 @@ func initAdminObject() []object.AdminObject {
 				}
 				return nil
 			},
-			Actions: []object.AdminAction{
+			Actions: []model.AdminAction{
 				{
 					Path: "make_publish",
 					Name: "Make Publish",

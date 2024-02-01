@@ -21,7 +21,6 @@ import (
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/model"
-	"github.com/andycai/weapi/object"
 	"github.com/andycai/weapi/utils/random"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm/clause"
@@ -316,13 +315,13 @@ func StoreExternal(externalUploader, path, name string, data []byte) (string, er
 		// carrot.Warning("upload to external server failed: ", resp.StatusCode, externalUploader, string(body))
 		return "", fmt.Errorf("upload to external server failed, code:%d %s", resp.StatusCode, string(body))
 	}
-	var remoteResult object.UploadResult
+	var remoteResult model.UploadResult
 	json.Unmarshal(body, &remoteResult)
 	return remoteResult.StorePath, nil
 }
 
-func UploadFile(path, name string, reader io.Reader) (*object.UploadResult, error) {
-	var r object.UploadResult
+func UploadFile(path, name string, reader io.Reader) (*model.UploadResult, error) {
+	var r model.UploadResult
 	r.Path = path
 	r.Name = name
 	r.Ext = strings.ToLower(filepath.Ext(name))

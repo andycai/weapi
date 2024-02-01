@@ -7,7 +7,6 @@ import (
 	"github.com/andycai/weapi/conf"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/model"
-	"github.com/andycai/weapi/object"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -46,7 +45,7 @@ func BeforeRenderPost(ctx *fiber.Ctx, vptr any) (any, error) {
 	return model.NewRenderContentFromPost(db, result, relations), nil
 }
 
-func BeforeQueryRenderPost(ctx *fiber.Ctx, queryResult *object.QueryResult) (any, error) {
+func BeforeQueryRenderPost(ctx *fiber.Ctx, queryResult *model.QueryResult) (any, error) {
 	if len(queryResult.Items) <= 0 {
 		return nil, nil
 	}

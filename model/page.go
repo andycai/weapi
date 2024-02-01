@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/andycai/weapi/enum"
-	"github.com/andycai/weapi/object"
 	"github.com/andycai/weapi/utils/random"
 	"gorm.io/gorm"
 )
@@ -55,7 +54,7 @@ type RenderContent struct {
 	Suggestions []RelationContent `json:"suggestions,omitempty"`
 }
 type ContentQueryResult struct {
-	*object.QueryResult
+	*QueryResult
 	Relations   []RelationContent `json:"relations,omitempty"`
 	Suggestions []RelationContent `json:"suggestions,omitempty"`
 }

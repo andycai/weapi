@@ -11,12 +11,12 @@ import (
 	"time"
 
 	"github.com/andycai/weapi/administrator/components/site"
-	"github.com/andycai/weapi/object"
+	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
-func RegisterObjects(r fiber.Router, objs []object.WebObject) {
+func RegisterObjects(r fiber.Router, objs []model.WebObject) {
 	for idx := range objs {
 		obj := &objs[idx]
 		err := RegisterObject(obj, r)
@@ -26,7 +26,7 @@ func RegisterObjects(r fiber.Router, objs []object.WebObject) {
 	}
 }
 
-func RegisterObject(obj *object.WebObject, r fiber.Router) error {
+func RegisterObject(obj *model.WebObject, r fiber.Router) error {
 	if err := Build(obj); err != nil {
 		return err
 	}
@@ -34,37 +34,37 @@ func RegisterObject(obj *object.WebObject, r fiber.Router) error {
 	p := obj.Name
 	allowMethods := obj.AllowMethods
 	if allowMethods == 0 {
-		allowMethods = object.GET | object.CREATE | object.EDIT | object.DELETE | object.QUERY
+		allowMethods = model.GET | model.CREATE | model.EDIT | model.DELETE | model.QUERY
 	}
 
 	primaryKeyPath := BuildPrimaryPath(obj, p)
-	if allowMethods&object.GET != 0 {
+	if allowMethods&model.GET != 0 {
 		r.Get(primaryKeyPath, func(c *fiber.Ctx) error {
 			handleGetObject(c, obj)
 			return nil
 		})
 	}
-	if allowMethods&object.CREATE != 0 {
+	if allowMethods&model.CREATE != 0 {
 		r.Put(p, func(c *fiber.Ctx) error {
 			handleCreateObject(c, obj)
 			return nil
 		})
 	}
-	if allowMethods&object.EDIT != 0 {
+	if allowMethods&model.EDIT != 0 {
 		r.Patch(primaryKeyPath, func(c *fiber.Ctx) error {
 			handleEditObject(c, obj)
 			return nil
 		})
 	}
 
-	if allowMethods&object.DELETE != 0 {
+	if allowMethods&model.DELETE != 0 {
 		r.Delete(primaryKeyPath, func(c *fiber.Ctx) error {
 			handleDeleteObject(c, obj)
 			return nil
 		})
 	}
 
-	if allowMethods&object.QUERY != 0 {
+	if allowMethods&model.QUERY != 0 {
 		r.Post(p, func(c *fiber.Ctx) error {
 			handleQueryObject(c, obj, site.DefaultPrepareQuery)
 			return nil
@@ -91,7 +91,7 @@ func RegisterObject(obj *object.WebObject, r fiber.Router) error {
 	return nil
 }
 
-func BuildPrimaryPath(obj *object.WebObject, prefix string) string {
+func BuildPrimaryPath(obj *model.WebObject, prefix string) string {
 	var primaryKeyPath []string
 	for _, v := range obj.UniqueKeys {
 		primaryKeyPath = append(primaryKeyPath, ":"+v.JSONName)
@@ -99,7 +99,7 @@ func BuildPrimaryPath(obj *object.WebObject, prefix string) string {
 	return filepath.Join(prefix, filepath.Join(primaryKeyPath...))
 }
 
-func getPrimaryValues(obj *object.WebObject, c *fiber.Ctx) ([]string, error) {
+func getPrimaryValues(obj *model.WebObject, c *fiber.Ctx) ([]string, error) {
 	var result []string
 	for _, field := range obj.UniqueKeys {
 		v := c.Params(field.JSONName)
@@ -111,7 +111,7 @@ func getPrimaryValues(obj *object.WebObject, c *fiber.Ctx) ([]string, error) {
 	return result, nil
 }
 
-func buildPrimaryCondition(obj *object.WebObject, keys []string) *gorm.DB {
+func buildPrimaryCondition(obj *model.WebObject, keys []string) *gorm.DB {
 	var tx *gorm.DB
 	for i := 0; i < len(obj.UniqueKeys); i++ {
 		colName := obj.UniqueKeys[i].Name
@@ -129,7 +129,7 @@ Check Go type corresponds to JSON type.
 - map[string]any, for JSON objects
 - nil, for JSON null
 */
-func checkType(obj *object.WebObject, key string, value any) (string, bool, error) {
+func checkType(obj *model.WebObject, key string, value any) (string, bool, error) {
 	targetKind, ok := obj.JsonToKinds[key]
 	if !ok {
 		return "", false, nil
@@ -162,7 +162,7 @@ func checkType(obj *object.WebObject, key string, value any) (string, bool, erro
 }
 
 // Build fill the properties of obj.
-func Build(obj *object.WebObject) error {
+func Build(obj *model.WebObject) error {
 	rt := reflect.TypeOf(obj.Model)
 	if rt.Kind() == reflect.Ptr {
 		rt = rt.Elem()
@@ -191,7 +191,7 @@ func Build(obj *object.WebObject) error {
 
 // parseFields parse the following properties according to struct tag:
 // - JsonToFields, JsonToKinds, primaryKeyName, primaryKeyJsonName
-func parseFields(obj *object.WebObject, rt reflect.Type) {
+func parseFields(obj *model.WebObject, rt reflect.Type) {
 	for i := 0; i < rt.NumField(); i++ {
 		f := rt.Field(i)
 
@@ -223,7 +223,7 @@ func parseFields(obj *object.WebObject, rt reflect.Type) {
 		if gormTag == "-" {
 			continue
 		}
-		pkField := object.WebObjectPrimaryField{
+		pkField := model.WebObjectPrimaryField{
 			Name:      f.Name,
 			JSONName:  strings.Split(jsonTag, ",")[0],
 			Kind:      f.Type.Kind(),
@@ -244,7 +244,7 @@ func parseFields(obj *object.WebObject, rt reflect.Type) {
 
 //#region api handler
 
-func handleGetObject(c *fiber.Ctx, obj *object.WebObject) {
+func handleGetObject(c *fiber.Ctx, obj *model.WebObject) {
 	keys, err := getPrimaryValues(obj, c)
 	if err != nil {
 		// AbortWithJSONError(c, http.StatusBadRequest, err)
@@ -283,7 +283,7 @@ func handleGetObject(c *fiber.Ctx, obj *object.WebObject) {
 	c.JSON(val)
 }
 
-func handleCreateObject(c *fiber.Ctx, obj *object.WebObject) {
+func handleCreateObject(c *fiber.Ctx, obj *model.WebObject) {
 	val := reflect.New(obj.ModelElem).Interface()
 
 	if c.Request().Header.ContentLength() > 0 {
@@ -310,7 +310,7 @@ func handleCreateObject(c *fiber.Ctx, obj *object.WebObject) {
 	c.JSON(val)
 }
 
-func handleEditObject(c *fiber.Ctx, obj *object.WebObject) {
+func handleEditObject(c *fiber.Ctx, obj *model.WebObject) {
 	keys, err := getPrimaryValues(obj, c)
 	if err != nil {
 		// AbortWithJSONError(c, http.StatusBadRequest, err)
@@ -390,7 +390,7 @@ func handleEditObject(c *fiber.Ctx, obj *object.WebObject) {
 	c.JSON(true)
 }
 
-func handleDeleteObject(c *fiber.Ctx, obj *object.WebObject) {
+func handleDeleteObject(c *fiber.Ctx, obj *model.WebObject) {
 	keys, err := getPrimaryValues(obj, c)
 	if err != nil {
 		// AbortWithJSONError(c, http.StatusBadRequest, err)
@@ -428,7 +428,7 @@ func handleDeleteObject(c *fiber.Ctx, obj *object.WebObject) {
 	c.JSON(true)
 }
 
-func handleQueryObject(c *fiber.Ctx, obj *object.WebObject, prepareQuery object.PrepareQuery) {
+func handleQueryObject(c *fiber.Ctx, obj *model.WebObject, prepareQuery model.PrepareQuery) {
 	db, form, err := prepareQuery(db, c)
 	if err != nil {
 		// AbortWithJSONError(c, http.StatusBadRequest, err)
@@ -444,7 +444,7 @@ func handleQueryObject(c *fiber.Ctx, obj *object.WebObject, prepareQuery object.
 	}
 
 	if len(filterFields) > 0 {
-		var stripFilters []object.Filter
+		var stripFilters []model.Filter
 		for i := 0; i < len(form.Filters); i++ {
 			filter := form.Filters[i]
 			// Struct must has this field.
@@ -468,7 +468,7 @@ func handleQueryObject(c *fiber.Ctx, obj *object.WebObject, prepareQuery object.
 		}
 		form.Filters = stripFilters
 	} else {
-		form.Filters = []object.Filter{}
+		form.Filters = []model.Filter{}
 	}
 
 	var orderFields = make(map[string]struct{})
@@ -476,7 +476,7 @@ func handleQueryObject(c *fiber.Ctx, obj *object.WebObject, prepareQuery object.
 		orderFields[k] = struct{}{}
 	}
 	if len(orderFields) > 0 {
-		var stripOrders []object.Order
+		var stripOrders []model.Order
 		for i := 0; i < len(form.Orders); i++ {
 			order := form.Orders[i]
 			field, ok := obj.JsonToFields[order.Name]
@@ -491,7 +491,7 @@ func handleQueryObject(c *fiber.Ctx, obj *object.WebObject, prepareQuery object.
 		}
 		form.Orders = stripOrders
 	} else {
-		form.Orders = []object.Order{}
+		form.Orders = []model.Order{}
 	}
 
 	if form.Keyword != "" {
@@ -547,12 +547,12 @@ func castTime(value any) any {
 	return value
 }
 
-func queryObjects(obj *object.WebObject, ctx *fiber.Ctx, form *object.QueryForm) (r object.QueryResult, err error) {
+func queryObjects(obj *model.WebObject, ctx *fiber.Ctx, form *model.QueryForm) (r model.QueryResult, err error) {
 	tblName := db.NamingStrategy.TableName(obj.TableName)
 
 	for _, v := range form.Filters {
 		if q := v.GetQuery(); q != "" {
-			if v.Op == object.FilterOpLike {
+			if v.Op == model.FilterOpLike {
 				if kws, ok := v.Value.([]any); ok {
 					qs := []string{}
 					for _, kw := range kws {
@@ -564,7 +564,7 @@ func queryObjects(obj *object.WebObject, ctx *fiber.Ctx, form *object.QueryForm)
 				} else {
 					db = db.Where(fmt.Sprintf("`%s`.%s", tblName, q), fmt.Sprintf("%%%s%%", v.Value))
 				}
-			} else if v.Op == object.FilterOpBetween {
+			} else if v.Op == model.FilterOpBetween {
 				vt := reflect.ValueOf(v.Value)
 				if vt.Kind() != reflect.Slice && vt.Len() != 2 {
 					return r, fmt.Errorf("invalid between value, must be slice with 2 elements")

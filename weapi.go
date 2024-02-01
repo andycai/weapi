@@ -5,13 +5,13 @@ import (
 	"path/filepath"
 
 	"github.com/andycai/weapi/enum"
-	"github.com/andycai/weapi/object"
+	"github.com/andycai/weapi/model"
 )
 
 //go:embed static
 var EmbedAssets embed.FS
 
-var ContentTypes = []object.AdminSelectOption{
+var ContentTypes = []model.AdminSelectOption{
 	{Value: enum.ContentTypeJson, Label: "JSON"},
 	{Value: enum.ContentTypeJson, Label: "HTML"},
 	{Value: enum.ContentTypeText, Label: "PlainText"},
@@ -22,18 +22,18 @@ var ContentTypes = []object.AdminSelectOption{
 	{Value: enum.ContentTypeFile, Label: "File"},
 }
 
-var EnabledPageContentTypes = []object.AdminSelectOption{
+var EnabledPageContentTypes = []model.AdminSelectOption{
 	{Value: enum.ContentTypeJson, Label: "JSON"},
 	{Value: enum.ContentTypeHtml, Label: "HTML"},
 	{Value: enum.ContentTypeMarkdown, Label: "Markdown"},
 }
 
-func ReadIcon(name string) *object.AdminIcon {
+func ReadIcon(name string) *model.AdminIcon {
 	path := filepath.Join("static/admin/", name)
 	data, err := EmbedAssets.ReadFile(path)
 	if err != nil {
 		// carrot.Warning("Read icon failed:", name, err)
 		return nil
 	}
-	return &object.AdminIcon{SVG: string(data)}
+	return &model.AdminIcon{SVG: string(data)}
 }

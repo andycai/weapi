@@ -5,7 +5,6 @@ import (
 	"github.com/andycai/weapi/administrator/components/user"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/model"
-	"github.com/andycai/weapi/object"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -25,8 +24,8 @@ func initDB(dbs []*gorm.DB) {
 func initCheckRouter(r fiber.Router) {
 }
 
-func initAdminObject() []object.AdminObject {
-	return []object.AdminObject{
+func initAdminObject() []model.AdminObject {
+	return []model.AdminObject{
 		{
 			Model:       &model.Config{},
 			Group:       "Settings",

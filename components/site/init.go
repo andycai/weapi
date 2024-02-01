@@ -5,7 +5,6 @@ import (
 	"github.com/andycai/weapi/components/post"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/model"
-	"github.com/andycai/weapi/object"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -27,10 +26,10 @@ func initNoCheckRouter(r fiber.Router) {
 }
 
 func initCheckRouter(r fiber.Router) {
-	objs := []object.WebObject{
+	objs := []model.WebObject{
 		{
 			Model:        &model.Site{},
-			AllowMethods: object.GET | object.QUERY,
+			AllowMethods: model.GET | model.QUERY,
 			Name:         "site",
 			Editables:    []string{"Domain", "Name", "Preview", "Disallow"},
 			Filterables:  []string{},
@@ -39,7 +38,7 @@ func initCheckRouter(r fiber.Router) {
 		},
 		{
 			Model:        &model.Category{},
-			AllowMethods: object.GET | object.QUERY,
+			AllowMethods: model.GET | model.QUERY,
 			Name:         "category",
 			Editables:    []string{"UUID", "SiteID", "Name", "Items"},
 			Filterables:  []string{},
@@ -48,7 +47,7 @@ func initCheckRouter(r fiber.Router) {
 		},
 		{
 			Model:        &model.Page{},
-			AllowMethods: object.GET | object.QUERY,
+			AllowMethods: model.GET | model.QUERY,
 			Name:         "page",
 			Filterables:  []string{"SiteID", "CategoryID", "CategoryPath", "Tags", "IsDraft", "Published", "ContentType"},
 			Searchables:  []string{"Title", "Description", "Body"},
@@ -58,7 +57,7 @@ func initCheckRouter(r fiber.Router) {
 		},
 		{
 			Model:             &model.Post{},
-			AllowMethods:      object.GET | object.QUERY,
+			AllowMethods:      model.GET | model.QUERY,
 			Name:              "post",
 			Filterables:       []string{"SiteID", "CategoryID", "CategoryPath", "Tags", "IsDraft", "Published", "ContentType"},
 			Searchables:       []string{"Title", "Description", "Body"},

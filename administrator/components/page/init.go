@@ -6,7 +6,6 @@ import (
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/model"
-	"github.com/andycai/weapi/object"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -26,8 +25,8 @@ func initDB(dbs []*gorm.DB) {
 func initCheckRouter(r fiber.Router) {
 }
 
-func initAdminObject() []object.AdminObject {
-	return []object.AdminObject{
+func initAdminObject() []model.AdminObject {
+	return []model.AdminObject{
 		{
 			Model:       &model.Page{},
 			Group:       "Contents",
@@ -44,11 +43,11 @@ func initAdminObject() []object.AdminObject {
 			Styles: []string{
 				"/static/admin/css/jsoneditor-9.10.2.min.css",
 			},
-			Scripts: []object.AdminScript{
+			Scripts: []model.AdminScript{
 				{Src: "/static/admin/js/cms_widget.js"},
 				{Src: "/static/admin/js/jsoneditor-9.10.2.min.js"},
 				{Src: "/static/admin/js/cms_page.js", Onload: true}},
-			Attributes: map[string]object.AdminAttribute{
+			Attributes: map[string]model.AdminAttribute{
 				"ContentType": {Choices: weapi.EnabledPageContentTypes, Default: enum.ContentTypeJson},
 				"Draft":       {Default: "{}"},
 				"IsDraft":     {Widget: "is-draft"},
@@ -58,13 +57,13 @@ func initAdminObject() []object.AdminObject {
 				"ID":          {Help: "ID must be unique,recommend use page url eg: about-us"},
 			},
 			EditPage: "./edit_page.html",
-			Orders: []object.Order{
+			Orders: []model.Order{
 				{
 					Name: "UpdatedAt",
-					Op:   object.OrderOpDesc,
+					Op:   model.OrderOpDesc,
 				},
 			},
-			Actions: []object.AdminAction{
+			Actions: []model.AdminAction{
 				{
 					WithoutObject: true,
 					Path:          "save_draft",
