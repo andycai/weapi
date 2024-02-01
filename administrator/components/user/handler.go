@@ -6,7 +6,7 @@ import (
 	"github.com/andycai/weapi/components/user"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/enum"
-	"github.com/andycai/weapi/library/authentication"
+	"github.com/andycai/weapi/lib/authentication"
 	"github.com/andycai/weapi/model"
 	"github.com/andycai/weapi/object"
 	"github.com/gofiber/fiber/v2"

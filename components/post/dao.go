@@ -1,7 +1,7 @@
 package post
 
 import (
-	"github.com/andycai/weapi/library/database"
+	"github.com/andycai/weapi/lib/database"
 	"github.com/andycai/weapi/model"
 	"gorm.io/gorm"
 )

@@ -7,7 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/andycai/weapi/library/authentication"
+	"github.com/andycai/weapi/lib/authentication"
+	"github.com/andycai/weapi/utils/date"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
 	"github.com/gomarkdown/markdown"
@@ -57,7 +58,7 @@ func ViewEngineStart() *html.Engine {
 	})
 
 	viewEngine.AddFunc("DateFormat", func(t time.Time, layout string) string {
-		return DateFormat(t, layout)
+		return date.Format(t, layout)
 	})
 
 	viewEngine.AddFunc("QueryUnescape", func(s string) string {

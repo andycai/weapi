@@ -18,10 +18,11 @@ import (
 
 	"github.com/andycai/weapi/administrator/components/user"
 	"github.com/andycai/weapi/conf"
-	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/enum"
+	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/model"
 	"github.com/andycai/weapi/object"
+	"github.com/andycai/weapi/utils/random"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm/clause"
 )
@@ -44,7 +45,7 @@ func handleMakeMediaPublish(c *fiber.Ctx, obj any, publish bool) (any, error) {
 	name := c.Query("name")
 
 	if err := MakeMediaPublish(siteId, path, name, obj, publish); err != nil {
-		// carrot.Warning("Make publish failed:", siteId, path, name, publish, err)
+		log.Infof("Make publish failed: %s, %s, %s, %t, %v", siteId, path, name, publish, err)
 		return false, err
 	}
 	return true, nil
@@ -191,7 +192,7 @@ func RemoveDirectory(path string) (string, error) {
 	var files []model.Media
 	r := db.Model(&model.Media{}).Where("path", path).Find(&files)
 	if r.Error != nil {
-		// carrot.Warning("Remove directory failed: ", r.Error, path)
+		log.Infof("Remove directory failed: %v, %s", r.Error, path)
 		return "", r.Error
 	}
 
@@ -357,7 +358,7 @@ func UploadFile(path, name string, reader io.Reader) (*object.UploadResult, erro
 		r.StorePath = storePath
 		r.External = true
 	} else {
-		storePath := fmt.Sprintf("%s%s", core.RandText(10), r.Ext)
+		storePath := fmt.Sprintf("%s%s", random.RandText(10), r.Ext)
 		r.StorePath = storePath
 		r.External = false
 		uploadDir, err := PrepareStoreLocalDir()

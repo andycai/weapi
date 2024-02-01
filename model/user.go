@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/andycai/weapi/core"
+	"github.com/andycai/weapi/utils/random"
 	"gorm.io/gorm"
 )
 
@@ -144,7 +144,7 @@ func (p GroupPermission) Value() (driver.Value, error) {
 
 // GenUniqueKey generate a unique value for a field in a table.
 func GenUniqueKey(tx *gorm.DB, field string, size int) (key string) {
-	key = core.RandText(size)
+	key = random.RandText(size)
 	for i := 0; i < 10; i++ {
 		var c int64
 		result := tx.Where(field, key).Limit(1).Count(&c)

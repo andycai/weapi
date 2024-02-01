@@ -6,9 +6,9 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/object"
+	"github.com/andycai/weapi/utils/random"
 	"gorm.io/gorm"
 )
 
@@ -66,7 +66,7 @@ func (*Page) TableName() string {
 
 func MakeDuplicate(db *gorm.DB, obj any) error {
 	if page, ok := obj.(*Page); ok {
-		page.ID = page.ID + "-copy-" + core.RandText(3)
+		page.ID = page.ID + "-copy-" + random.RandText(3)
 		page.Title = page.Title + "-copy"
 		page.IsDraft = true
 		page.PreviewURL = ""
@@ -75,7 +75,7 @@ func MakeDuplicate(db *gorm.DB, obj any) error {
 		page.UpdatedAt = time.Now()
 		return db.Create(page).Error
 	} else if post, ok := obj.(*Post); ok {
-		post.ID = post.ID + "-copy-" + core.RandText(3)
+		post.ID = post.ID + "-copy-" + random.RandText(3)
 		post.Title = post.Title + "-copy"
 		post.IsDraft = true
 		post.PreviewURL = ""

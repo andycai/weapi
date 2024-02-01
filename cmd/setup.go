@@ -14,8 +14,9 @@ import (
 	"github.com/andycai/weapi"
 	"github.com/andycai/weapi/components/user"
 	"github.com/andycai/weapi/core"
-	"github.com/andycai/weapi/library/database"
+	"github.com/andycai/weapi/lib/database"
 	"github.com/andycai/weapi/middlewares"
+	"github.com/andycai/weapi/utils/date"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/adaptor"
 	"github.com/spf13/viper"
@@ -115,7 +116,7 @@ func runSetupMode(addr string) {
 		// current working directory
 		cwd, _ := os.Getwd()
 		data := map[string]any{
-			"buildTime":    core.DateFormat(core.Now(), "2006-01-02 15:04:05"),
+			"buildTime":    date.Format(date.Now(), "2006-01-02 15:04:05"),
 			"gitCommit":    GitCommit,
 			"osVersion":    osVersion,
 			"cwd":          cwd,

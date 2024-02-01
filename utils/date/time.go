@@ -1,8 +1,13 @@
-package core
+package date
 
 import "time"
 
-func ParseDate(date string) time.Time {
+var (
+	zoneUTC = time.UTC
+	zone    = time.FixedZone("CST", 3600)
+)
+
+func Parse(date string) time.Time {
 	t, err := time.ParseInLocation("2006-01-02 15:04", date, zoneUTC)
 	if err == nil {
 		return t.In(zoneUTC)
@@ -14,7 +19,7 @@ func SetZoneOffset(offset int) {
 	zone = time.FixedZone("CST", offset*3600)
 }
 
-func DateFormat(t time.Time, layout string) string {
+func Format(t time.Time, layout string) string {
 	return t.In(zone).Format(layout)
 }
 

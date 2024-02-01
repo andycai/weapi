@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"github.com/andycai/weapi/library/authentication"
+	"github.com/andycai/weapi/lib/authentication"
 	"github.com/gofiber/fiber/v2"
 )
 

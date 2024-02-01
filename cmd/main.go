@@ -10,10 +10,11 @@ import (
 	"github.com/andycai/weapi/conf"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/enum"
-	"github.com/andycai/weapi/library/authentication"
-	"github.com/andycai/weapi/library/database"
+	"github.com/andycai/weapi/lib/authentication"
+	"github.com/andycai/weapi/lib/database"
 	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/middlewares"
+	"github.com/andycai/weapi/utils/date"
 	"gorm.io/gorm"
 
 	"github.com/gofiber/fiber/v2"
@@ -90,7 +91,7 @@ func main() {
 		// create super user
 	}
 
-	core.SetZoneOffset(zoneOffset)
+	date.SetZoneOffset(zoneOffset)
 	core.SetLang(lang)
 
 	// Middleware

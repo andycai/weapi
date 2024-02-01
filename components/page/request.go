@@ -6,6 +6,7 @@ import (
 
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/model"
+	"github.com/andycai/weapi/utils/date"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gosimple/slug"
 )
@@ -39,7 +40,7 @@ func Bind(c *fiber.Ctx, page *model.Page) error {
 	}
 
 	if r.PublishedAt != "" {
-		page.PublishedAt = sql.NullTime{Time: core.ParseDate(r.PublishedAt), Valid: true} // core.ParseDate(r.PublishedAt)
+		page.PublishedAt = sql.NullTime{Time: date.Parse(r.PublishedAt), Valid: true} // core.ParseDate(r.PublishedAt)
 	} else {
 		page.PublishedAt = sql.NullTime{Time: time.Now(), Valid: true} // time.Now()
 	}
