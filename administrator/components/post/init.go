@@ -101,7 +101,7 @@ func initAdminObject() []model.AdminObject {
 					Path:          "tags",
 					Name:          "Query All Tags",
 					Handler: func(c *fiber.Ctx, obj any) (any, error) {
-						return page.HandleQueryTags(c, obj, "posts")
+						return HandleQueryTags(c, obj, "posts")
 					},
 				},
 			},

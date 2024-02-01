@@ -56,33 +56,6 @@ func initAdminObject() []model.AdminObject {
 			},
 			Weight: 10,
 		},
-		{
-			Model:       &model.Category{},
-			Group:       "Contents",
-			Name:        "Category",
-			PluralName:  "Categories",
-			Desc:        "The category of articles and pages can be multi-level",
-			Shows:       []string{"Name", "UUID", "Site", "Items"},
-			Editables:   []string{"Name", "UUID", "Site", "Items"},
-			Orderables:  []string{},
-			Searchables: []string{"UUID", "Site", "Items", "Name"},
-			Requireds:   []string{"UUID", "Site", "Items", "Name"},
-			Icon:        weapi.ReadIcon("/icon/swatch.svg"),
-			Attributes:  map[string]model.AdminAttribute{"Items": {Widget: "category-item"}},
-			Scripts: []model.AdminScript{
-				{Src: "/static/admin/js/cms_widget.js"},
-				{Src: "/static/admin/js/cms_category.js", Onload: true},
-			},
-			Actions: []model.AdminAction{
-				{
-					WithoutObject: true,
-					Path:          "query_with_count",
-					Name:          "Query with item count",
-					Handler:       HandleQueryCategoryWithCount,
-				},
-			},
-			Weight: 11,
-		},
 	}
 }
 

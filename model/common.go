@@ -5,8 +5,6 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type StringArray []string
@@ -65,22 +63,4 @@ type QueryByTagsResult struct {
 	Total int   `json:"total"`
 	Limit int   `json:"limit"`
 	Pos   int   `json:"pos"`
-}
-
-func GetSummary(db *gorm.DB) (result SummaryResult) {
-	db.Model(&Site{}).Count(&result.SiteCount)
-	db.Model(&Page{}).Count(&result.PageCount)
-	db.Model(&Post{}).Count(&result.PostCount)
-	db.Model(&Category{}).Count(&result.CategoryCount)
-	db.Model(&Media{}).Where("directory", false).Count(&result.MediaCount)
-
-	var latestPosts []Post
-	db.Order("updated_at desc").Limit(20).Find(&latestPosts)
-
-	for idx := range latestPosts {
-		item := NewRenderContentFromPost(db, &latestPosts[idx], false)
-		item.PostBody = ""
-		result.LatestPosts = append(result.LatestPosts, item)
-	}
-	return result
 }

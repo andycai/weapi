@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
-	"strings"
 
+	"github.com/andycai/weapi/administrator/components/category"
 	"github.com/andycai/weapi/administrator/components/user"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
@@ -327,14 +327,8 @@ func handleAction(obj *model.AdminObject, c *fiber.Ctx) error {
 	return nil
 }
 
-func HandleQueryCategoryWithCount(c *fiber.Ctx, obj any) (any, error) {
-	siteId := c.Query("site_id")
-	current := strings.ToLower(c.Query("current"))
-	return model.QueryCategoryWithCount(db, siteId, current)
-}
-
 func HandleAdminSummary(c *fiber.Ctx) error {
-	result := model.GetSummary(db)
+	result := GetSummary()
 	// result.BuildTime = m.BuildTime
 	result.CanExport = user.CurrentUser(c).IsSuperUser
 	return c.JSON(result)
@@ -348,7 +342,7 @@ func handleGetTags(c *fiber.Ctx) error {
 		return err
 	}
 
-	tags, err := model.GetTagsByCategory(db, contentType, &form)
+	tags, err := category.GetTagsByCategory(contentType, &form)
 	if err != nil {
 		// carrot.AbortWithJSONError(c, http.StatusInternalServerError, err)
 		return err

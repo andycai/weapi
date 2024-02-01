@@ -2,7 +2,6 @@ package page
 
 import (
 	"github.com/andycai/weapi/enum"
-	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -11,7 +10,7 @@ import (
 func HandleMakePagePublish(c *fiber.Ctx, obj any, publish bool) (any, error) {
 	siteId := c.Query("site_id")
 	id := c.Query("id")
-	if err := model.MakePublish(db, siteId, id, obj, publish); err != nil {
+	if err := MakePublish(siteId, id, obj, publish); err != nil {
 		// carrot.Warning("make publish failed:", siteId, id, publish, err)
 		return false, err
 	}
@@ -19,7 +18,7 @@ func HandleMakePagePublish(c *fiber.Ctx, obj any, publish bool) (any, error) {
 }
 
 func HandleMakePageDuplicate(c *fiber.Ctx, obj any) (any, error) {
-	if err := model.MakeDuplicate(db, obj); err != nil {
+	if err := MakeDuplicate(obj); err != nil {
 		// carrot.Warning("make duplicate failed:", obj, err)
 		return false, err
 	}
@@ -40,7 +39,7 @@ func HandleSaveDraft(c *fiber.Ctx, obj any) (any, error) {
 		return nil, enum.ErrDraftIsInvalid
 	}
 
-	if err := model.SafeDraft(db, siteId, id, obj, draft); err != nil {
+	if err := SafeDraft(siteId, id, obj, draft); err != nil {
 		// carrot.Warning("safe draft failed:", siteId, id, err)
 		return false, err
 	}
@@ -48,7 +47,7 @@ func HandleSaveDraft(c *fiber.Ctx, obj any) (any, error) {
 }
 
 func HandleQueryTags(c *fiber.Ctx, obj any, tableName string) (any, error) {
-	return model.QueryTags(db.Table(tableName))
+	return QueryTags()
 }
 
 //#endregion

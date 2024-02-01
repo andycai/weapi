@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/andycai/weapi/administrator/components/config"
+	"github.com/andycai/weapi/administrator/components/post"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
@@ -42,7 +43,7 @@ func BeforeRenderPost(ctx *fiber.Ctx, vptr any) (any, error) {
 		relations = false
 	}
 
-	return model.NewRenderContentFromPost(db, result, relations), nil
+	return post.NewRenderContentFromPost(result, relations), nil
 }
 
 func BeforeQueryRenderPost(ctx *fiber.Ctx, queryResult *model.QueryResult) (any, error) {
@@ -69,8 +70,8 @@ func BeforeQueryRenderPost(ctx *fiber.Ctx, queryResult *model.QueryResult) (any,
 	relationCount := config.GetIntValue(enum.KEY_CMS_RELATION_COUNT, 3)
 	suggestionCount := config.GetIntValue(enum.KEY_CMS_SUGGESTION_COUNT, 3)
 
-	r.Suggestions, _ = GetSuggestions(siteId, categoryId, categoryPath, "", relationCount)
-	r.Relations, _ = GetRelations(siteId, categoryId, categoryPath, "", suggestionCount)
+	r.Suggestions, _ = post.GetSuggestions(siteId, categoryId, categoryPath, "", relationCount)
+	r.Relations, _ = post.GetRelations(siteId, categoryId, categoryPath, "", suggestionCount)
 
 	return r, nil
 }

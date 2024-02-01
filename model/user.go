@@ -10,8 +10,6 @@ import (
 	"gorm.io/gorm"
 )
 
-const TableNameUser = "users"
-
 const (
 	PermissionAll    = "all"
 	PermissionCreate = "create"
@@ -157,8 +155,4 @@ func GenUniqueKey(tx *gorm.DB, field string, size int) (key string) {
 		return key
 	}
 	return ""
-}
-
-func (*User) TableName() string {
-	return TableNameUser
 }

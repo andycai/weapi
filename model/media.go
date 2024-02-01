@@ -4,11 +4,7 @@ import (
 	"path/filepath"
 
 	"github.com/andycai/weapi/enum"
-	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
-
-const TableNameMedia = "media"
 
 type Media struct {
 	BaseContent
@@ -29,10 +25,6 @@ type MediaFolder struct {
 	FoldersCount int64  `json:"foldersCount"`
 }
 
-func (*Media) TableName() string {
-	return TableNameMedia
-}
-
 func (m *Media) BuildPublicUrls(mediaHost string, mediaPrefix string) {
 	if m.Directory {
 		m.PublicUrl = ""
@@ -51,43 +43,4 @@ func (m *Media) BuildPublicUrls(mediaHost string, mediaPrefix string) {
 	if m.ContentType == enum.ContentTypeImage && m.Thumbnail == "" {
 		m.Thumbnail = m.PublicUrl
 	}
-}
-
-func CreateFolder(db *gorm.DB, parent, name string, user *User) (string, error) {
-	if parent == "" {
-		parent = "/"
-	}
-	obj := Media{
-		Path:      parent,
-		Name:      name,
-		Directory: true,
-	}
-
-	if user != nil {
-		obj.Creator = *user
-		obj.CreatorID = user.ID
-	}
-
-	fullPath := filepath.Join(parent, name)
-	return fullPath, db.Clauses(clause.OnConflict{
-		DoNothing: true,
-	}).Create(&obj).Error
-}
-
-func ListFolders(db *gorm.DB, path string) ([]MediaFolder, error) {
-	var folders []MediaFolder = make([]MediaFolder, 0)
-	tx := db.Model(&Media{}).Select("path", "name").Where("path", path).Where("directory", true)
-	r := tx.Find(&folders)
-	if r.Error != nil {
-		return nil, r.Error
-	}
-	for i := range folders {
-		folder := &folders[i]
-		folder.Path = filepath.Join(folder.Path, folder.Name)
-		tx := db.Model(&Media{}).Where("path", folder.Path)
-		tx.Select("COUNT(*)").Where("directory", true).Find(&folder.FoldersCount)
-		tx = db.Model(&Media{}).Where("path", folder.Path)
-		tx.Select("COUNT(*)").Where("directory", false).Find(&folder.FilesCount)
-	}
-	return folders, r.Error
 }

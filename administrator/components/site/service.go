@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/andycai/weapi/administrator/components/config"
+	"github.com/andycai/weapi/administrator/components/post"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
@@ -664,4 +665,22 @@ func DefaultPrepareQuery(db *gorm.DB, c *fiber.Ctx) (*gorm.DB, *model.QueryForm,
 	}
 
 	return db, &form, nil
+}
+
+func GetSummary() (result model.SummaryResult) {
+	db.Model(&model.Site{}).Count(&result.SiteCount)
+	db.Model(&model.Page{}).Count(&result.PageCount)
+	db.Model(&model.Post{}).Count(&result.PostCount)
+	db.Model(&model.Category{}).Count(&result.CategoryCount)
+	db.Model(&model.Media{}).Where("directory", false).Count(&result.MediaCount)
+
+	var latestPosts []model.Post
+	db.Order("updated_at desc").Limit(20).Find(&latestPosts)
+
+	for idx := range latestPosts {
+		item := post.NewRenderContentFromPost(&latestPosts[idx], false)
+		item.PostBody = ""
+		result.LatestPosts = append(result.LatestPosts, item)
+	}
+	return result
 }

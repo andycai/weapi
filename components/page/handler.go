@@ -3,6 +3,7 @@ package page
 import (
 	"strconv"
 
+	"github.com/andycai/weapi/administrator/components/page"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
@@ -18,5 +19,5 @@ func BeforeRenderPage(ctx *fiber.Ctx, vptr any) (any, error) {
 	if draft {
 		result.Body = result.Draft
 	}
-	return model.NewRenderContentFromPage(db, result), nil
+	return page.NewRenderContentFromPage(result), nil
 }
