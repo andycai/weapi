@@ -1,4 +1,4 @@
-package entity
+package site
 
 import (
 	"github.com/andycai/weapi/components/page"

@@ -1,4 +1,4 @@
-package entity
+package site
 
 import (
 	"database/sql"
@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/andycai/weapi/administrator/components/entity"
+	"github.com/andycai/weapi/administrator/components/site"
 	"github.com/andycai/weapi/object"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -66,7 +66,7 @@ func RegisterObject(obj *object.WebObject, r fiber.Router) error {
 
 	if allowMethods&object.QUERY != 0 {
 		r.Post(p, func(c *fiber.Ctx) error {
-			handleQueryObject(c, obj, entity.DefaultPrepareQuery)
+			handleQueryObject(c, obj, site.DefaultPrepareQuery)
 			return nil
 		})
 	}
@@ -80,7 +80,7 @@ func RegisterObject(obj *object.WebObject, r fiber.Router) error {
 			v.Method = http.MethodPost
 		}
 		if v.Prepare == nil {
-			v.Prepare = entity.DefaultPrepareQuery
+			v.Prepare = site.DefaultPrepareQuery
 		}
 		r.Add(v.Method, filepath.Join(p, v.Path), func(ctx *fiber.Ctx) error {
 			handleQueryObject(ctx, obj, v.Prepare)

@@ -6,6 +6,7 @@ import (
 
 	"github.com/andycai/weapi"
 	_ "github.com/andycai/weapi/administrator/components"
+	"github.com/andycai/weapi/administrator/components/config"
 	_ "github.com/andycai/weapi/components"
 	"github.com/andycai/weapi/conf"
 	"github.com/andycai/weapi/core"
@@ -100,12 +101,11 @@ func main() {
 	app.Static("/static", filepath.Join("", staticDir))
 	app.Static("/admin", filepath.Join("", htmlDir))
 
-	// mediaPrefix := conf.GetValue(db, enum.KEY_CMS_MEDIA_PREFIX)
-	// uploadDir := conf.GetValue(db, enum.KEY_CMS_UPLOAD_DIR)
-	// app.Static(mediaPrefix, filepath.Join("", uploadDir))
-
 	// router
 	core.SetupRouter(app)
+
+	// check config
+	config.CheckConfig()
 
 	err = app.Listen(addr)
 	if err != nil {

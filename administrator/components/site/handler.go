@@ -1,4 +1,4 @@
-package entity
+package site
 
 import (
 	"database/sql"

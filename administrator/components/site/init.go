@@ -2,7 +2,6 @@ package site
 
 import (
 	"github.com/andycai/weapi"
-	"github.com/andycai/weapi/administrator/components/entity"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/model"
 	"github.com/andycai/weapi/object"
@@ -22,8 +21,15 @@ func initDB(dbs []*gorm.DB) {
 	db = dbs[0]
 }
 
-func initCheckRouter(r fiber.Router) {
-	// r.Get("/posts/manager", ManagerPage)
+func initAdminCheckRouter(r fiber.Router) {
+	adminObjects := BuildAdminObjects(r, core.GetAdminObjects())
+
+	r.Post("/json", func(c *fiber.Ctx) error {
+		return JsonAction(c, adminObjects)
+	})
+
+	r.Post("/summary", HandleAdminSummary)
+	r.Post("/tags/:content_type", handleGetTags)
 }
 
 func initAdminObject() []object.AdminObject {
@@ -73,7 +79,7 @@ func initAdminObject() []object.AdminObject {
 					WithoutObject: true,
 					Path:          "query_with_count",
 					Name:          "Query with item count",
-					Handler:       entity.HandleQueryCategoryWithCount,
+					Handler:       HandleQueryCategoryWithCount,
 				},
 			},
 			Weight: 11,
@@ -83,6 +89,6 @@ func initAdminObject() []object.AdminObject {
 
 func init() {
 	core.RegisterDatabase(KeyDB, initDB)
-	core.RegisterAdminCheckRouter(KeyCheckRouter, initCheckRouter)
+	core.RegisterAdminCheckRouter(KeyCheckRouter, initAdminCheckRouter)
 	core.RegisterAdminObject(initAdminObject())
 }

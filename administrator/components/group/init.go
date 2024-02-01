@@ -1,4 +1,4 @@
-package entity
+package group
 
 import (
 	"github.com/andycai/weapi"
@@ -11,9 +11,9 @@ import (
 )
 
 const (
-	KeyDB            = "admin.entity.gorm.db"
-	KeyNoCheckRouter = "admin.entity.router.nocheck"
-	KeyCheckRouter   = "admin.entity.router.check"
+	KeyDB            = "admin.group.gorm.db"
+	KeyNoCheckRouter = "admin.group.router.nocheck"
+	KeyCheckRouter   = "admin.group.router.check"
 )
 
 var db *gorm.DB
@@ -22,18 +22,7 @@ func initDB(dbs []*gorm.DB) {
 	db = dbs[0]
 }
 
-func initNoCheckRouter(r fiber.Router) {
-}
-
 func initCheckRouter(r fiber.Router) {
-	adminObjects := BuildAdminObjects(r, core.GetAdminObjects())
-
-	r.Post("/json", func(c *fiber.Ctx) error {
-		return JsonAction(c, adminObjects)
-	})
-
-	r.Post("/summary", HandleAdminSummary)
-	r.Post("/tags/:content_type", handleGetTags)
 }
 
 func initAdminObject() []object.AdminObject {
@@ -75,27 +64,11 @@ func initAdminObject() []object.AdminObject {
 			},
 			Weight: 23,
 		},
-		{
-			Model:       &model.Config{},
-			Group:       "Settings",
-			Name:        "Config",
-			Desc:        "System config with database backend, You can change it in admin page, and it will take effect immediately without restarting the server", //
-			PluralName:  "Configs",
-			Shows:       []string{"Key", "Value", "Desc"},
-			Editables:   []string{"Key", "Value", "Desc"},
-			Orderables:  []string{"Key"},
-			Searchables: []string{"Key", "Value", "Desc"},
-			Requireds:   []string{"Key", "Value"},
-			Icon:        weapi.ReadIcon("/icon/config.svg"),
-			AccessCheck: user.SuperAccessCheck,
-			Weight:      24,
-		},
 	}
 }
 
 func init() {
 	core.RegisterDatabase(KeyDB, initDB)
-	core.RegisterAPINoCheckRouter(KeyNoCheckRouter, initNoCheckRouter)
 	core.RegisterAdminCheckRouter(KeyCheckRouter, initCheckRouter)
 	core.RegisterAdminObject(initAdminObject())
 }

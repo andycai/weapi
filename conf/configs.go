@@ -13,6 +13,21 @@ import (
 	"gorm.io/gorm"
 )
 
+// func ReadConf() {
+// 	viper.SetConfigName("app")
+// 	viper.SetConfigType("yaml")
+// 	viper.AddConfigPath(".")
+
+// 	err := viper.ReadInConfig()
+// 	if err != nil {
+// 		panic(fmt.Errorf("Fatal error config file: %s \n", err))
+// 	}
+
+// 	pflag.String("app.cacheDir", "./cache/", "cache directory")
+// 	pflag.Parse()
+// 	viper.BindPFlags(pflag.CommandLine) // bind cmd
+// }
+
 var configValueCache *core.ExpiredLRUCache[string, string]
 
 func init() {

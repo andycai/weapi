@@ -21,6 +21,9 @@ bin/
 *.db
 .env
 .weapi_setup_done
+*.log
+data/
+template/
 
 # Go workspace file
 go.work
