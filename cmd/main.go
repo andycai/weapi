@@ -7,6 +7,7 @@ import (
 	"github.com/andycai/weapi"
 	_ "github.com/andycai/weapi/administrator/components"
 	"github.com/andycai/weapi/administrator/components/config"
+	"github.com/andycai/weapi/administrator/components/user"
 	_ "github.com/andycai/weapi/components"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/enum"
@@ -14,6 +15,7 @@ import (
 	"github.com/andycai/weapi/lib/database"
 	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/middlewares"
+	"github.com/andycai/weapi/model"
 	"github.com/andycai/weapi/utils/date"
 	"gorm.io/gorm"
 
@@ -88,6 +90,23 @@ func main() {
 
 	if superUserEmail != "" && superUserPassword != "" {
 		// create super user
+		err, userVo := user.GetByEmail(superUserEmail)
+		if err == nil && userVo != nil {
+			user.UpdatePassword(userVo, superUserPassword)
+			log.Infof("password of the super user %s has been updated", superUserEmail)
+		} else {
+			userVo = &model.User{}
+			userVo.Email = superUserEmail
+			userVo.Password = core.HashPassword(superUserPassword)
+			userVo.IsStaff = true
+			userVo.Activated = true
+			userVo.Enabled = true
+			userVo.IsSuperUser = true
+			err := user.CreateUser(userVo)
+			if err != nil {
+				panic(err)
+			}
+		}
 	}
 
 	date.SetZoneOffset(zoneOffset)
