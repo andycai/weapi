@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/andycai/weapi/enum"
+	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/model"
 	"github.com/andycai/weapi/utils/random"
 	"gorm.io/gorm"
@@ -17,7 +18,7 @@ func NewRenderContentFromPage(page *model.Page) *model.RenderContent {
 		data = make(map[string]any)
 		err := json.Unmarshal([]byte(page.Body), &data)
 		if err != nil {
-			// carrot.Warning("unmarshal json error: ", page.SiteID, page.ID, page.Title, err)
+			log.Infof("unmarshal json error: %s, %s, %s, %s", page.SiteID, page.ID, page.Title, err)
 		}
 	} else {
 		data = page.Body

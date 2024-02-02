@@ -2,6 +2,7 @@ package page
 
 import (
 	"github.com/andycai/weapi/enum"
+	"github.com/andycai/weapi/log"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -11,7 +12,7 @@ func HandleMakePagePublish(c *fiber.Ctx, obj any, publish bool) (any, error) {
 	siteId := c.Query("site_id")
 	id := c.Query("id")
 	if err := MakePublish(siteId, id, obj, publish); err != nil {
-		// carrot.Warning("make publish failed:", siteId, id, publish, err)
+		log.Infof("make publish failed: %s, %s, %t, %s", siteId, id, publish, err)
 		return false, err
 	}
 	return true, nil
@@ -19,7 +20,7 @@ func HandleMakePagePublish(c *fiber.Ctx, obj any, publish bool) (any, error) {
 
 func HandleMakePageDuplicate(c *fiber.Ctx, obj any) (any, error) {
 	if err := MakeDuplicate(obj); err != nil {
-		// carrot.Warning("make duplicate failed:", obj, err)
+		log.Infof("make duplicate failed: %v, %s", obj, err)
 		return false, err
 	}
 	return true, nil
@@ -40,7 +41,7 @@ func HandleSaveDraft(c *fiber.Ctx, obj any) (any, error) {
 	}
 
 	if err := SafeDraft(siteId, id, obj, draft); err != nil {
-		// carrot.Warning("safe draft failed:", siteId, id, err)
+		log.Infof("safe draft failed: %s, %s, %s", siteId, id, err)
 		return false, err
 	}
 	return true, nil

@@ -59,38 +59,3 @@ const CORS_ALLOW_ALL = "*"
 const CORS_ALLOW_CREDENTIALS = "true"
 const CORS_ALLOW_HEADERS = "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With, X-Auth-Token"
 const CORS_ALLOW_METHODS = "POST, OPTIONS, GET, PUT, PATCH, DELETE"
-
-// func InitCarrot(db *gorm.DB, r *gin.Engine) (err error) {
-// 	err = InitMigrate(db)
-// 	if err != nil {
-// 		log.Fatal("migrate failed", err)
-// 	}
-
-// 	r.Use(WithGormDB(db), CORSEnabled())
-
-// 	secret := GetEnv(ENV_SESSION_SECRET)
-// 	if secret != "" {
-// 		r.Use(WithCookieSession(secret))
-// 	} else {
-// 		r.Use(WithMemSession(""))
-// 	}
-
-// 	//
-// 	// Check default SITE_*
-// 	//
-// 	CheckValue(db, KEY_SITE_LOGO_URL, "/static/img/carrot.svg")
-// 	CheckValue(db, KEY_SITE_FAVICON_URL, "/static/img/favicon.png")
-// 	CheckValue(db, KEY_SITE_SIGNIN_URL, "/auth/login")
-// 	CheckValue(db, KEY_SITE_SIGNUP_URL, "/auth/register")
-// 	CheckValue(db, KEY_SITE_LOGOUT_URL, "/auth/logout")
-// 	CheckValue(db, KEY_SITE_RESET_PASSWORD_URL, "/auth/reset_password")
-// 	CheckValue(db, KEY_SITE_LOGIN_NEXT, "/")
-
-// 	as := NewStaticAssets()
-// 	as.InitStaticAssets(r)
-
-// 	r.HTMLRender = as
-
-// 	InitAuthHandler("/auth", db, r)
-// 	return nil
-// }

@@ -15,6 +15,7 @@ import (
 	"github.com/andycai/weapi/administrator/components/user"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/lib/database"
+	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/middlewares"
 	"github.com/andycai/weapi/utils/date"
 	"github.com/gofiber/fiber/v2"
@@ -84,13 +85,13 @@ func RunSetup(addr string) {
 
 func runSetupMode(addr string) {
 	// var err error
-	// log.Infof("Run setup mode")
+	log.Infof("Run setup mode")
 	ln, err := net.Listen("tcp", addr)
 	if err != nil {
 		panic(err)
 	}
 
-	// log.Infof("Please visit http://%s/setup to complete install", addr)
+	log.Infof("Please visit http://%s/setup to complete install", addr)
 
 	engine := core.ViewEngineStart()
 	app := fiber.New(fiber.Config{
@@ -140,7 +141,7 @@ func runSetupMode(addr string) {
 			}
 		}()
 
-		// log.Infof("DSN: %s", form.DSN())
+		log.Infof("DSN: %s", form.DSN())
 		db, err = database.InitRDBMS(form.Driver, form.DSN(), 32, 30, 14400)
 		if err != nil {
 			return fail(c, err.Error())
@@ -255,7 +256,7 @@ func runSetupMode(addr string) {
 		u.Enabled = true
 		u.IsSuperUser = true
 		db.Save(u)
-		// log.Infof("Create super user: %s", form.Username)
+		log.Infof("Create super user: %s", form.Username)
 
 		return ok(c)
 	})
@@ -263,7 +264,7 @@ func runSetupMode(addr string) {
 	app.Post("/setup/restart", func(c *fiber.Ctx) error {
 		os.WriteFile(setupDoneFlag, []byte("done"), 0644)
 		time.AfterFunc(500*time.Millisecond, func() {
-			// log.Infof("Restarting...")
+			log.Infof("Restarting...")
 			srv.Shutdown(context.Background())
 		})
 

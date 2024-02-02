@@ -24,7 +24,7 @@ type Unsigned interface {
 	~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr
 }
 
-// Max 返回最大值
+// Max return the maximum
 func Max[T Ordered](x, y T) T {
 	if x > y {
 		return x
@@ -33,7 +33,7 @@ func Max[T Ordered](x, y T) T {
 	return y
 }
 
-// Min 返回最小值
+// Min return the minimum
 func Min[T Ordered](x, y T) T {
 	if x < y {
 		return x

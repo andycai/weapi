@@ -14,6 +14,7 @@ import (
 	"github.com/andycai/weapi/administrator/components/config"
 	"github.com/andycai/weapi/administrator/components/post"
 	"github.com/andycai/weapi/enum"
+	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/jinzhu/inflection"
@@ -60,12 +61,12 @@ func BuildAdminObjects(r fiber.Router, objs []model.AdminObject) []*model.AdminO
 		obj := &objs[idx]
 		err := Build(obj)
 		if err != nil {
-			// Warning("Build admin object fail, ignore", obj.Group, obj.Name, "err:", err)
+			log.Infof("Build admin object fail, ignore %s, %s, err: %s", obj.Group, obj.Name, err)
 			continue
 		}
 
 		if _, ok := exists[obj.Path]; ok {
-			// Warning("Ignore exist admin object", obj.Group, obj.Name)
+			log.Infof("Ignore exist admin object %s, %s", obj.Group, obj.Name)
 			continue
 		}
 

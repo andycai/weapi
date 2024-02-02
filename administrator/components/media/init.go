@@ -6,6 +6,7 @@ import (
 	"github.com/andycai/weapi/administrator/components/user"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/enum"
+	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -81,7 +82,7 @@ func initAdminObject() []model.AdminObject {
 			BeforeDelete: func(ctx *fiber.Ctx, vptr any) error {
 				media := vptr.(*model.Media)
 				if err := RemoveFile(media.Path, media.Name); err != nil {
-					// log.Warningf("Delete file failed: ", media.StorePath, err)
+					log.Infof("Delete file failed: %s, %s", media.StorePath, err)
 				}
 				return nil
 			},

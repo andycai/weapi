@@ -43,7 +43,6 @@ func main() {
 	var superUserPassword string
 
 	log.Setup(debug, logFile)
-	// conf.ReadConf()
 
 	flag.StringVar(&superUserEmail, "superuser", "", "Create an super user with email")
 	flag.StringVar(&superUserPassword, "password", "", "Super user password")

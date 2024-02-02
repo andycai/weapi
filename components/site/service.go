@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/andycai/weapi/administrator/components/site"
+	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -21,7 +22,7 @@ func RegisterObjects(r fiber.Router, objs []model.WebObject) {
 		obj := &objs[idx]
 		err := RegisterObject(obj, r)
 		if err != nil {
-			// log.Fatalf("RegisterObject [%s] fail %v\n", obj.Name, err)
+			log.Infof("RegisterObject [%s] fail %v\n", obj.Name, err)
 		}
 	}
 }

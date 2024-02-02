@@ -80,7 +80,7 @@ func RemoveDirectory(path string) (string, error) {
 		if !media.External {
 			fullPath := filepath.Join(uploadDir, media.StorePath)
 			if err := os.Remove(fullPath); err != nil {
-				// carrot.Warning("Remove file failed: ", err, fullPath)
+				log.Infof("Remove file failed: %s, %s", err, fullPath)
 			}
 		}
 	}
@@ -147,7 +147,7 @@ func PrepareStoreLocalDir() (string, error) {
 
 	if _, err := os.Stat(uploadDir); err != nil {
 		if os.IsNotExist(err) {
-			// carrot.Warning("upload dir not exist, create it: ", uploadDir)
+			log.Infof("upload dir not exist, create it: %s", uploadDir)
 			if err = os.MkdirAll(uploadDir, 0755); err != nil {
 				return "", err
 			}
@@ -179,7 +179,7 @@ func StoreExternal(externalUploader, path, name string, data []byte) (string, er
 
 	resp, err := http.Post(externalUploader, form.FormDataContentType(), buf)
 	if err != nil {
-		// carrot.Warning("upload to external server failed: ", err, externalUploader)
+		log.Infof("upload to external server failed: %s, %s", err, externalUploader)
 		return "", err
 	}
 
@@ -188,7 +188,7 @@ func StoreExternal(externalUploader, path, name string, data []byte) (string, er
 	io.Copy(respBody, resp.Body)
 	body := respBody.Bytes()
 	if resp.StatusCode != http.StatusOK {
-		// carrot.Warning("upload to external server failed: ", resp.StatusCode, externalUploader, string(body))
+		log.Infof("upload to external server failed: %s, %s, %s", resp.StatusCode, externalUploader, string(body))
 		return "", fmt.Errorf("upload to external server failed, code:%d %s", resp.StatusCode, string(body))
 	}
 	var remoteResult model.UploadResult
@@ -251,7 +251,7 @@ func UploadFile(path, name string, reader io.Reader) (*model.UploadResult, error
 		if err == nil {
 			r.Dimensions = fmt.Sprintf("%dX%d", config.Width, config.Height)
 		} else {
-			// carrot.Warning("decode image config error: ", err)
+			log.Infof("decode image config error: %s", err)
 			r.Dimensions = "X"
 		}
 	}
