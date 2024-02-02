@@ -99,7 +99,7 @@ func runSetupMode(addr string) {
 	})
 
 	// Middleware
-	middlewares.Use(app)
+	middlewares.Use(app, nil)
 	app.Static("/static", filepath.Join("", viper.GetString("app.static")))
 
 	srv := &http.Server{Handler: adaptor.FiberApp(app)}
@@ -142,7 +142,7 @@ func runSetupMode(addr string) {
 		}()
 
 		log.Infof("DSN: %s", form.DSN())
-		db, err = database.InitRDBMS(form.Driver, form.DSN(), 32, 30, 14400)
+		db, err = database.InitRDBMS(os.Stdout, form.Driver, form.DSN(), 32, 30, 14400)
 		if err != nil {
 			return fail(c, err.Error())
 		}
@@ -164,7 +164,7 @@ func runSetupMode(addr string) {
 				h.Close()
 			}
 		}()
-		db, err = database.InitRDBMS(form.Driver, form.DSN(), 32, 30, 14400)
+		db, err = database.InitRDBMS(os.Stdout, form.Driver, form.DSN(), 32, 30, 14400)
 		if err != nil {
 			return fail(c, err.Error())
 		}
@@ -231,7 +231,7 @@ func runSetupMode(addr string) {
 			}
 		}()
 
-		db, err = database.InitRDBMS(form.DBConfig.Driver, form.DBConfig.DSN(), 32, 30, 14400)
+		db, err = database.InitRDBMS(os.Stdout, form.DBConfig.Driver, form.DBConfig.DSN(), 32, 30, 14400)
 		if err != nil {
 			return fail(c, err.Error())
 		}

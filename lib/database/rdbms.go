@@ -1,6 +1,9 @@
 package database
 
 import (
+	"io"
+	"log"
+	"os"
 	"time"
 
 	"gorm.io/driver/clickhouse"
@@ -9,6 +12,7 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/driver/sqlserver"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 //   driver: mysql
@@ -29,26 +33,43 @@ import (
 var db *gorm.DB
 
 // Init database init
-func InitRDBMS(name, source string, active, idle, idleTimeout int) (*gorm.DB, error) {
+func InitRDBMS(logWriter io.Writer, name, source string, active, idle, idleTimeout int) (*gorm.DB, error) {
 	var (
 		gormDB *gorm.DB
 		err    error
 	)
+
+	var newLogger logger.Interface
+	if logWriter == nil {
+		logWriter = os.Stdout
+	}
+	newLogger = logger.New(
+		log.New(logWriter, "\r\n", log.LstdFlags), // io writer
+		logger.Config{
+			SlowThreshold:             time.Second, // Slow SQL threshold
+			LogLevel:                  logger.Warn, // Log level
+			IgnoreRecordNotFoundError: true,        // Ignore ErrRecordNotFound error for logger
+			Colorful:                  false,       // Disable color
+		},
+	)
+
+	gormCfg := &gorm.Config{Logger: newLogger, SkipDefaultTransaction: true}
+
 	switch name {
 	case "mysql":
 		// https://github.com/go-sql-driver/mysql
-		gormDB, err = gorm.Open(mysql.Open(source), &gorm.Config{})
+		gormDB, err = gorm.Open(mysql.Open(source), gormCfg)
 	case "postgres":
 		// https://github.com/go-gorm/postgres
-		gormDB, err = gorm.Open(postgres.Open(source), &gorm.Config{})
+		gormDB, err = gorm.Open(postgres.Open(source), gormCfg)
 	case "sqlite":
 		// github.com/mattn/go-sqlite3
-		gormDB, err = gorm.Open(sqlite.Open(source), &gorm.Config{})
+		gormDB, err = gorm.Open(sqlite.Open(source), gormCfg)
 	case "sqlserver":
 		// github.com/denisenkom/go-mssqldb
-		gormDB, err = gorm.Open(sqlserver.Open(source), &gorm.Config{})
+		gormDB, err = gorm.Open(sqlserver.Open(source), gormCfg)
 	case "clickhouse":
-		gormDB, err = gorm.Open(clickhouse.Open(source), &gorm.Config{})
+		gormDB, err = gorm.Open(clickhouse.Open(source), gormCfg)
 	}
 	if err != nil {
 		return nil, err

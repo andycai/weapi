@@ -2,6 +2,8 @@ package main
 
 import (
 	"flag"
+	"io"
+	"os"
 	"path/filepath"
 
 	"github.com/andycai/weapi"
@@ -65,9 +67,25 @@ func main() {
 	if dsn == "" {
 		RunSetup(addr)
 	}
+	var httplw io.Writer = os.Stdout
+	var lw io.Writer = os.Stdout
+
+	if !debug {
+		lw, err := os.OpenFile(logFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		if err != nil {
+			log.Infof("error opening file: %v", err)
+		}
+		defer lw.Close()
+
+		httplw, err := os.OpenFile("http-"+logFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		if err != nil {
+			log.Infof("error opening file: %v", err)
+		}
+		defer httplw.Close()
+	}
 
 	// database open and init
-	db, err := database.InitRDBMS(dbDriver, dsn, dbActive, dbIdle, dbTimeout)
+	db, err := database.InitRDBMS(lw, dbDriver, dsn, dbActive, dbIdle, dbTimeout)
 
 	if err != nil {
 		panic(err)
@@ -113,7 +131,7 @@ func main() {
 	core.SetLang(lang)
 
 	// Middleware
-	middlewares.Use(app)
+	middlewares.Use(app, httplw)
 
 	app.Static("/static", filepath.Join("", staticDir))
 	app.Static("/admin", filepath.Join("", htmlDir))
@@ -124,6 +142,7 @@ func main() {
 	// check config
 	config.CheckConfig()
 
+	log.Infof("Server started on %s", addr)
 	err = app.Listen(addr)
 	if err != nil {
 		panic(err)

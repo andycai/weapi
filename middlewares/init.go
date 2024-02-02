@@ -2,6 +2,8 @@ package middlewares
 
 import (
 	"fmt"
+	"io"
+	"os"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -12,8 +14,11 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 )
 
-func Use(app *fiber.App) {
-	// 日志
+func Use(app *fiber.App, logfile io.Writer) {
+	if logfile == nil {
+		logfile = os.Stdout
+	}
+	// request
 	// app.Use(func(c *fiber.Ctx) error {
 	// 	// Log each request
 	// 	log.Info(
@@ -26,7 +31,7 @@ func Use(app *fiber.App) {
 	// 	return c.Next()
 	// })
 
-	// 限流
+	// rate limiter
 	app.Use(
 		limiter.New(limiter.Config{
 			Next: func(c *fiber.Ctx) bool {
@@ -53,7 +58,8 @@ func Use(app *fiber.App) {
 		logger.New(logger.Config{
 			Format:     "${time} ${pid} ${locals:requestid} ${status} - ${method} ${path}​\n​",
 			TimeFormat: "2006-01-02 15:04:05",
-			// TimeZone:   "America/New_York",
+			Output:     logfile,
+			// TimeZone:   "America/New_York", // "Asia/Shanghai",
 		}),
 	)
 }
