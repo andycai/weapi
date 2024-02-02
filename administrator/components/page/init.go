@@ -31,7 +31,6 @@ func initAdminObject() []model.AdminObject {
 			Model:       &model.Page{},
 			Group:       "Contents",
 			Name:        "Page",
-			PluralName:  "Pages",
 			Desc:        "The page data of the website can only be in JSON/YAML format",
 			Shows:       []string{"ID", "Site", "Title", "Author", "IsDraft", "Published", "PublishedAt", "CategoryID", "Tags", "CreatedAt"},
 			Editables:   []string{"ID", "Site", "CategoryID", "CategoryPath", "Author", "IsDraft", "Draft", "Published", "PublishedAt", "ContentType", "Thumbnail", "Tags", "Title", "Alt", "Description", "Keywords", "Draft", "Remark"},

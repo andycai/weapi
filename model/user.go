@@ -56,14 +56,14 @@ type User struct {
 	Email       string     `json:"email" gorm:"size:128;uniqueIndex"`
 	Password    string     `json:"-" gorm:"size:128"`
 	Phone       string     `json:"phone,omitempty" gorm:"size:64;index"`
-	FirstName   string     `json:"firstName,omitempty" gorm:"size:128"`
-	LastName    string     `json:"lastName,omitempty" gorm:"size:128"`
-	DisplayName string     `json:"displayName,omitempty" gorm:"size:128"`
+	FirstName   string     `json:"first_name,omitempty" gorm:"size:128"`
+	LastName    string     `json:"last_name,omitempty" gorm:"size:128"`
+	DisplayName string     `json:"display_name,omitempty" gorm:"size:128"`
 	IsSuperUser bool       `json:"-"`
 	IsStaff     bool       `json:"-"`
 	Enabled     bool       `json:"-"`
 	Activated   bool       `json:"-"`
-	LastLogin   *time.Time `json:"lastLogin,omitempty"`
+	LastLogin   *time.Time `json:"last_login,omitempty"`
 	LastLoginIP string     `json:"-" gorm:"size:128"`
 
 	Source    string   `json:"-" gorm:"size:64;index"`

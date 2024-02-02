@@ -16,7 +16,7 @@ type Media struct {
 	Dimensions string `json:"dimensions" gorm:"size:200"` // x*y
 	StorePath  string `json:"-" gorm:"size:300"`
 	External   bool   `json:"external"`
-	PublicUrl  string `json:"publicUrl,omitempty" gorm:"-"`
+	PublicUrl  string `json:"public_url,omitempty" gorm:"-"`
 }
 type MediaFolder struct {
 	Name         string `json:"name"`

@@ -14,7 +14,7 @@ type CategoryItem struct {
 }
 
 type Category struct {
-	SiteID string        `json:"siteId" gorm:"uniqueIndex:,composite:_site_uuid"`
+	SiteID string        `json:"site_id" gorm:"uniqueIndex:,composite:_site_uuid"`
 	Site   Site          `json:"-"`
 	UUID   string        `json:"uuid" gorm:"size:12;uniqueIndex:,composite:_site_uuid"`
 	Name   string        `json:"name" gorm:"size:200"`
@@ -26,7 +26,7 @@ type RenderCategory struct {
 	UUID     string `json:"uuid"`
 	Name     string `json:"name"`
 	Path     string `json:"path,omitempty"`
-	PathName string `json:"pathName,omitempty"`
+	PathName string `json:"path_name,omitempty"`
 }
 
 func (s CategoryItem) Value() (driver.Value, error) {

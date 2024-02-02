@@ -39,7 +39,7 @@ func initAdminObject() []model.AdminObject {
 			Requireds:   []string{"Name"},
 			Icon:        weapi.ReadIcon("/icon/group.svg"),
 			AccessCheck: user.SuperAccessCheck,
-			Weight:      22,
+			Weight:      92,
 		},
 		{
 			Model:       &model.GroupMember{},
@@ -61,7 +61,7 @@ func initAdminObject() []model.AdminObject {
 					Choices: []model.AdminSelectOption{{Label: "Admin", Value: model.GroupRoleAdmin}, {Label: "Member", Value: model.GroupRoleMember}},
 				},
 			},
-			Weight: 23,
+			Weight: 93,
 		},
 	}
 }

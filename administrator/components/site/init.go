@@ -36,11 +36,10 @@ func initAdminCheckRouter(r fiber.Router) {
 func initAdminObject() []model.AdminObject {
 	return []model.AdminObject{
 		{
-			Model:      &model.Site{},
-			Group:      "Contents",
-			Name:       "Site",
-			PluralName: "Sites",
-			Shows:      []string{"Domain", "Name", "Preview", "Disallow", "UpdatedAt", "CreatedAt"},
+			Model: &model.Site{},
+			Group: "Contents",
+			Name:  "Site",
+			Shows: []string{"Domain", "Name", "Preview", "Disallow", "UpdatedAt", "CreatedAt"},
 			Orders: []model.Order{
 				{
 					Name: "UpdatedAt",

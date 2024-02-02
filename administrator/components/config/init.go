@@ -39,7 +39,7 @@ func initAdminObject() []model.AdminObject {
 			Requireds:   []string{"Key", "Value"},
 			Icon:        weapi.ReadIcon("/icon/config.svg"),
 			AccessCheck: user.SuperAccessCheck,
-			Weight:      24,
+			Weight:      94,
 		},
 	}
 }

@@ -43,7 +43,6 @@ func initAdminObject() []model.AdminObject {
 			Model:       &model.Media{},
 			Group:       "Contents",
 			Name:        "Media",
-			PluralName:  "Media",
 			Desc:        "All kinds of media files, such as images, videos, audios, etc.",
 			Shows:       []string{"Name", "ContentType", "Author", "Published", "Size", "Dimensions", "UpdatedAt"},
 			Editables:   []string{"External", "PublicUrl", "Author", "Published", "PublishedAt", "Title", "Alt", "Description", "Keywords", "ContentType", "Size", "Path", "Name", "Dimensions", "StorePath", "UpdatedAt", "Ext", "Size", "StorePath", "Remark"},

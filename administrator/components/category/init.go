@@ -29,7 +29,6 @@ func initAdminObject() []model.AdminObject {
 			Model:       &model.Category{},
 			Group:       "Contents",
 			Name:        "Category",
-			PluralName:  "Categories",
 			Desc:        "The category of articles and pages can be multi-level",
 			Shows:       []string{"Name", "UUID", "Site", "Items"},
 			Editables:   []string{"Name", "UUID", "Site", "Items"},

@@ -18,8 +18,8 @@ func (s *StringArray) Scan(input interface{}) error {
 }
 
 type BaseContent struct {
-	UpdatedAt   time.Time    `json:"updatedAt" gorm:"index"`
-	CreatedAt   time.Time    `json:"createdAt" gorm:"index"`
+	UpdatedAt   time.Time    `json:"updated_at" gorm:"index"`
+	CreatedAt   time.Time    `json:"created_at" gorm:"index"`
 	Thumbnail   string       `json:"thumbnail,omitempty" gorm:"size:500"`
 	Tags        string       `json:"tags,omitempty" gorm:"size:200;index"`
 	Title       string       `json:"title,omitempty" gorm:"size:200"`
@@ -30,8 +30,8 @@ type BaseContent struct {
 	Creator     User         `json:"-"`
 	Author      string       `json:"author" gorm:"size:64"`
 	Published   bool         `json:"published"`
-	PublishedAt sql.NullTime `json:"publishedAt"`
-	ContentType string       `json:"contentType" gorm:"size:32"`
+	PublishedAt sql.NullTime `json:"published_at"`
+	ContentType string       `json:"content_type" gorm:"size:32"`
 	Remark      string       `json:"remark"`
 }
 
@@ -47,9 +47,9 @@ type SummaryResult struct {
 }
 
 type TagsForm struct {
-	SiteId       string `json:"siteId"`
-	CategoryId   string `json:"categoryId"`
-	CategoryPath string `json:"categoryPath"`
+	SiteId       string `json:"site_id"`
+	CategoryId   string `json:"category_id"`
+	CategoryPath string `json:"category_path"`
 }
 
 type QueryByTagsForm struct {

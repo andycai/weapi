@@ -32,7 +32,6 @@ func initAdminObject() []model.AdminObject {
 			Model:       &model.Post{},
 			Group:       "Contents",
 			Name:        "Post",
-			PluralName:  "Posts",
 			Desc:        "Website articles or blogs, support HTML and Markdown formats",
 			Shows:       []string{"ID", "Site", "Title", "Author", "CategoryID", "Tags", "IsDraft", "Published", "PublishedAt", "CreatedAt"},
 			Editables:   []string{"ID", "Site", "CategoryID", "CategoryPath", "Author", "IsDraft", "Draft", "Published", "PublishedAt", "ContentType", "Thumbnail", "Tags", "Title", "Alt", "Description", "Keywords", "Draft", "Remark"},
