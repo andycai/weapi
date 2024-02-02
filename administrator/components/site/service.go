@@ -629,7 +629,6 @@ func QueryObjects(obj *model.AdminObject, session *gorm.DB, form *model.QueryFor
 		modelObj := vals.Elem().Index(i).Addr().Interface()
 		r.Objects = append(r.Objects, modelObj)
 		if obj.BeforeRender != nil {
-			// db := getDbConnection(ctx, obj.GetDB, false)
 			rr, err := obj.BeforeRender(ctx, modelObj)
 			if err != nil {
 				return r, err
@@ -649,11 +648,11 @@ func QueryObjects(obj *model.AdminObject, session *gorm.DB, form *model.QueryFor
 }
 
 // DefaultPrepareQuery return default QueryForm.
-func DefaultPrepareQuery(db *gorm.DB, c *fiber.Ctx) (*gorm.DB, *model.QueryForm, error) {
+func DefaultPrepareQuery(c *fiber.Ctx) (*model.QueryForm, error) {
 	var form model.QueryForm
 	if c.Request().Header.ContentLength() > 0 {
 		if err := c.BodyParser(&form); err != nil {
-			return nil, nil, err
+			return nil, err
 		}
 	}
 
@@ -664,7 +663,7 @@ func DefaultPrepareQuery(db *gorm.DB, c *fiber.Ctx) (*gorm.DB, *model.QueryForm,
 		form.Limit = model.DefaultQueryLimit
 	}
 
-	return db, &form, nil
+	return &form, nil
 }
 
 func GetSummary() (result model.SummaryResult) {

@@ -40,34 +40,29 @@ func RegisterObject(obj *model.WebObject, r fiber.Router) error {
 	primaryKeyPath := BuildPrimaryPath(obj, p)
 	if allowMethods&model.GET != 0 {
 		r.Get(primaryKeyPath, func(c *fiber.Ctx) error {
-			handleGetObject(c, obj)
-			return nil
+			return handleGetObject(c, obj)
 		})
 	}
 	if allowMethods&model.CREATE != 0 {
 		r.Put(p, func(c *fiber.Ctx) error {
-			handleCreateObject(c, obj)
-			return nil
+			return handleCreateObject(c, obj)
 		})
 	}
 	if allowMethods&model.EDIT != 0 {
 		r.Patch(primaryKeyPath, func(c *fiber.Ctx) error {
-			handleEditObject(c, obj)
-			return nil
+			return handleEditObject(c, obj)
 		})
 	}
 
 	if allowMethods&model.DELETE != 0 {
 		r.Delete(primaryKeyPath, func(c *fiber.Ctx) error {
-			handleDeleteObject(c, obj)
-			return nil
+			return handleDeleteObject(c, obj)
 		})
 	}
 
 	if allowMethods&model.QUERY != 0 {
 		r.Post(p, func(c *fiber.Ctx) error {
-			handleQueryObject(c, obj, site.DefaultPrepareQuery)
-			return nil
+			return handleQueryObject(c, obj, site.DefaultPrepareQuery)
 		})
 	}
 
@@ -83,8 +78,7 @@ func RegisterObject(obj *model.WebObject, r fiber.Router) error {
 			v.Prepare = site.DefaultPrepareQuery
 		}
 		r.Add(v.Method, filepath.Join(p, v.Path), func(ctx *fiber.Ctx) error {
-			handleQueryObject(ctx, obj, v.Prepare)
-			return nil
+			return handleQueryObject(ctx, obj, v.Prepare)
 		})
 	}
 

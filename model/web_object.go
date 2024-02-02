@@ -40,7 +40,7 @@ const (
 )
 
 type GetDB func(c *fiber.Ctx, isCreate bool) *gorm.DB // designed for group
-type PrepareQuery func(db *gorm.DB, c *fiber.Ctx) (*gorm.DB, *QueryForm, error)
+type PrepareQuery func(c *fiber.Ctx) (*QueryForm, error)
 
 type (
 	BeforeCreateFunc      func(ctx *fiber.Ctx, vptr any) error

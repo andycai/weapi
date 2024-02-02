@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/andycai/weapi/enum"
+	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/model"
 )
 
@@ -32,7 +33,7 @@ func ReadIcon(name string) *model.AdminIcon {
 	path := filepath.Join("static/admin/", name)
 	data, err := EmbedAssets.ReadFile(path)
 	if err != nil {
-		// carrot.Warning("Read icon failed:", name, err)
+		log.Infof("Read icon failed: %s, %s", name, err)
 		return nil
 	}
 	return &model.AdminIcon{SVG: string(data)}

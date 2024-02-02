@@ -1,6 +1,7 @@
 package media
 
 import (
+	"net/http"
 	"path/filepath"
 
 	_ "image/gif"
@@ -9,6 +10,7 @@ import (
 
 	"github.com/andycai/weapi/administrator/components/config"
 	"github.com/andycai/weapi/administrator/components/user"
+	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/model"
@@ -47,19 +49,16 @@ func handleMedia(c *fiber.Ctx) error {
 	}
 	img, err := GetMedia(path, name)
 	if err != nil {
-		// carrot.AbortWithJSONError(c, http.StatusNotFound, err)
-		return err
+		return core.Error(c, http.StatusNotFound, err)
 	}
 
 	if img.External {
-		c.Redirect(img.StorePath)
-		return nil
+		return c.Redirect(img.StorePath)
 	}
 
 	uploadDir := config.GetValue(enum.KEY_CMS_UPLOAD_DIR)
 	filepath := filepath.Join(uploadDir, img.StorePath)
 	return c.SendFile(filepath)
-	// http.ServeFile(c.Request().BodyWriter(), c.Request(), filepath)
 }
 
 func handleRemoveDirectory(c *fiber.Ctx, obj any) (any, error) {
@@ -67,8 +66,7 @@ func handleRemoveDirectory(c *fiber.Ctx, obj any) (any, error) {
 
 	parent, err := RemoveDirectory(path)
 	if err != nil {
-		// carrot.AbortWithJSONError(c, http.StatusInternalServerError, err)
-		return nil, err
+		return nil, core.Error(c, http.StatusInternalServerError, err)
 	}
 	return parent, nil
 }

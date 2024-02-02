@@ -2,37 +2,36 @@ package site
 
 import (
 	"errors"
+	"fmt"
+	"net/http"
 	"reflect"
 
+	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
-func handleGetObject(c *fiber.Ctx, obj *model.WebObject) {
+func handleGetObject(c *fiber.Ctx, obj *model.WebObject) error {
 	keys, err := getPrimaryValues(obj, c)
 	if err != nil {
-		// AbortWithJSONError(c, http.StatusBadRequest, err)
-		return
+		return core.Error(c, http.StatusBadRequest, err)
 	}
-	// db := getDbConnection(c, obj.GetDB, false)
 	// the real name of the primaryKey column
 	val := reflect.New(obj.ModelElem).Interface()
 	result := buildPrimaryCondition(obj, keys).Take(&val)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			// AbortWithJSONError(c, http.StatusNotFound, errors.New("not found"))
+			return core.Error(c, http.StatusNotFound, errors.New("not found"))
 		} else {
-			// AbortWithJSONError(c, http.StatusInternalServerError, result.Error)
+			return core.Error(c, http.StatusInternalServerError, result.Error)
 		}
-		return
 	}
 
 	if obj.BeforeRender != nil {
 		rr, err := obj.BeforeRender(c, val)
 		if err != nil {
-			// AbortWithJSONError(c, http.StatusInternalServerError, err)
-			return
+			return core.Error(c, http.StatusInternalServerError, err)
 		}
 
 		// if c.Writer.Written() || c.Writer.Status() != http.StatusOK {
@@ -45,50 +44,42 @@ func handleGetObject(c *fiber.Ctx, obj *model.WebObject) {
 		}
 	}
 
-	c.JSON(val)
+	return c.JSON(val)
 }
 
-func handleCreateObject(c *fiber.Ctx, obj *model.WebObject) {
+func handleCreateObject(c *fiber.Ctx, obj *model.WebObject) error {
 	val := reflect.New(obj.ModelElem).Interface()
 
 	if c.Request().Header.ContentLength() > 0 {
 		if err := c.BodyParser(&val); err != nil {
-			// AbortWithJSONError(c, http.StatusBadRequest, err)
-			return
+			return core.Error(c, http.StatusBadRequest, err)
 		}
 	}
 
-	// db := getDbConnection(c, obj.GetDB, true)
 	if obj.BeforeCreate != nil {
 		if err := obj.BeforeCreate(c, val); err != nil {
-			// AbortWithJSONError(c, http.StatusBadRequest, err)
-			return
+			return core.Error(c, http.StatusBadRequest, err)
 		}
 	}
 
 	result := db.Create(val)
 	if result.Error != nil {
-		// AbortWithJSONError(c, http.StatusInternalServerError, result.Error)
-		return
+		return core.Error(c, http.StatusInternalServerError, result.Error)
 	}
 
-	c.JSON(val)
+	return c.JSON(val)
 }
 
-func handleEditObject(c *fiber.Ctx, obj *model.WebObject) {
+func handleEditObject(c *fiber.Ctx, obj *model.WebObject) error {
 	keys, err := getPrimaryValues(obj, c)
 	if err != nil {
-		// AbortWithJSONError(c, http.StatusBadRequest, err)
-		return
+		return core.Error(c, http.StatusBadRequest, err)
 	}
 
 	var inputVals map[string]any
 	if err := c.BodyParser(&inputVals); err != nil {
-		// AbortWithJSONError(c, http.StatusBadRequest, err)
-		return
+		return core.Error(c, http.StatusBadRequest, err)
 	}
-
-	// db := getDbConnection(c, obj.GetDB, false)
 
 	var vals map[string]any = map[string]any{}
 
@@ -104,8 +95,7 @@ func handleEditObject(c *fiber.Ctx, obj *model.WebObject) {
 
 		fieldName, ok, err := checkType(obj, k, v)
 		if err != nil {
-			// AbortWithJSONError(c, http.StatusBadRequest, fmt.Errorf("%s type not match", k))
-			return
+			return core.Error(c, http.StatusBadRequest, fmt.Errorf("%s type not match", k))
 		}
 		if !ok { // ignore invalid field
 			continue
@@ -127,8 +117,7 @@ func handleEditObject(c *fiber.Ctx, obj *model.WebObject) {
 	}
 
 	if len(vals) == 0 {
-		// AbortWithJSONError(c, http.StatusBadRequest, errors.New("not changed"))
-		return
+		return core.Error(c, http.StatusBadRequest, errors.New("not changed"))
 	}
 	// db = buildPrimaryCondition(obj, db.Table(db.NamingStrategy.TableName(obj.TableName)), keys)
 	db = buildPrimaryCondition(obj, keys)
@@ -137,32 +126,27 @@ func handleEditObject(c *fiber.Ctx, obj *model.WebObject) {
 		val := reflect.New(obj.ModelElem).Interface()
 		tx := db.Session(&gorm.Session{})
 		if err := tx.First(val).Error; err != nil {
-			// AbortWithJSONError(c, http.StatusNotFound, errors.New("not found"))
-			return
+			return core.Error(c, http.StatusNotFound, errors.New("not found"))
 		}
 		if err := obj.BeforeUpdate(c, val, inputVals); err != nil {
-			// AbortWithJSONError(c, http.StatusBadRequest, err)
-			return
+			return core.Error(c, http.StatusBadRequest, err)
 		}
 	}
 
 	result := db.Updates(vals)
 	if result.Error != nil {
-		// AbortWithJSONError(c, http.StatusInternalServerError, result.Error)
-		return
+		return core.Error(c, http.StatusInternalServerError, result.Error)
 	}
 
-	c.JSON(true)
+	return c.JSON(true)
 }
 
-func handleDeleteObject(c *fiber.Ctx, obj *model.WebObject) {
+func handleDeleteObject(c *fiber.Ctx, obj *model.WebObject) error {
 	keys, err := getPrimaryValues(obj, c)
 	if err != nil {
-		// AbortWithJSONError(c, http.StatusBadRequest, err)
-		return
+		return core.Error(c, http.StatusBadRequest, err)
 	}
 
-	// db := getDbConnection(c, obj.GetDB, false)
 	val := reflect.New(obj.ModelElem).Interface()
 
 	r := buildPrimaryCondition(obj, keys).Session(&gorm.Session{}).First(val)
@@ -170,34 +154,30 @@ func handleDeleteObject(c *fiber.Ctx, obj *model.WebObject) {
 	// for gorm delete hook, need to load model first.
 	if r.Error != nil {
 		if errors.Is(r.Error, gorm.ErrRecordNotFound) {
-			// AbortWithJSONError(c, http.StatusNotFound, errors.New("not found"))
+			return core.Error(c, http.StatusNotFound, errors.New("not found"))
 		} else {
-			// AbortWithJSONError(c, http.StatusInternalServerError, r.Error)
+			return core.Error(c, http.StatusInternalServerError, r.Error)
 		}
-		return
 	}
 
 	if obj.BeforeDelete != nil {
 		if err := obj.BeforeDelete(c, val); err != nil {
-			// AbortWithJSONError(c, http.StatusBadRequest, err)
-			return
+			return core.Error(c, http.StatusBadRequest, err)
 		}
 	}
 
 	r = db.Delete(val)
 	if r.Error != nil {
-		// AbortWithJSONError(c, http.StatusInternalServerError, r.Error)
-		return
+		return core.Error(c, http.StatusInternalServerError, r.Error)
 	}
 
-	c.JSON(true)
+	return c.JSON(true)
 }
 
-func handleQueryObject(c *fiber.Ctx, obj *model.WebObject, prepareQuery model.PrepareQuery) {
-	db, form, err := prepareQuery(db, c)
+func handleQueryObject(c *fiber.Ctx, obj *model.WebObject, prepareQuery model.PrepareQuery) error {
+	form, err := prepareQuery(c)
 	if err != nil {
-		// AbortWithJSONError(c, http.StatusBadRequest, err)
-		return
+		return core.Error(c, http.StatusBadRequest, err)
 	}
 
 	namer := db.NamingStrategy
@@ -276,15 +256,13 @@ func handleQueryObject(c *fiber.Ctx, obj *model.WebObject, prepareQuery model.Pr
 
 	r, err := queryObjects(obj, c, form)
 	if err != nil {
-		// AbortWithJSONError(c, http.StatusBadRequest, err)
-		return
+		return core.Error(c, http.StatusBadRequest, err)
 	}
 
 	if obj.BeforeQueryRender != nil {
 		obj, err := obj.BeforeQueryRender(c, &r)
 		if err != nil {
-			// AbortWithJSONError(c, http.StatusBadRequest, err)
-			return
+			return core.Error(c, http.StatusBadRequest, err)
 		}
 
 		// if c.Writer.Written() || c.Writer.Status() != http.StatusOK {
@@ -293,9 +271,8 @@ func handleQueryObject(c *fiber.Ctx, obj *model.WebObject, prepareQuery model.Pr
 		// }
 
 		if obj != nil {
-			c.JSON(obj)
-			return
+			return c.JSON(obj)
 		}
 	}
-	c.JSON(r)
+	return c.JSON(r)
 }

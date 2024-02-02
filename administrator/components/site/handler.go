@@ -3,10 +3,12 @@ package site
 import (
 	"errors"
 	"fmt"
+	"net/http"
 	"reflect"
 
 	"github.com/andycai/weapi/administrator/components/category"
 	"github.com/andycai/weapi/administrator/components/user"
+	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -33,7 +35,6 @@ func HandleAdminIndex(c *fiber.Ctx, objects []*model.AdminObject, buildContext m
 				continue
 			}
 		}
-		// db := getDbConnection(c, obj.GetDB, false)
 		val := *obj
 		BuildPermissions(obj, user.CurrentUser(c))
 		viewObjects = append(viewObjects, val)
@@ -51,27 +52,23 @@ func HandleAdminIndex(c *fiber.Ctx, objects []*model.AdminObject, buildContext m
 	})
 }
 
-func handleGetOne(obj *model.AdminObject, c *fiber.Ctx) {
-	// db := getDbConnection(c, obj.GetDB, false)
+func handleGetOne(obj *model.AdminObject, c *fiber.Ctx) error {
 	modelObj := reflect.New(obj.ModelElem).Interface()
 	keys := getPrimaryValues(obj, c)
 	if len(keys) <= 0 {
-		// AbortWithJSONError(c, http.StatusBadRequest, errors.New("invalid primary key"))
-		return
+		return core.Error(c, http.StatusBadRequest, errors.New("invalid primary key"))
 	}
 
 	result := db.Preload(clause.Associations).Where(keys).First(modelObj)
 
 	if result.Error != nil {
-		// AbortWithJSONError(c, http.StatusInternalServerError, result.Error)
-		return
+		return core.Error(c, http.StatusInternalServerError, result.Error)
 	}
 
 	if obj.BeforeRender != nil {
 		rr, err := obj.BeforeRender(c, modelObj)
 		if err != nil {
-			// AbortWithJSONError(c, http.StatusInternalServerError, err)
-			return
+			return core.Error(c, http.StatusInternalServerError, err)
 		}
 		if rr != nil {
 			// if BeforeRender return not nil, then use it as result
@@ -81,25 +78,21 @@ func handleGetOne(obj *model.AdminObject, c *fiber.Ctx) {
 
 	data, err := MarshalOne(obj, modelObj)
 	if err != nil {
-		// AbortWithJSONError(c, http.StatusInternalServerError, err)
-		return
+		return core.Error(c, http.StatusInternalServerError, err)
 	}
 
-	c.JSON(data)
+	return c.JSON(data)
 }
 
 // Query many objects with filter/limit/offset/order/search
 func handleQueryOrGetOne(obj *model.AdminObject, c *fiber.Ctx) error {
 	if c.Request().Header.ContentLength() <= 0 {
-		handleGetOne(obj, c)
-		return nil
+		return handleGetOne(obj, c)
 	}
 
-	// db, form, err := DefaultPrepareQuery(getDbConnection(c, obj.GetDB, false), c)
-	db, form, err := DefaultPrepareQuery(db, c)
+	form, err := DefaultPrepareQuery(c)
 	if err != nil {
-		// AbortWithJSONError(c, http.StatusBadRequest, err)
-		return err
+		return core.Error(c, http.StatusBadRequest, err)
 	}
 
 	if form.ForeignMode {
@@ -109,8 +102,7 @@ func handleQueryOrGetOne(obj *model.AdminObject, c *fiber.Ctx) error {
 	r, err := QueryObjects(obj, db, form, c)
 
 	if err != nil {
-		// AbortWithJSONError(c, http.StatusInternalServerError, err)
-		return err
+		return core.Error(c, http.StatusInternalServerError, err)
 	}
 	if form.ForeignMode {
 		var items []map[string]any
@@ -144,33 +136,27 @@ func handleCreate(obj *model.AdminObject, c *fiber.Ctx) error {
 	keys := getPrimaryValues(obj, c)
 	var vals map[string]any
 	if err := c.BodyParser(&vals); err != nil {
-		// AbortWithJSONError(c, http.StatusBadRequest, err)
-		return err
+		return core.Error(c, http.StatusBadRequest, err)
 	}
 	elmObj := reflect.New(obj.ModelElem)
 	elm, err := UnmarshalFrom(obj, elmObj, keys, vals)
 	if err != nil {
-		// AbortWithJSONError(c, http.StatusBadRequest, err)
-		return err
+		return core.Error(c, http.StatusBadRequest, err)
 	}
-	// db := getDbConnection(c, obj.GetDB, true)
 	if obj.BeforeCreate != nil {
 		if err := obj.BeforeCreate(c, elm); err != nil {
-			// AbortWithJSONError(c, http.StatusBadRequest, err)
-			return err
+			return core.Error(c, http.StatusBadRequest, err)
 		}
 	}
 
 	result := db.Create(elm)
 	if result.Error != nil {
-		// AbortWithJSONError(c, http.StatusInternalServerError, result.Error)
-		return result.Error
+		return core.Error(c, http.StatusInternalServerError, result.Error)
 	}
 	if obj.BeforeRender != nil {
 		rr, err := obj.BeforeRender(c, elm)
 		if err != nil {
-			// AbortWithJSONError(c, http.StatusInternalServerError, err)
-			return err
+			return core.Error(c, http.StatusInternalServerError, err)
 		}
 		if rr != nil {
 			// if BeforeRender return not nil, then use it as result
@@ -184,34 +170,28 @@ func handleCreate(obj *model.AdminObject, c *fiber.Ctx) error {
 func handleUpdate(obj *model.AdminObject, c *fiber.Ctx) error {
 	keys := getPrimaryValues(obj, c)
 	if len(keys) <= 0 {
-		// AbortWithJSONError(c, http.StatusBadRequest, errors.New("invalid primary key"))
-		return errors.New("invalid primary key")
+		return core.Error(c, http.StatusBadRequest, errors.New("invalid primary key"))
 	}
 
 	var inputVals map[string]any
 	if err := c.BodyParser(&inputVals); err != nil {
-		// AbortWithJSONError(c, http.StatusBadRequest, err)
-		return err
+		return core.Error(c, http.StatusBadRequest, err)
 	}
 
-	// db := getDbConnection(c, obj.GetDB, false)
 	elmObj := reflect.New(obj.ModelElem)
 	err := db.Where(keys).First(elmObj.Interface()).Error
 	if err != nil {
-		// AbortWithJSONError(c, http.StatusNotFound, errors.New("not found"))
-		return errors.New("not found")
+		return core.Error(c, http.StatusNotFound, errors.New("not found"))
 	}
 
 	val, err := UnmarshalFrom(obj, elmObj, keys, inputVals)
 	if err != nil {
-		// AbortWithJSONError(c, http.StatusBadRequest, err)
-		return err
+		return core.Error(c, http.StatusBadRequest, err)
 	}
 
 	if obj.BeforeUpdate != nil {
 		if err := obj.BeforeUpdate(c, val, inputVals); err != nil {
-			// AbortWithJSONError(c, http.StatusBadRequest, err)
-			return err
+			return core.Error(c, http.StatusBadRequest, err)
 		}
 	}
 
@@ -239,8 +219,7 @@ func handleUpdate(obj *model.AdminObject, c *fiber.Ctx) error {
 	}).Where(keys).Create(val)
 
 	if result.Error != nil {
-		// AbortWithJSONError(c, http.StatusInternalServerError, result.Error)
-		return result.Error
+		return core.Error(c, http.StatusInternalServerError, result.Error)
 	}
 
 	return c.JSON(true)
@@ -249,35 +228,29 @@ func handleUpdate(obj *model.AdminObject, c *fiber.Ctx) error {
 func handleDelete(obj *model.AdminObject, c *fiber.Ctx) error {
 	keys := getPrimaryValues(obj, c)
 	if len(keys) <= 0 {
-		// AbortWithJSONError(c, http.StatusBadRequest, errors.New("invalid primary key"))
-		return errors.New("invalid primary key")
+		return core.Error(c, http.StatusBadRequest, errors.New("invalid primary key"))
 	}
-	// db := getDbConnection(c, obj.GetDB, false)
 	val := reflect.New(obj.ModelElem).Interface()
 	r := db.Where(keys).Take(val)
 
 	// for gorm delete hook, need to load model first.
 	if r.Error != nil {
 		if errors.Is(r.Error, gorm.ErrRecordNotFound) {
-			// AbortWithJSONError(c, http.StatusNotFound, errors.New("not found"))
-			return errors.New("not found")
+			return core.Error(c, http.StatusNotFound, errors.New("not found"))
 		} else {
-			// AbortWithJSONError(c, http.StatusInternalServerError, r.Error)
-			return r.Error
+			return core.Error(c, http.StatusInternalServerError, r.Error)
 		}
 	}
 
 	if obj.BeforeDelete != nil {
 		if err := obj.BeforeDelete(c, val); err != nil {
-			// AbortWithJSONError(c, http.StatusBadRequest, err)
-			return err
+			return core.Error(c, http.StatusBadRequest, err)
 		}
 	}
 
 	r = db.Where(keys).Delete(val)
 	if r.Error != nil {
-		// AbortWithJSONError(c, http.StatusInternalServerError, r.Error)
-		return r.Error
+		return core.Error(c, http.StatusInternalServerError, r.Error)
 	}
 
 	return c.JSON(true)
@@ -289,47 +262,39 @@ func handleAction(obj *model.AdminObject, c *fiber.Ctx) error {
 			continue
 		}
 
-		// db := getDbConnection(c, obj.GetDB, false)
 		if action.WithoutObject {
 			r, err := action.Handler(c, nil)
 			if err != nil {
-				// AbortWithJSONError(c, http.StatusInternalServerError, err)
-				return err
+				return core.Error(c, http.StatusInternalServerError, err)
 			}
 			return c.JSON(r)
 		}
 
 		keys := getPrimaryValues(obj, c)
 		if len(keys) <= 0 {
-			// AbortWithJSONError(c, http.StatusBadRequest, errors.New("invalid primary key"))
-			return errors.New("invalid primary key")
+			return core.Error(c, http.StatusBadRequest, errors.New("invalid primary key"))
 		}
 		modelObj := reflect.New(obj.ModelElem).Interface()
 		result := db.Where(keys).First(modelObj)
 
 		if result.Error != nil {
 			if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-				// AbortWithJSONError(c, http.StatusNotFound, errors.New("not found"))
-				return errors.New("not found")
+				return core.Error(c, http.StatusNotFound, errors.New("not found"))
 			} else {
-				// AbortWithJSONError(c, http.StatusInternalServerError, result.Error)
-				return result.Error
+				return core.Error(c, http.StatusInternalServerError, result.Error)
 			}
 		}
 		r, err := action.Handler(c, modelObj)
 		if err != nil {
-			// AbortWithJSONError(c, http.StatusInternalServerError, err)
-			return err
+			return core.Error(c, http.StatusInternalServerError, err)
 		}
 		return c.JSON(r)
 	}
-	// c.AbortWithStatus(http.StatusBadRequest)
-	return nil
+	return core.Error(c, http.StatusBadRequest, errors.New("invalid action"))
 }
 
 func HandleAdminSummary(c *fiber.Ctx) error {
 	result := GetSummary()
-	// result.BuildTime = m.BuildTime
 	result.CanExport = user.CurrentUser(c).IsSuperUser
 	return c.JSON(result)
 }
@@ -338,14 +303,12 @@ func handleGetTags(c *fiber.Ctx) error {
 	contentType := c.Params("content_type")
 	var form model.TagsForm
 	if err := c.BodyParser(&form); err != nil {
-		// carrot.AbortWithJSONError(c, http.StatusBadRequest, err)
-		return err
+		return core.Error(c, http.StatusBadRequest, err)
 	}
 
 	tags, err := category.GetTagsByCategory(contentType, &form)
 	if err != nil {
-		// carrot.AbortWithJSONError(c, http.StatusInternalServerError, err)
-		return err
+		return core.Error(c, http.StatusInternalServerError, err)
 	}
 
 	return c.JSON(tags)
