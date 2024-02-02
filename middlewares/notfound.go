@@ -9,3 +9,7 @@ func NotFound(c *fiber.Ctx) error {
 		"message": "Page not found.",
 	})
 }
+
+func NotFoundPage(c *fiber.Ctx) error {
+	return c.Render("components/404", fiber.Map{})
+}
