@@ -7,9 +7,9 @@ import (
 )
 
 const (
-	KeyUserDB            = "user.gorm.db"
-	KeyUserNoCheckRouter = "user.router.nocheck"
-	KeyUserCheckRouter   = "user.router.check"
+	keyDB            = "user.gorm.db"
+	keyNoCheckRouter = "user.router.nocheck"
+	keyCheckRouter   = "user.router.check"
 )
 
 var db *gorm.DB
@@ -18,15 +18,12 @@ func initDB(dbs []*gorm.DB) {
 	db = dbs[0]
 }
 
-func initNoCheckRouter(r fiber.Router) {
-}
-
-func initCheckRouter(r fiber.Router) {
+func initAPICheckRouter(r fiber.Router) {
 	//
 }
 
 func init() {
-	core.RegisterDatabase(KeyUserDB, initDB)
-	core.RegisterAPINoCheckRouter(KeyUserCheckRouter, initNoCheckRouter)
-	core.RegisterAPICheckRouter(KeyUserCheckRouter, initCheckRouter)
+	core.RegisterDatabase(keyDB, initDB)
+	core.RegisterAPICheckRouter(keyCheckRouter, initAPICheckRouter)
+	core.RegisterAPIAuth(WithAPIAuth)
 }

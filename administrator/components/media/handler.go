@@ -25,7 +25,7 @@ func handleListFolders(c *fiber.Ctx, obj any) (any, error) {
 func handleNewFolder(c *fiber.Ctx, obj any) (any, error) {
 	path := c.Query("path")
 	name := c.Query("name")
-	user := user.CurrentUser(c)
+	user := user.Current(c)
 	return CreateFolder(path, name, user)
 }
 
@@ -100,7 +100,7 @@ func handleUpload(c *fiber.Ctx, obj any) (any, error) {
 
 	var media model.Media
 
-	user := user.CurrentUser(c)
+	user := user.Current(c)
 	media.Name = r.Name
 	media.Path = r.Path
 	media.External = r.External

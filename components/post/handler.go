@@ -9,24 +9,7 @@ import (
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm"
 )
-
-func GetPostOrPageDB(ctx *fiber.Ctx, isCreate bool) *gorm.DB {
-	if isCreate {
-		return db
-	}
-	draft, _ := strconv.ParseBool(ctx.Query("draft"))
-	if draft {
-		return db
-	}
-	// single get not need published
-	if ctx.Method() == http.MethodGet {
-		return db
-	}
-	// query must be published
-	return db.Where("published", true)
-}
 
 func BeforeRenderPost(ctx *fiber.Ctx, vptr any) (any, error) {
 	draft, _ := strconv.ParseBool(ctx.Query("draft"))

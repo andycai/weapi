@@ -20,7 +20,7 @@ func initDB(dbs []*gorm.DB) {
 	db = dbs[0]
 }
 
-func initRootNoCheckRouter(r fiber.Router) {
+func initPublicNoCheckRouter(r fiber.Router) {
 	auth := r.Group("/auth")
 	{
 		auth.Get("/login", handleSigin)
@@ -31,7 +31,7 @@ func initRootNoCheckRouter(r fiber.Router) {
 	}
 }
 
-func initCheckRouter(r fiber.Router) {
+func initAdminCheckRouter(r fiber.Router) {
 }
 
 func initAdminObject() []model.AdminObject {
@@ -101,7 +101,8 @@ func initAdminObject() []model.AdminObject {
 
 func init() {
 	core.RegisterDatabase(KeyDB, initDB)
-	core.RegisterRootNoCheckRouter(KeyNoCheckRouter, initRootNoCheckRouter)
-	core.RegisterAdminCheckRouter(KeyCheckRouter, initCheckRouter)
+	core.RegisterPublicNoCheckRouter(KeyNoCheckRouter, initPublicNoCheckRouter)
+	core.RegisterAdminCheckRouter(KeyCheckRouter, initAdminCheckRouter)
 	core.RegisterAdminObject(initAdminObject())
+	core.RegisterAdminAuth(WithAdminAuth)
 }

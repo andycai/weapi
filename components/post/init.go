@@ -1,15 +1,17 @@
 package post
 
 import (
+	"github.com/andycai/weapi/components/site"
 	"github.com/andycai/weapi/core"
+	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
 const (
-	KeyPostDB            = "post.gorm.db"
-	KeyPostNoCheckRouter = "post.router.nocheck"
-	KeyPostCheckRouter   = "post.router.check"
+	keyDB            = "post.gorm.db"
+	keyNoCheckRouter = "post.router.nocheck"
+	keyCheckRouter   = "post.router.check"
 )
 
 var db *gorm.DB
@@ -18,15 +20,23 @@ func initDB(dbs []*gorm.DB) {
 	db = dbs[0]
 }
 
-func initNoCheckRouter(r fiber.Router) {
-}
-
-func initCheckRouter(r fiber.Router) {
-	//
+func initAPICheckRouter(r fiber.Router) {
+	objs := []model.WebObject{
+		{
+			Model:             &model.Post{},
+			AllowMethods:      model.GET | model.QUERY,
+			Name:              "post",
+			Filterables:       []string{"SiteID", "CategoryID", "CategoryPath", "Tags", "IsDraft", "Published", "ContentType"},
+			Searchables:       []string{"Title", "Description", "Body"},
+			Orderables:        []string{"CreatedAt", "UpdatedAt"},
+			BeforeRender:      BeforeRenderPost,
+			BeforeQueryRender: BeforeQueryRenderPost,
+		},
+	}
+	site.RegisterObjects(r, objs)
 }
 
 func init() {
-	core.RegisterDatabase(KeyPostDB, initDB)
-	core.RegisterAPINoCheckRouter(KeyPostNoCheckRouter, initNoCheckRouter)
-	core.RegisterAPICheckRouter(KeyPostCheckRouter, initCheckRouter)
+	core.RegisterDatabase(keyDB, initDB)
+	core.RegisterAPICheckRouter(keyCheckRouter, initAPICheckRouter)
 }

@@ -246,7 +246,7 @@ func runSetupMode(addr string) {
 		if err == nil && u != nil {
 			user.UpdatePassword(u, form.Password)
 		} else {
-			err = user.CreateUser(u)
+			err = user.Create(u)
 			if err != nil {
 				panic(err)
 			}

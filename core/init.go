@@ -10,12 +10,14 @@ import (
 
 var dbMap = map[string]func([]*gorm.DB){}
 
-var routerRootNoCheckMap = map[string]func(fiber.Router){}
+var routerPublicNoCheckMap = map[string]func(fiber.Router){}
 var routerRootCheckMap = map[string]func(fiber.Router){}
 var routerAPINoCheckMap = map[string]func(fiber.Router){}
 var routerAPICheckMap = map[string]func(fiber.Router){}
 var routerAdminCheckMap = map[string]func(fiber.Router){}
 var adminObjects = []model.AdminObject{}
+var withAPIAuth func(*fiber.Ctx) error
+var withAdminAuth func(*fiber.Ctx) error
 
 func RegisterDatabase(dbType string, f func([]*gorm.DB)) {
 	if _, ok := dbMap[dbType]; ok {
@@ -24,11 +26,11 @@ func RegisterDatabase(dbType string, f func([]*gorm.DB)) {
 	dbMap[dbType] = f
 }
 
-func RegisterRootNoCheckRouter(routerType string, f func(fiber.Router)) {
-	if _, ok := routerRootNoCheckMap[routerType]; ok {
+func RegisterPublicNoCheckRouter(routerType string, f func(fiber.Router)) {
+	if _, ok := routerPublicNoCheckMap[routerType]; ok {
 		panic("duplicate router type: " + routerType)
 	}
-	routerRootNoCheckMap[routerType] = f
+	routerPublicNoCheckMap[routerType] = f
 }
 
 func RegisterRootCheckRouter(routerType string, f func(fiber.Router)) {
@@ -61,6 +63,14 @@ func RegisterAdminCheckRouter(routerType string, f func(fiber.Router)) {
 
 func RegisterAdminObject(objs []model.AdminObject) {
 	adminObjects = append(adminObjects, objs...)
+}
+
+func RegisterAPIAuth(fn func(ctx *fiber.Ctx) error) {
+	withAPIAuth = fn
+}
+
+func RegisterAdminAuth(fn func(ctx *fiber.Ctx) error) {
+	withAdminAuth = fn
 }
 
 func GetAdminObjects() []model.AdminObject {

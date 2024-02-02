@@ -1,8 +1,6 @@
 package site
 
 import (
-	"github.com/andycai/weapi/components/page"
-	"github.com/andycai/weapi/components/post"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
@@ -10,9 +8,9 @@ import (
 )
 
 const (
-	KeyPageDB            = "entity.gorm.db"
-	KeyPageNoCheckRouter = "entity.router.nocheck"
-	KeyPageCheckRouter   = "entity.router.check"
+	keyDB            = "site.gorm.db"
+	keyNoCheckRouter = "site.router.nocheck"
+	keyCheckRouter   = "site.router.check"
 )
 
 var db *gorm.DB
@@ -21,11 +19,7 @@ func initDB(dbs []*gorm.DB) {
 	db = dbs[0]
 }
 
-func initNoCheckRouter(r fiber.Router) {
-
-}
-
-func initCheckRouter(r fiber.Router) {
+func initAPICheckRouter(r fiber.Router) {
 	objs := []model.WebObject{
 		{
 			Model:        &model.Site{},
@@ -45,33 +39,11 @@ func initCheckRouter(r fiber.Router) {
 			Orderables:   []string{},
 			Searchables:  []string{"UUID", "Name", "Items"},
 		},
-		{
-			Model:        &model.Page{},
-			AllowMethods: model.GET | model.QUERY,
-			Name:         "page",
-			Filterables:  []string{"SiteID", "CategoryID", "CategoryPath", "Tags", "IsDraft", "Published", "ContentType"},
-			Searchables:  []string{"Title", "Description", "Body"},
-			Orderables:   []string{"CreatedAt", "UpdatedAt"},
-			GetDB:        post.GetPostOrPageDB,
-			BeforeRender: page.BeforeRenderPage,
-		},
-		{
-			Model:             &model.Post{},
-			AllowMethods:      model.GET | model.QUERY,
-			Name:              "post",
-			Filterables:       []string{"SiteID", "CategoryID", "CategoryPath", "Tags", "IsDraft", "Published", "ContentType"},
-			Searchables:       []string{"Title", "Description", "Body"},
-			Orderables:        []string{"CreatedAt", "UpdatedAt"},
-			GetDB:             post.GetPostOrPageDB,
-			BeforeRender:      post.BeforeRenderPost,
-			BeforeQueryRender: post.BeforeQueryRenderPost,
-		},
 	}
 	RegisterObjects(r, objs)
 }
 
 func init() {
-	core.RegisterDatabase(KeyPageDB, initDB)
-	core.RegisterAPINoCheckRouter(KeyPageNoCheckRouter, initNoCheckRouter)
-	core.RegisterAPICheckRouter(KeyPageNoCheckRouter, initCheckRouter)
+	core.RegisterDatabase(keyDB, initDB)
+	core.RegisterAPICheckRouter(keyNoCheckRouter, initAPICheckRouter)
 }

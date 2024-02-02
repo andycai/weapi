@@ -4,6 +4,7 @@ import (
 	"github.com/andycai/weapi"
 	"github.com/andycai/weapi/administrator/components/config"
 	"github.com/andycai/weapi/administrator/components/user"
+	userapi "github.com/andycai/weapi/components/user"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/log"
@@ -24,12 +25,12 @@ func initDB(dbs []*gorm.DB) {
 	db = dbs[0]
 }
 
-func initRootNoCheckRouter(r fiber.Router) {
+func initPublicNoCheckRouter(r fiber.Router) {
 	mediaPrefix := config.GetValue(enum.KEY_CMS_MEDIA_PREFIX)
 	if mediaPrefix == "" {
 		mediaPrefix = "/media/"
 	}
-	g := r.Group(mediaPrefix)
+	g := r.Group(mediaPrefix, userapi.WithAPIAuth)
 	g.Get("/*", handleMedia)
 }
 
@@ -76,7 +77,7 @@ func initAdminObject() []model.AdminObject {
 			},
 			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
 				media := vptr.(*model.Media)
-				media.Creator = *user.CurrentUser(ctx)
+				media.Creator = *user.Current(ctx)
 				return nil
 			},
 			BeforeDelete: func(ctx *fiber.Ctx, vptr any) error {
@@ -133,7 +134,7 @@ func initAdminObject() []model.AdminObject {
 
 func init() {
 	core.RegisterDatabase(KeyDB, initDB)
-	core.RegisterRootNoCheckRouter(KeyNoCheckRouter, initRootNoCheckRouter)
+	core.RegisterPublicNoCheckRouter(KeyNoCheckRouter, initPublicNoCheckRouter)
 	core.RegisterAdminCheckRouter(KeyCheckRouter, initAdminCheckRouter)
 	core.RegisterAdminObject(initAdminObject())
 }

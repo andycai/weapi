@@ -2,6 +2,7 @@ package user
 
 import (
 	"errors"
+	"net/http"
 	"strings"
 	"time"
 
@@ -11,12 +12,29 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+func WithAdminAuth(c *fiber.Ctx) error {
+	userVo := Current(c)
+	signinURL := "/auth/login"
+	if userVo == nil {
+		if signinURL == "" {
+			return core.Error(c, http.StatusUnauthorized, errors.New("Unauthorized"))
+		} else {
+			return c.Redirect(signinURL, http.StatusFound)
+		}
+	}
+
+	if !userVo.IsStaff && !userVo.IsSuperUser {
+		return core.Error(c, http.StatusForbidden, errors.New("Forbidden"))
+	}
+
+	return c.Next()
+}
+
 func SuperAccessCheck(c *fiber.Ctx, obj *model.AdminObject) error {
-	isAuthenticated, _ := authentication.AuthGet(c)
-	if isAuthenticated {
+	if Current(c).IsSuperUser {
 		return nil
 	}
-	return errors.New("not authorized")
+	return errors.New("only superuser can access")
 }
 
 func GetByID(id uint) *model.User {
@@ -28,7 +46,7 @@ func GetByID(id uint) *model.User {
 	return &user
 }
 
-func CurrentUser(c *fiber.Ctx) *model.User {
+func Current(c *fiber.Ctx) *model.User {
 	var userVo *model.User
 	isAuthenticated, userID := authentication.AuthGet(c)
 
@@ -46,7 +64,7 @@ func GetByEmail(email string) (error, *model.User) {
 	return result.Error, &user
 }
 
-func CreateUser(user *model.User) error {
+func Create(user *model.User) error {
 	result := db.Create(user)
 
 	return result.Error

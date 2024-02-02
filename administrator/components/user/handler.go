@@ -29,10 +29,10 @@ func handleSigin(c *fiber.Ctx) error {
 }
 
 func handleSiginAction(c *fiber.Ctx) error {
-	loginVo := &reqLogin{}
+	loginVo := &ReqLogin{}
 
 	if err := c.BodyParser(&loginVo); err != nil {
-		return err
+		return core.Err(c, enum.ErrUserEmailOrPasswordError)
 	}
 
 	if loginVo.Email == "" || loginVo.Password == "" {

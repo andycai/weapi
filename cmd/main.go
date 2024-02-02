@@ -18,6 +18,7 @@ import (
 	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/middlewares"
 	"github.com/andycai/weapi/model"
+	"github.com/andycai/weapi/utils"
 	"github.com/andycai/weapi/utils/date"
 	"gorm.io/gorm"
 
@@ -31,17 +32,17 @@ func main() {
 	})
 
 	var addr string
-	var logFile string = config.GetEnv(enum.ENV_LOG_FILE)
-	var dbDriver string = config.GetEnv(enum.ENV_DB_DRIVER)
-	var dsn string = config.GetEnv(enum.ENV_DSN)
-	var debug bool = config.GetEnv(enum.ENV_DEBUG) != ""
-	var staticDir string = config.GetEnv(enum.ENV_STATIC_DIR)
-	var htmlDir string = config.GetEnv(enum.ENV_HTML_DIR)
-	var dbActive = config.GetIntEnv(enum.ENV_DB_ACTIVE)
-	var dbIdle = config.GetIntEnv(enum.ENV_DB_IDLE)
-	var dbTimeout = config.GetIntEnv(enum.ENV_DB_TIMEOUT)
-	var lang = config.GetEnv(enum.ENV_LANG)
-	var zoneOffset = config.GetIntEnv(enum.ENV_ZONE_OFFSET)
+	var logFile string = utils.GetEnv(enum.ENV_LOG_FILE)
+	var dbDriver string = utils.GetEnv(enum.ENV_DB_DRIVER)
+	var dsn string = utils.GetEnv(enum.ENV_DSN)
+	var debug bool = utils.GetEnv(enum.ENV_DEBUG) != ""
+	var staticDir string = utils.GetEnv(enum.ENV_STATIC_DIR)
+	var htmlDir string = utils.GetEnv(enum.ENV_HTML_DIR)
+	var dbActive = utils.GetIntEnv(enum.ENV_DB_ACTIVE)
+	var dbIdle = utils.GetIntEnv(enum.ENV_DB_IDLE)
+	var dbTimeout = utils.GetIntEnv(enum.ENV_DB_TIMEOUT)
+	var lang = utils.GetEnv(enum.ENV_LANG)
+	var zoneOffset = utils.GetIntEnv(enum.ENV_ZONE_OFFSET)
 
 	var superUserEmail string
 	var superUserPassword string
@@ -120,7 +121,7 @@ func main() {
 			userVo.Activated = true
 			userVo.Enabled = true
 			userVo.IsSuperUser = true
-			err := user.CreateUser(userVo)
+			err := user.Create(userVo)
 			if err != nil {
 				panic(err)
 			}

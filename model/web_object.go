@@ -5,7 +5,6 @@ import (
 	"reflect"
 
 	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm"
 )
 
 const (
@@ -39,7 +38,6 @@ const (
 	QUERY  = 1 << 5
 )
 
-type GetDB func(c *fiber.Ctx, isCreate bool) *gorm.DB // designed for group
 type PrepareQuery func(c *fiber.Ctx) (*QueryForm, error)
 
 type (
@@ -74,7 +72,6 @@ type WebObject struct {
 	Filterables       []string
 	Orderables        []string
 	Searchables       []string
-	GetDB             GetDB
 	BeforeCreate      BeforeCreateFunc
 	BeforeUpdate      BeforeUpdateFunc
 	BeforeDelete      BeforeDeleteFunc

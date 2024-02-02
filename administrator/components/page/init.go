@@ -22,7 +22,7 @@ func initDB(dbs []*gorm.DB) {
 	db = dbs[0]
 }
 
-func initCheckRouter(r fiber.Router) {
+func initAdminCheckRouter(r fiber.Router) {
 }
 
 func initAdminObject() []model.AdminObject {
@@ -105,7 +105,7 @@ func initAdminObject() []model.AdminObject {
 			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
 				page := vptr.(*model.Page)
 				page.ContentType = enum.ContentTypeJson
-				page.Creator = *user.CurrentUser(ctx)
+				page.Creator = *user.Current(ctx)
 				page.IsDraft = true
 				return nil
 			},
@@ -128,6 +128,6 @@ func initAdminObject() []model.AdminObject {
 
 func init() {
 	core.RegisterDatabase(KeyDB, initDB)
-	core.RegisterAdminCheckRouter(KeyCheckRouter, initCheckRouter)
+	core.RegisterAdminCheckRouter(KeyCheckRouter, initAdminCheckRouter)
 	core.RegisterAdminObject(initAdminObject())
 }

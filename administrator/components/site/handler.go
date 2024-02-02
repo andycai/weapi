@@ -21,11 +21,11 @@ func handleDashboard(c *fiber.Ctx) error {
 
 func handleJson(c *fiber.Ctx, adminObjects []*model.AdminObject) error {
 	for _, obj := range adminObjects {
-		BuildPermissions(obj, user.CurrentUser(c))
+		BuildPermissions(obj, user.Current(c))
 	}
 	return c.JSON(fiber.Map{
 		"objects": adminObjects,
-		"user":    user.CurrentUser(c),
+		"user":    user.Current(c),
 		"site":    GetPageContext(),
 	})
 }
@@ -40,7 +40,7 @@ func HandleAdminIndex(c *fiber.Ctx, objects []*model.AdminObject, buildContext m
 			}
 		}
 		val := *obj
-		BuildPermissions(obj, user.CurrentUser(c))
+		BuildPermissions(obj, user.Current(c))
 		viewObjects = append(viewObjects, val)
 	}
 
@@ -51,7 +51,7 @@ func HandleAdminIndex(c *fiber.Ctx, objects []*model.AdminObject, buildContext m
 
 	c.JSON(fiber.Map{
 		"objects": viewObjects,
-		"user":    user.CurrentUser(c),
+		"user":    user.Current(c),
 		"site":    siteCtx,
 	})
 }
@@ -299,7 +299,7 @@ func handleAction(obj *model.AdminObject, c *fiber.Ctx) error {
 
 func HandleAdminSummary(c *fiber.Ctx) error {
 	result := GetSummary()
-	result.CanExport = user.CurrentUser(c).IsSuperUser
+	result.CanExport = user.Current(c).IsSuperUser
 	return c.JSON(result)
 }
 

@@ -111,7 +111,6 @@ type AdminObject struct {
 
 	Attributes       map[string]AdminAttribute `json:"-"` // Field's extra attributes
 	AccessCheck      AdminAccessCheck          `json:"-"` // Access control function
-	GetDB            GetDB                     `json:"-"`
 	BeforeCreate     BeforeCreateFunc          `json:"-"`
 	BeforeRender     BeforeRenderFunc          `json:"-"`
 	BeforeUpdate     BeforeUpdateFunc          `json:"-"`

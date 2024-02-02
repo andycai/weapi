@@ -1,6 +1,6 @@
 package user
 
-type reqLogin struct {
+type ReqLogin struct {
 	Email    string `json:"email" validate:"required"`
 	Password string `json:"password" validate:"required"`
 }
