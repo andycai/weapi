@@ -73,6 +73,6 @@ Alpine.store('page', {
             })
         }
         Alpine.store('queryresult').refresh()
-        injectFrom('result_form_grid', 'list_page_grid.html')
+        injectFrom('result_form_grid', '/html/list_page_grid.html')
     },
 })

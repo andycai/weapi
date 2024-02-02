@@ -56,7 +56,7 @@ func initAdminObject() []model.AdminObject {
 				"CategoryID":  {Widget: "category-id-and-path", FilterWidget: "category-id-and-path"},
 				"ID":          {Help: "ID must be unique,recommend use page url eg: about-us"},
 			},
-			EditPage: "./edit_page.html",
+			EditPage: "/html/edit_page.html",
 			Orders: []model.Order{
 				{
 					Name: "UpdatedAt",

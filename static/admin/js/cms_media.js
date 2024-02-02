@@ -322,8 +322,8 @@ Alpine.store('media', {
                 row.view_on_site = row.public_url
             })
         }
-        injectFrom('result_head_form', 'media_path.html')
-        injectFrom('result_form_grid', 'list_media_grid.html')
+        injectFrom('result_head_form', '/html/media_path.html')
+        injectFrom('result_form_grid', '/html/list_media_grid.html')
         this.refreshFolders().then()
     },
 })

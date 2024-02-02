@@ -23,6 +23,8 @@ func initDB(dbs []*gorm.DB) {
 func initAdminCheckRouter(r fiber.Router) {
 	adminObjects := BuildAdminObjects(r, core.GetAdminObjects())
 
+	r.Get("/", handleDashboard)
+
 	r.Post("/json", func(c *fiber.Ctx) error {
 		return handleJson(c, adminObjects)
 	})

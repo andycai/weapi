@@ -33,7 +33,7 @@ func init() {
 func CheckConfig() {
 	CheckValue(enum.KEY_SITE_LOGO_URL, "/static/img/logo.svg")
 	CheckValue(enum.KEY_CMS_GUEST_ACCESS_API, "true")
-	CheckValue(enum.KEY_ADMIN_DASHBOARD, "./dashboard.html")
+	CheckValue(enum.KEY_ADMIN_DASHBOARD, "/html/dashboard.html")
 	CheckValue(enum.KEY_CMS_UPLOAD_DIR, "./data/uploads/")
 	CheckValue(enum.KEY_CMS_MEDIA_PREFIX, "/media/")
 	CheckValue(enum.KEY_CMS_MEDIA_HOST, "")

@@ -60,7 +60,7 @@ func initAdminObject() []model.AdminObject {
 				{Src: "/static/admin/js/cms_widget.js"},
 				{Src: "/static/admin/js/cms_media.js", Onload: true},
 			},
-			EditPage: "./edit_media.html",
+			EditPage: "/html/edit_media.html",
 			Orders: []model.Order{
 				{
 					Name: "UpdatedAt",

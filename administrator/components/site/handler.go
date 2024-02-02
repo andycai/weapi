@@ -15,6 +15,10 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+func handleDashboard(c *fiber.Ctx) error {
+	return c.SendFile("templates/admin/index.html")
+}
+
 func handleJson(c *fiber.Ctx, adminObjects []*model.AdminObject) error {
 	for _, obj := range adminObjects {
 		BuildPermissions(obj, user.CurrentUser(c))

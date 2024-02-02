@@ -361,8 +361,8 @@ class AdminObject {
         this.name = meta.name
         this.path = meta.path
         this.group = meta.group
-        this.listpage = meta.listpage || 'list.html'
-        this.editpage = meta.editpage || 'edit.html'
+        this.listpage = meta.listpage || '/html/list.html'
+        this.editpage = meta.editpage || '/html/edit.html'
         this.primaryKeys = meta.primaryKeys
         this.uniqueKeys = meta.uniqueKeys
         this.pluralName = meta.pluralName
@@ -747,7 +747,7 @@ const adminapp = () => ({
         }
     },
     loadSidebar() {
-        fetch('sidebar.html', {
+        fetch('/html/sidebar.html', {
             cache: "no-store",
         }).then(resp => {
             resp.text().then(text => {

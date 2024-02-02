@@ -134,7 +134,7 @@ func main() {
 	middlewares.Use(app, httplw)
 
 	app.Static("/static", filepath.Join("", staticDir))
-	app.Static("/admin", filepath.Join("", htmlDir))
+	app.Static("/html", filepath.Join("", htmlDir))
 
 	// router
 	core.SetupRouter(app)
