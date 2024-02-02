@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 type Club struct {
 	ID        uint      `json:"id" gorm:"primarykey"`
@@ -12,4 +15,8 @@ type Club struct {
 	Logo      string    `json:"logo" gorm:"column:logo;comment:群组LOGO"`                    // 群组LOGO
 	Notice    string    `json:"notice" gorm:"column:notice;comment:群组公告"`                  // 群组公告
 	Addr      string    `json:"addr" gorm:"column:addr;comment:群组总部地址"`                    // 群组总部地址
+}
+
+func (s Club) String() string {
+	return fmt.Sprintf("%s(%d)", s.Name, s.ID)
 }
