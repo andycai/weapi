@@ -8,17 +8,16 @@
     <title>{{ .title }} {{ .sitename }}</title>
     <meta name="description" content="{{ .description }}">
     <meta name="keywords" content="{{ .keywords }}">
-    <link rel="stylesheet" href="/static/inter.css">
     {{ .extra_css }}
 </head>
 <style>
     :root {
-        font-family: 'Inter', sans-serif;
+        font-family: sans-serif;
     }
 
     @supports (font-variation-settings: normal) {
         :root {
-            font-family: 'Inter var', sans-serif;
+            font-family: sans-serif;
         }
     }
 </style>
@@ -30,7 +29,7 @@
 {{ if .maincss_url }}
 <link href="{{ .maincss_url }}" rel="stylesheet" type="text/css">
 {{ else }}
-<script src="/static/tailwind-3.3.2.js"></script>
+<script src="/static/admin/tailwind-3.3.2.js"></script>
 {{ end }}
 
 {{ .extra_js }}
