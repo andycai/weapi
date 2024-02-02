@@ -1,24 +1,12 @@
 package weapi
 
 import (
-	"github.com/andycai/weapi/model"
 	"gorm.io/gorm"
 )
 
 func AutoMultiMigrate(dbs []*gorm.DB) error {
 	for _, db := range dbs {
-		if err := MakeMigrates(db, []any{
-			&model.User{},
-			&model.Post{},
-			&model.Category{},
-			&model.Page{},
-			&model.Comment{},
-			&model.Config{},
-			&model.Group{},
-			&model.GroupMember{},
-			&model.Site{},
-			&model.Media{},
-		}); err != nil {
+		if err := MakeMigrates(db, models); err != nil {
 			return err
 		}
 	}
@@ -26,18 +14,7 @@ func AutoMultiMigrate(dbs []*gorm.DB) error {
 }
 
 func AutoMigrate(db *gorm.DB) error {
-	return MakeMigrates(db, []any{
-		&model.User{},
-		&model.Post{},
-		&model.Category{},
-		&model.Page{},
-		&model.Comment{},
-		&model.Config{},
-		&model.Group{},
-		&model.GroupMember{},
-		&model.Site{},
-		&model.Media{},
-	})
+	return MakeMigrates(db, models)
 }
 
 func MakeMigrates(db *gorm.DB, insts []any) error {

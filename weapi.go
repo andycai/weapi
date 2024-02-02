@@ -29,6 +29,21 @@ var EnabledPageContentTypes = []model.AdminSelectOption{
 	{Value: enum.ContentTypeMarkdown, Label: "Markdown"},
 }
 
+var models = []any{
+	&model.User{},
+	&model.Site{},
+	&model.Category{},
+	&model.Page{},
+	&model.Post{},
+	&model.Media{},
+	&model.Comment{},
+	&model.Group{},
+	&model.GroupMember{},
+	&model.Config{},
+	&model.Activity{},
+	&model.Club{},
+}
+
 func ReadIcon(name string) *model.AdminIcon {
 	path := filepath.Join("static/admin/", name)
 	data, err := EmbedAssets.ReadFile(path)
