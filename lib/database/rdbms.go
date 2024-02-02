@@ -6,11 +6,9 @@ import (
 	"os"
 	"time"
 
-	"gorm.io/driver/clickhouse"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
-	"gorm.io/driver/sqlserver"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
@@ -65,11 +63,11 @@ func InitRDBMS(logWriter io.Writer, name, source string, active, idle, idleTimeo
 	case "sqlite":
 		// github.com/mattn/go-sqlite3
 		gormDB, err = gorm.Open(sqlite.Open(source), gormCfg)
-	case "sqlserver":
-		// github.com/denisenkom/go-mssqldb
-		gormDB, err = gorm.Open(sqlserver.Open(source), gormCfg)
-	case "clickhouse":
-		gormDB, err = gorm.Open(clickhouse.Open(source), gormCfg)
+		// case "sqlserver":
+		// 	// github.com/denisenkom/go-mssqldb
+		// 	gormDB, err = gorm.Open(sqlserver.Open(source), gormCfg)
+		// case "clickhouse":
+		// 	gormDB, err = gorm.Open(clickhouse.Open(source), gormCfg)
 	}
 	if err != nil {
 		return nil, err
