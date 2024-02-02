@@ -1,8 +1,6 @@
 package core
 
 import (
-	"net/http"
-
 	"github.com/andycai/weapi/enum"
 	"github.com/gofiber/fiber/v2"
 )
@@ -29,15 +27,15 @@ func Push(c *fiber.Ctx, code int) error {
 	})
 }
 
-func Err(c *Ctx, code int) error {
-	return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+func Err(c *Ctx, statusCode, code int) error {
+	return c.Status(statusCode).JSON(fiber.Map{
 		"code":  code,
 		"error": enum.CodeText(code),
 	})
 }
 
-func Error(c *Ctx, code int, err error) error {
-	return c.Status(code).JSON(fiber.Map{
+func Error(c *Ctx, statusCode int, err error) error {
+	return c.Status(statusCode).JSON(fiber.Map{
 		"error": err.Error(),
 	})
 }

@@ -14,4 +14,6 @@ const (
 	ErrUserEmailFormat            = 10105
 	ErrUserEmailOrPasswordError   = 10106
 	ErrUserEmailOrPasswordIsEmpty = 10107
+	ErrUserDisabled               = 10108
+	ErrUserNotActivated           = 10109
 )

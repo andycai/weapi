@@ -6,6 +6,8 @@ import (
 	"github.com/andycai/weapi/administrator/components/config"
 	"github.com/andycai/weapi/administrator/components/user"
 	"github.com/andycai/weapi/enum"
+	"github.com/andycai/weapi/utils"
+	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -21,6 +23,7 @@ func WithAPIAuth(c *fiber.Ctx) error {
 		}
 	}
 
-	// return middlewares.JWTProtected()(c)
-	return nil
+	return jwtware.New(jwtware.Config{
+		SigningKey: jwtware.SigningKey{Key: []byte(utils.GetEnv(enum.ENV_SESSION_SECRET))},
+	})(c)
 }

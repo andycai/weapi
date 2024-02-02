@@ -83,8 +83,11 @@ func UpdatePassword(user *model.User, password string) error {
 	return err
 }
 
-func UpdateLoginTime(userID uint) error {
-	db.Model(&model.User{}).Where("id = ?", userID).Update("last_login", time.Now())
+func UpdateLogin(c *fiber.Ctx, userID uint) error {
+	db.Model(&model.User{}).Where("id = ?", userID).Updates(map[string]any{
+		"LastLogin":   time.Now(),
+		"LastLoginIP": core.IP(c),
+	})
 
 	return nil
 }

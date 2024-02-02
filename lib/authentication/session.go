@@ -2,6 +2,7 @@ package authentication
 
 import (
 	"database/sql"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
@@ -26,7 +27,8 @@ func sessionMySQLStart(db *sql.DB, tableName string) {
 	})
 
 	authSession := session.New(session.Config{
-		Storage: store,
+		Storage:    store,
+		Expiration: 24 * time.Hour,
 	})
 
 	storedAuthenticationSession = authSession

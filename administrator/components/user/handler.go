@@ -2,11 +2,15 @@ package user
 
 import (
 	"errors"
+	"net/http"
+	"time"
 
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/lib/authentication"
+	"github.com/andycai/weapi/utils"
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
 	"gorm.io/gorm"
 )
 
@@ -32,29 +36,57 @@ func handleSiginAction(c *fiber.Ctx) error {
 	loginVo := &ReqLogin{}
 
 	if err := c.BodyParser(&loginVo); err != nil {
-		return core.Err(c, enum.ErrUserEmailOrPasswordError)
+		return core.Err(c, http.StatusBadRequest, enum.ErrUserEmailOrPasswordError)
 	}
 
 	if loginVo.Email == "" || loginVo.Password == "" {
-		return core.Err(c, enum.ErrUserEmailOrPasswordError)
+		return core.Err(c, http.StatusBadRequest, enum.ErrUserEmailOrPasswordError)
 	}
 
 	err, userVo := GetByEmail(loginVo.Email)
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return core.Err(c, enum.ErrUserEmailOrPasswordError)
+			return core.Err(c, http.StatusForbidden, enum.ErrUserEmailOrPasswordError)
 		}
 	}
 
 	if !core.CheckPassword(userVo.Password, loginVo.Password) {
-		return core.Err(c, enum.ErrUserEmailOrPasswordError)
+		return core.Err(c, http.StatusForbidden, enum.ErrUserEmailOrPasswordError)
 	}
 
-	UpdateLoginTime(uint(userVo.ID))
-	authentication.AuthStore(c, uint(userVo.ID))
+	if !userVo.Enabled {
+		return core.Err(c, http.StatusForbidden, enum.ErrUserDisabled)
+	}
 
-	return core.Push(c, enum.Success)
+	if !userVo.Activated {
+		return core.Err(c, http.StatusForbidden, enum.ErrUserNotActivated)
+	}
+
+	UpdateLogin(c, userVo.ID)
+	authentication.AuthStore(c, userVo.ID)
+
+	if !loginVo.Remember {
+		core.Push(c, enum.Success)
+	}
+
+	// Create the Claims
+	claims := jwt.MapClaims{
+		"name":  userVo.Email,
+		"admin": userVo.IsSuperUser,
+		"exp":   time.Now().Add(time.Hour * 72).Unix(),
+	}
+
+	// Create token
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	// Generate encoded token and send it as response.
+	t, err := token.SignedString([]byte(utils.GetEnv(enum.ENV_SESSION_SECRET)))
+	if err != nil {
+		return core.Error(c, http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(fiber.Map{"token": t})
 }
 
 func handleLogoutAction(c *fiber.Ctx) error {
