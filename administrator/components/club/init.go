@@ -31,13 +31,19 @@ func initAdminObject() []model.AdminObject {
 			Desc:        "The club data of the website can only be in JSON format",
 			Shows:       []string{"ID", "Site", "Creator", "Name", "Level", "CreatedAt"},
 			Editables:   []string{"Name", "Site", "Creator", "Level", "Logo", "Description", "Notice", "Addr"},
-			Filterables: []string{"UpdatedAt"},
+			Filterables: []string{"Site", "UpdatedAt"},
 			Orderables:  []string{"UpdatedAt"},
 			Searchables: []string{"Name", "Description"},
 			Requireds:   []string{"Name"},
 			// Icon:        weapi.ReadIcon("/icon/piece.svg"),
 			Scripts: []model.AdminScript{
 				{Src: "/static/admin/js/cms_club.js", Onload: true},
+			},
+			Orders: []model.Order{
+				{
+					Name: "UpdatedAt",
+					Op:   model.OrderOpDesc,
+				},
 			},
 			Actions: []model.AdminAction{},
 			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
@@ -55,7 +61,7 @@ func initAdminObject() []model.AdminObject {
 			Desc:        "The club member data of the website can only be in JSON format",
 			Shows:       []string{"ID", "User", "Club", "Position", "DisplayName", "EnterAt"},
 			Editables:   []string{"DisplayName", "User", "Club", "Position", "Scores", "EnterAt"},
-			Filterables: []string{"EnterAt"},
+			Filterables: []string{"Club", "EnterAt"},
 			Orderables:  []string{"EnterAt"},
 			Searchables: []string{"DisplayName"},
 			Requireds:   []string{"DisplayName"},
