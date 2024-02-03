@@ -36,6 +36,9 @@ func initAdminObject() []model.AdminObject {
 			Searchables: []string{"Name", "Description"},
 			Requireds:   []string{"Name", "Description", "Kind", "Type", "Quota", "BeginAt", "EndAt"},
 			// Icon:        weapi.ReadIcon("/icon/piece.svg"),
+			Scripts: []model.AdminScript{
+				{Src: "/static/admin/js/cms_activity.js", Onload: true},
+			},
 			Actions: []model.AdminAction{},
 			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
 				return nil

@@ -36,6 +36,9 @@ func initAdminObject() []model.AdminObject {
 			Searchables: []string{"Name", "Description"},
 			Requireds:   []string{"Name"},
 			// Icon:        weapi.ReadIcon("/icon/piece.svg"),
+			Scripts: []model.AdminScript{
+				{Src: "/static/admin/js/cms_club.js", Onload: true},
+			},
 			Actions: []model.AdminAction{},
 			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
 				return nil
@@ -51,7 +54,7 @@ func initAdminObject() []model.AdminObject {
 			Name:        "ClubMember",
 			Desc:        "The club member data of the website can only be in JSON format",
 			Shows:       []string{"ID", "User", "Club", "Position", "DisplayName", "EnterAt"},
-			Editables:   []string{"DisplayName", "User", "Club", "Position", "Scores"},
+			Editables:   []string{"DisplayName", "User", "Club", "Position", "Scores", "EnterAt"},
 			Filterables: []string{"EnterAt"},
 			Orderables:  []string{"EnterAt"},
 			Searchables: []string{"DisplayName"},
