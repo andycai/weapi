@@ -31,6 +31,15 @@ func initAPICheckRouter(r fiber.Router) {
 			Orderables:   []string{"UpdatedAt"},
 			Searchables:  []string{"Name", "Description"},
 		},
+		{
+			Model:        &model.Club{},
+			AllowMethods: model.GET | model.QUERY,
+			Name:         "club",
+			Editables:    []string{"Name", "Description", "Logo", "Notice", "Address"},
+			Filterables:  []string{"SiteID"},
+			Orderables:   []string{"UpdatedAt"},
+			Searchables:  []string{"Name", "Description"},
+		},
 	}
 	site.RegisterObjects(r, objs)
 }

@@ -8,7 +8,6 @@ import (
 
 	"github.com/andycai/weapi"
 	_ "github.com/andycai/weapi/administrator/components"
-	"github.com/andycai/weapi/administrator/components/config"
 	"github.com/andycai/weapi/administrator/components/user"
 	_ "github.com/andycai/weapi/components"
 	"github.com/andycai/weapi/core"
@@ -141,7 +140,7 @@ func main() {
 	core.SetupRouter(app)
 
 	// check config
-	config.CheckConfig()
+	user.CheckConfig()
 
 	log.Infof("Server started on %s", addr)
 	err = app.Listen(addr)

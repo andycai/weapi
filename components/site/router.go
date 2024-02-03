@@ -1,7 +1,6 @@
 package site
 
 import (
-	"github.com/andycai/weapi/components/site"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
@@ -9,9 +8,9 @@ import (
 )
 
 const (
-	keyDB            = "club.gorm.db"
-	keyNoCheckRouter = "club.router.nocheck"
-	keyCheckRouter   = "club.router.check"
+	keyDB            = "site.gorm.db"
+	keyNoCheckRouter = "site.router.nocheck"
+	keyCheckRouter   = "site.router.check"
 )
 
 var db *gorm.DB
@@ -23,16 +22,16 @@ func initDB(dbs []*gorm.DB) {
 func initAPICheckRouter(r fiber.Router) {
 	objs := []model.WebObject{
 		{
-			Model:        &model.Club{},
+			Model:        &model.Site{},
 			AllowMethods: model.GET | model.QUERY,
-			Name:         "club",
-			Editables:    []string{"Name", "Description", "Logo", "Notice", "Address"},
-			Filterables:  []string{"SiteID"},
-			Orderables:   []string{"UpdatedAt"},
-			Searchables:  []string{"Name", "Description"},
+			Name:         "site",
+			Editables:    []string{"Domain", "Name", "Preview", "Disallow"},
+			Filterables:  []string{},
+			Orderables:   []string{},
+			Searchables:  []string{"Domain", "Name"},
 		},
 	}
-	site.RegisterObjects(r, objs)
+	RegisterObjects(r, objs)
 }
 
 func init() {

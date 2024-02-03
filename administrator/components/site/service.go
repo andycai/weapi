@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/andycai/weapi/administrator/components/config"
-	"github.com/andycai/weapi/administrator/components/post"
+	"github.com/andycai/weapi/administrator/components/content"
+	"github.com/andycai/weapi/administrator/components/user"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/model"
@@ -27,25 +27,25 @@ import (
 
 func GetPageContext() map[string]any {
 	return map[string]any{
-		"siteurl":            config.GetValue(enum.KEY_SITE_URL),
-		"sitename":           config.GetValue(enum.KEY_SITE_NAME),
-		"copyright":          config.GetValue(enum.KEY_SITE_COPYRIGHT),
-		"siteadmin":          config.GetValue(enum.KEY_SITE_ADMIN),
-		"keywords":           config.GetValue(enum.KEY_SITE_KEYWORDS),
-		"description":        config.GetValue(enum.KEY_SITE_DESCRIPTION),
-		"ga":                 config.GetValue(enum.KEY_SITE_GA),
-		"logo_url":           config.GetValue(enum.KEY_SITE_LOGO_URL),
-		"favicon_url":        config.GetValue(enum.KEY_SITE_FAVICON_URL),
-		"terms_url":          config.GetValue(enum.KEY_SITE_TERMS_URL),
-		"privacy_url":        config.GetValue(enum.KEY_SITE_PRIVACY_URL),
-		"signin_url":         config.GetValue(enum.KEY_SITE_SIGNIN_URL),
-		"signup_url":         config.GetValue(enum.KEY_SITE_SIGNUP_URL),
-		"logout_url":         config.GetValue(enum.KEY_SITE_LOGOUT_URL),
-		"reset_password_url": config.GetValue(enum.KEY_SITE_RESET_PASSWORD_URL),
-		"login_next":         config.GetValue(enum.KEY_SITE_LOGIN_NEXT),
-		"slogan":             config.GetValue(enum.KEY_SITE_SLOGAN),
-		"user_id_type":       config.GetValue(enum.KEY_SITE_USER_ID_TYPE),
-		"dashboard":          config.GetValue(enum.KEY_ADMIN_DASHBOARD),
+		"siteurl":            user.GetValue(enum.KEY_SITE_URL),
+		"sitename":           user.GetValue(enum.KEY_SITE_NAME),
+		"copyright":          user.GetValue(enum.KEY_SITE_COPYRIGHT),
+		"siteadmin":          user.GetValue(enum.KEY_SITE_ADMIN),
+		"keywords":           user.GetValue(enum.KEY_SITE_KEYWORDS),
+		"description":        user.GetValue(enum.KEY_SITE_DESCRIPTION),
+		"ga":                 user.GetValue(enum.KEY_SITE_GA),
+		"logo_url":           user.GetValue(enum.KEY_SITE_LOGO_URL),
+		"favicon_url":        user.GetValue(enum.KEY_SITE_FAVICON_URL),
+		"terms_url":          user.GetValue(enum.KEY_SITE_TERMS_URL),
+		"privacy_url":        user.GetValue(enum.KEY_SITE_PRIVACY_URL),
+		"signin_url":         user.GetValue(enum.KEY_SITE_SIGNIN_URL),
+		"signup_url":         user.GetValue(enum.KEY_SITE_SIGNUP_URL),
+		"logout_url":         user.GetValue(enum.KEY_SITE_LOGOUT_URL),
+		"reset_password_url": user.GetValue(enum.KEY_SITE_RESET_PASSWORD_URL),
+		"login_next":         user.GetValue(enum.KEY_SITE_LOGIN_NEXT),
+		"slogan":             user.GetValue(enum.KEY_SITE_SLOGAN),
+		"user_id_type":       user.GetValue(enum.KEY_SITE_USER_ID_TYPE),
+		"dashboard":          user.GetValue(enum.KEY_ADMIN_DASHBOARD),
 	}
 }
 
@@ -701,7 +701,7 @@ func GetSummary() (result model.SummaryResult) {
 	db.Order("updated_at desc").Limit(20).Find(&latestPosts)
 
 	for idx := range latestPosts {
-		item := post.NewRenderContentFromPost(&latestPosts[idx], false)
+		item := content.NewRenderContentFromPost(&latestPosts[idx], false)
 		item.PostBody = ""
 		result.LatestPosts = append(result.LatestPosts, item)
 	}

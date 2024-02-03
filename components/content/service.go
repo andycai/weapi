@@ -1,15 +1,28 @@
-package post
+package content
 
 import (
 	"net/http"
 	"strconv"
 
-	"github.com/andycai/weapi/administrator/components/config"
-	"github.com/andycai/weapi/administrator/components/post"
+	"github.com/andycai/weapi/administrator/components/content"
+	"github.com/andycai/weapi/administrator/components/user"
+	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
 )
+
+func BeforeRenderPage(ctx *fiber.Ctx, vptr any) (any, error) {
+	draft, _ := strconv.ParseBool(ctx.Query("draft"))
+	result := vptr.(*model.Page)
+	if !draft && !result.Published {
+		return nil, core.Error(ctx, http.StatusTooEarly, enum.ErrPageIsNotPublish)
+	}
+	if draft {
+		result.Body = result.Draft
+	}
+	return content.NewRenderContentFromPage(result), nil
+}
 
 func BeforeRenderPost(ctx *fiber.Ctx, vptr any) (any, error) {
 	draft, _ := strconv.ParseBool(ctx.Query("draft"))
@@ -26,7 +39,7 @@ func BeforeRenderPost(ctx *fiber.Ctx, vptr any) (any, error) {
 		relations = false
 	}
 
-	return post.NewRenderContentFromPost(result, relations), nil
+	return content.NewRenderContentFromPost(result, relations), nil
 }
 
 func BeforeQueryRenderPost(ctx *fiber.Ctx, queryResult *model.QueryResult) (any, error) {
@@ -50,11 +63,11 @@ func BeforeQueryRenderPost(ctx *fiber.Ctx, queryResult *model.QueryResult) (any,
 		QueryResult: queryResult,
 	}
 
-	relationCount := config.GetIntValue(enum.KEY_CMS_RELATION_COUNT, 3)
-	suggestionCount := config.GetIntValue(enum.KEY_CMS_SUGGESTION_COUNT, 3)
+	relationCount := user.GetIntValue(enum.KEY_CMS_RELATION_COUNT, 3)
+	suggestionCount := user.GetIntValue(enum.KEY_CMS_SUGGESTION_COUNT, 3)
 
-	r.Suggestions, _ = post.GetSuggestions(siteId, categoryId, categoryPath, "", relationCount)
-	r.Relations, _ = post.GetRelations(siteId, categoryId, categoryPath, "", suggestionCount)
+	r.Suggestions, _ = content.GetSuggestions(siteId, categoryId, categoryPath, "", relationCount)
+	r.Relations, _ = content.GetRelations(siteId, categoryId, categoryPath, "", suggestionCount)
 
 	return r, nil
 }

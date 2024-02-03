@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"reflect"
 
-	"github.com/andycai/weapi/administrator/components/category"
+	"github.com/andycai/weapi/administrator/components/content"
 	"github.com/andycai/weapi/administrator/components/user"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/model"
@@ -321,7 +321,7 @@ func handleGetTags(c *fiber.Ctx) error {
 		return core.Error(c, http.StatusBadRequest, err)
 	}
 
-	tags, err := category.GetTagsByCategory(contentType, &form)
+	tags, err := content.GetTagsByCategory(contentType, &form)
 	if err != nil {
 		return core.Error(c, http.StatusInternalServerError, err)
 	}

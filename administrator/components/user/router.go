@@ -95,6 +95,58 @@ func initAdminObject() []model.AdminObject {
 			},
 			Weight: 91,
 		},
+		{
+			Model:       &model.Group{},
+			Group:       "Settings",
+			Name:        "Group",
+			Desc:        "A group describes a group of users. One user can be part of many groups and one group can have many users", //
+			PluralName:  "Groups",
+			Shows:       []string{"ID", "Name", "Extra", "UpdatedAt", "CreatedAt"},
+			Editables:   []string{"Name", "Extra", "UpdatedAt"},
+			Orderables:  []string{"UpdatedAt"},
+			Searchables: []string{"Name"},
+			Requireds:   []string{"Name"},
+			Icon:        weapi.ReadIcon("/icon/group.svg"),
+			AccessCheck: SuperAccessCheck,
+			Weight:      92,
+		},
+		{
+			Model:       &model.GroupMember{},
+			Group:       "Settings",
+			Name:        "GroupMember",
+			Desc:        "Group members", //
+			PluralName:  "GroupMembers",
+			Shows:       []string{"ID", "User", "Group", "Role", "CreatedAt"},
+			Filterables: []string{"Group", "Role", "CreatedAt"},
+			Editables:   []string{"User", "Group", "Role"},
+			Orderables:  []string{"CreatedAt"},
+			Searchables: []string{"User", "Group"},
+			Requireds:   []string{"User", "Group", "Role"},
+			Icon:        weapi.ReadIcon("/icon/members.svg"),
+			AccessCheck: SuperAccessCheck,
+			Attributes: map[string]model.AdminAttribute{
+				"Role": {
+					Default: model.GroupRoleMember,
+					Choices: []model.AdminSelectOption{{Label: "Admin", Value: model.GroupRoleAdmin}, {Label: "Member", Value: model.GroupRoleMember}},
+				},
+			},
+			Weight: 93,
+		},
+		{
+			Model:       &model.Config{},
+			Group:       "Settings",
+			Name:        "Config",
+			Desc:        "System config with database backend, You can change it in admin page, and it will take effect immediately without restarting the server", //
+			PluralName:  "Configs",
+			Shows:       []string{"Key", "Value", "Desc"},
+			Editables:   []string{"Key", "Value", "Desc"},
+			Orderables:  []string{"Key"},
+			Searchables: []string{"Key", "Value", "Desc"},
+			Requireds:   []string{"Key", "Value"},
+			Icon:        weapi.ReadIcon("/icon/config.svg"),
+			AccessCheck: SuperAccessCheck,
+			Weight:      94,
+		},
 	}
 }
 
