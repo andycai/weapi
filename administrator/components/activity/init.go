@@ -31,13 +31,19 @@ func initAdminObject() []model.AdminObject {
 			Desc:        "The activity data of the website can only be in JSON format",
 			Shows:       []string{"ID", "Site", "Creator", "Club", "Name", "BeginAt", "EndAt"},
 			Editables:   []string{"Site", "Club", "Creator", "Name", "Description", "BeginAt", "EndAt", "Kind", "Type", "Quota", "Waiting", "Stage", "FeeType", "Ahead", "Address"},
-			Filterables: []string{"UpdatedAt", "BeginAt", "EndAt"},
+			Filterables: []string{"Site", "Club", "UpdatedAt", "BeginAt", "EndAt"},
 			Orderables:  []string{"UpdatedAt"},
 			Searchables: []string{"Name", "Description"},
 			Requireds:   []string{"Name", "Description", "Kind", "Type", "Quota", "BeginAt", "EndAt"},
 			// Icon:        weapi.ReadIcon("/icon/piece.svg"),
 			Scripts: []model.AdminScript{
 				{Src: "/static/admin/js/cms_activity.js", Onload: true},
+			},
+			Orders: []model.Order{
+				{
+					Name: "UpdatedAt",
+					Op:   model.OrderOpDesc,
+				},
 			},
 			Actions: []model.AdminAction{},
 			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
