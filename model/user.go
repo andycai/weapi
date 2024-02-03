@@ -49,7 +49,7 @@ func (p Profile) Value() (driver.Value, error) {
 }
 
 type User struct {
-	ID        uint      `json:"-" gorm:"primaryKey"`
+	ID        uint      `json:"-" gorm:"primaryKey;autoIncrement"`
 	CreatedAt time.Time `json:"-" gorm:"autoCreateTime"`
 	UpdatedAt time.Time `json:"-" gorm:"autoUpdateTime"`
 
@@ -81,7 +81,7 @@ type GroupPermission struct {
 }
 
 type Group struct {
-	ID         uint            `json:"-" gorm:"primaryKey"`
+	ID         uint            `json:"-" gorm:"primaryKey;autoIncrement"`
 	CreatedAt  time.Time       `json:"-" gorm:"autoCreateTime"`
 	UpdatedAt  time.Time       `json:"-"`
 	Name       string          `json:"name" gorm:"size:200"`
@@ -91,7 +91,7 @@ type Group struct {
 }
 
 type GroupMember struct {
-	ID        uint      `json:"-" gorm:"primaryKey"`
+	ID        uint      `json:"-" gorm:"primaryKey;autoIncrement"`
 	CreatedAt time.Time `json:"-" gorm:"autoCreateTime"`
 	UserID    uint      `json:"-"`
 	User      User      `json:"user"`

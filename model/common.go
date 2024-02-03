@@ -64,3 +64,15 @@ type QueryByTagsResult struct {
 	Limit int   `json:"limit"`
 	Pos   int   `json:"pos"`
 }
+
+type BaseField struct {
+	ID          uint      `json:"id" gorm:"primarykey;autoIncrement:true"`
+	UpdatedAt   time.Time `json:"updated_at" gorm:"autoCreateTime"`
+	CreatedAt   time.Time `json:"created_at" gorm:"autoUpdateTime"`
+	SiteID      string    `json:"site_id" gorm:"uniqueIndex:,composite:_site_name"`
+	Site        Site      `json:"-"`
+	Name        string    `json:"title" gorm:"size:200;uniqueIndex:,composite:_site_name"`
+	Description string    `json:"description,omitempty"`
+	CreatorID   uint      `json:"-" gorm:"index"`
+	Creator     User      `json:"-"`
+}

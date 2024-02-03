@@ -33,7 +33,7 @@ func initAdminObject() []model.AdminObject {
 			Desc:        "A group describes a group of users. One user can be part of many groups and one group can have many users", //
 			PluralName:  "Groups",
 			Shows:       []string{"ID", "Name", "Extra", "UpdatedAt", "CreatedAt"},
-			Editables:   []string{"ID", "Name", "Extra", "UpdatedAt"},
+			Editables:   []string{"Name", "Extra", "UpdatedAt"},
 			Orderables:  []string{"UpdatedAt"},
 			Searchables: []string{"Name"},
 			Requireds:   []string{"Name"},
@@ -49,7 +49,7 @@ func initAdminObject() []model.AdminObject {
 			PluralName:  "GroupMembers",
 			Shows:       []string{"ID", "User", "Group", "Role", "CreatedAt"},
 			Filterables: []string{"Group", "Role", "CreatedAt"},
-			Editables:   []string{"ID", "User", "Group", "Role"},
+			Editables:   []string{"User", "Group", "Role"},
 			Orderables:  []string{"CreatedAt"},
 			Searchables: []string{"User", "Group"},
 			Requireds:   []string{"User", "Group", "Role"},

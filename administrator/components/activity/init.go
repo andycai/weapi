@@ -29,26 +29,13 @@ func initAdminObject() []model.AdminObject {
 			Group:       "Activities",
 			Name:        "Activity",
 			Desc:        "The activity data of the website can only be in JSON format",
-			Shows:       []string{"ID", "Site", "Club", "Title", "BeginAt", "EndAt"},
-			Editables:   []string{"Site", "Club", "Creator", "Title", "Description", "BeginAt", "EndAt", "Kind", "Type", "Quota"},
+			Shows:       []string{"ID", "Site", "Creator", "Club", "Name", "BeginAt", "EndAt"},
+			Editables:   []string{"Site", "Club", "Creator", "Name", "Description", "BeginAt", "EndAt", "Kind", "Type", "Quota", "Waiting", "Stage", "FeeType", "Ahead", "Address"},
 			Filterables: []string{"UpdatedAt", "BeginAt", "EndAt"},
 			Orderables:  []string{"UpdatedAt"},
-			Searchables: []string{"Title", "Description"},
-			Requireds:   []string{"Title", "Description", "BeginAt", "EndAt"},
+			Searchables: []string{"Name", "Description"},
+			Requireds:   []string{"Name", "Description", "BeginAt", "EndAt"},
 			// Icon:        weapi.ReadIcon("/icon/piece.svg"),
-			Styles: []string{
-				"/static/admin/css/jsoneditor-9.10.2.min.css",
-			},
-			Scripts: []model.AdminScript{
-				{Src: "/static/admin/js/cms_widget.js"},
-				{Src: "/static/admin/js/jsoneditor-9.10.2.min.js"},
-			},
-			Orders: []model.Order{
-				{
-					Name: "UpdatedAt",
-					Op:   model.OrderOpDesc,
-				},
-			},
 			Actions: []model.AdminAction{},
 			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
 				return nil

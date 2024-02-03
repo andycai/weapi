@@ -29,26 +29,13 @@ func initAdminObject() []model.AdminObject {
 			Group:       "Activities",
 			Name:        "Club",
 			Desc:        "The club data of the website can only be in JSON format",
-			Shows:       []string{"ID", "Name", "Level", "CreatedAt"},
-			Editables:   []string{"Name", "Level", "Logo", "Notice", "Addr"},
+			Shows:       []string{"ID", "Creator", "Name", "Level", "CreatedAt"},
+			Editables:   []string{"Name", "Creator", "Level", "Logo", "Description", "Notice", "Addr"},
 			Filterables: []string{"UpdatedAt"},
 			Orderables:  []string{"UpdatedAt"},
 			Searchables: []string{"name"},
 			Requireds:   []string{"Name"},
 			// Icon:        weapi.ReadIcon("/icon/piece.svg"),
-			Styles: []string{
-				"/static/admin/css/jsoneditor-9.10.2.min.css",
-			},
-			Scripts: []model.AdminScript{
-				{Src: "/static/admin/js/cms_widget.js"},
-				{Src: "/static/admin/js/jsoneditor-9.10.2.min.js"},
-			},
-			Orders: []model.Order{
-				{
-					Name: "UpdatedAt",
-					Op:   model.OrderOpDesc,
-				},
-			},
 			Actions: []model.AdminAction{},
 			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
 				return nil
