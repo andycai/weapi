@@ -5,6 +5,12 @@ import (
 	"time"
 )
 
+const (
+	ClubPositionOwner   = 1
+	ClubPositionMember  = 2
+	ClubPositionManager = 3
+)
+
 type Club struct {
 	BaseField
 	Scores  uint   `json:"scores" gorm:"default:0;comment:俱乐部积分"` // 俱乐部积分

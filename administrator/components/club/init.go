@@ -57,6 +57,16 @@ func initAdminObject() []model.AdminObject {
 			Searchables: []string{"DisplayName"},
 			Requireds:   []string{"DisplayName"},
 			// Icon:        weapi.ReadIcon("/icon/piece.svg"),
+			Attributes: map[string]model.AdminAttribute{
+				"Position": {
+					Default: model.ClubPositionMember,
+					Choices: []model.AdminSelectOption{
+						{Label: "Owner", Value: model.ClubPositionOwner},
+						{Label: "Member", Value: model.ClubPositionMember},
+						{Label: "Manager", Value: model.ClubPositionManager},
+					},
+				},
+			},
 			Actions: []model.AdminAction{},
 			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
 				return nil
