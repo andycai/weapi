@@ -2,6 +2,36 @@ package model
 
 import "time"
 
+const (
+	ActivityKindBasketball = iota + 1
+	ActivityKindFootball
+	ActivityKindVolleyball
+	ActivityKindBadminton
+	ActivityKindDinner
+	ActivityKindOther
+)
+
+const (
+	ActivityTypePrivate = iota + 1
+	ActivityTypePublic
+	ActivityTypeClub
+)
+
+const (
+	ActivityStageSignup = iota + 1
+	ActivityStageInProcess
+	ActivityStageFinished
+	ActivityStageAbort
+)
+
+const (
+	ActivityFeeTypeFree = iota + 1
+	ActivityFeeTypeFixed
+	ActivityFeeTypeAA
+	ActivityFeeTypeMaleFixedFemaleAA
+	ActivityFeeTypeMaleAAFemaleFixed
+)
+
 type Activity struct {
 	BaseField
 	ClubID    uint      `json:"club_id" gorm:"index"`

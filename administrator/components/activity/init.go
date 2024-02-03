@@ -45,6 +45,37 @@ func initAdminObject() []model.AdminObject {
 					Op:   model.OrderOpDesc,
 				},
 			},
+			Attributes: map[string]model.AdminAttribute{
+				"Kind": {
+					Default: model.ActivityKindBasketball,
+					Choices: []model.AdminSelectOption{
+						{Label: "Basketball", Value: model.ActivityKindBasketball},
+						{Label: "Football", Value: model.ActivityKindFootball},
+						{Label: "Volleyball", Value: model.ActivityKindVolleyball},
+						{Label: "Badminton", Value: model.ActivityKindBadminton},
+						{Label: "Dinner", Value: model.ActivityKindDinner},
+						{Label: "Other", Value: model.ActivityKindOther},
+					},
+				},
+				"Type": {
+					Default: model.ActivityTypePublic,
+					Choices: []model.AdminSelectOption{
+						{Label: "Private", Value: model.ActivityTypePrivate},
+						{Label: "Public", Value: model.ActivityTypePublic},
+						{Label: "Club", Value: model.ActivityTypeClub},
+					},
+				},
+				"FeeType": {
+					Default: model.ActivityFeeTypeFree,
+					Choices: []model.AdminSelectOption{
+						{Label: "Free", Value: model.ActivityFeeTypeFree},
+						{Label: "Fixed", Value: model.ActivityFeeTypeFixed},
+						{Label: "AA", Value: model.ActivityFeeTypeAA},
+						{Label: "Male Fixed", Value: model.ActivityFeeTypeMaleFixedFemaleAA},
+						{Label: "Female Fixed", Value: model.ActivityFeeTypeMaleAAFemaleFixed},
+					},
+				},
+			},
 			Actions: []model.AdminAction{},
 			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
 				return nil

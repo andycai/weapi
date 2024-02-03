@@ -6,9 +6,9 @@ import (
 )
 
 const (
-	ClubPositionOwner   = 1
-	ClubPositionMember  = 2
-	ClubPositionManager = 3
+	ClubPositionOwner = iota + 1
+	ClubPositionMember
+	ClubPositionManager
 )
 
 type Club struct {
