@@ -3,6 +3,7 @@ package site
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"path"
 	"reflect"
@@ -646,6 +647,28 @@ func QueryObjects(obj *model.AdminObject, session *gorm.DB, form *model.QueryFor
 		r.Items = append(r.Items, item)
 	}
 	return r, nil
+}
+
+func checkRequired(required []string, inputVals map[string]any) error {
+	for _, v := range required {
+		if _, ok := inputVals[v]; ok {
+			ret := false
+			switch inputVals[v].(type) {
+			case string:
+				if inputVals[v] == "" {
+					ret = true
+				}
+			case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64:
+				if inputVals[v] == 0 {
+					ret = true
+				}
+			}
+			if ret {
+				return errors.New(fmt.Sprintf("required field %s", v))
+			}
+		}
+	}
+	return nil
 }
 
 // DefaultPrepareQuery return default QueryForm.

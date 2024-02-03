@@ -142,6 +142,12 @@ func handleCreate(obj *model.AdminObject, c *fiber.Ctx) error {
 	if err := c.BodyParser(&vals); err != nil {
 		return core.Error(c, http.StatusBadRequest, err)
 	}
+
+	err := checkRequired(obj.Requireds, vals)
+	if err != nil {
+		return core.Error(c, http.StatusBadRequest, err)
+	}
+
 	elmObj := reflect.New(obj.ModelElem)
 	elm, err := UnmarshalFrom(obj, elmObj, keys, vals)
 	if err != nil {
@@ -182,8 +188,13 @@ func handleUpdate(obj *model.AdminObject, c *fiber.Ctx) error {
 		return core.Error(c, http.StatusBadRequest, err)
 	}
 
+	err := checkRequired(obj.Requireds, inputVals)
+	if err != nil {
+		return core.Error(c, http.StatusBadRequest, err)
+	}
+
 	elmObj := reflect.New(obj.ModelElem)
-	err := db.Where(keys).First(elmObj.Interface()).Error
+	err = db.Where(keys).First(elmObj.Interface()).Error
 	if err != nil {
 		return core.Error(c, http.StatusNotFound, errors.New("not found"))
 	}

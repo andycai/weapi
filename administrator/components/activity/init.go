@@ -78,10 +78,10 @@ func initAdminObject() []model.AdminObject {
 			},
 			Actions: []model.AdminAction{},
 			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
-				return checkRequest(vptr.(*model.Activity))
+				return nil
 			},
 			BeforeUpdate: func(ctx *fiber.Ctx, vptr any, vals map[string]any) error {
-				return checkRequest(vptr.(*model.Activity))
+				return nil
 			},
 			Weight: 21,
 		},

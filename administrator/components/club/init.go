@@ -47,10 +47,10 @@ func initAdminObject() []model.AdminObject {
 			},
 			Actions: []model.AdminAction{},
 			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
-				return checkRequest(vptr.(*model.Club))
+				return nil
 			},
 			BeforeUpdate: func(ctx *fiber.Ctx, vptr any, vals map[string]any) error {
-				return checkRequest(vptr.(*model.Club))
+				return nil
 			},
 			Weight: 22,
 		},
@@ -78,10 +78,10 @@ func initAdminObject() []model.AdminObject {
 			},
 			Actions: []model.AdminAction{},
 			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
-				return checkMemberRequest(vptr.(*model.ClubMember))
+				return nil
 			},
 			BeforeUpdate: func(ctx *fiber.Ctx, vptr any, vals map[string]any) error {
-				return checkMemberRequest(vptr.(*model.ClubMember))
+				return nil
 			},
 			Weight: 23,
 		},
