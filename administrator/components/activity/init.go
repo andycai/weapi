@@ -34,7 +34,7 @@ func initAdminObject() []model.AdminObject {
 			Filterables: []string{"Site", "Club", "UpdatedAt", "BeginAt", "EndAt"},
 			Orderables:  []string{"UpdatedAt"},
 			Searchables: []string{"Name", "Description"},
-			Requireds:   []string{"Name", "Description", "Kind", "Type", "Quota", "BeginAt", "EndAt"},
+			Requireds:   []string{"Name", "Description", "Kind", "Type", "FeeType", "Quota", "BeginAt", "EndAt"},
 			// Icon:        weapi.ReadIcon("/icon/piece.svg"),
 			Scripts: []model.AdminScript{
 				{Src: "/static/admin/js/cms_activity.js", Onload: true},
@@ -78,10 +78,10 @@ func initAdminObject() []model.AdminObject {
 			},
 			Actions: []model.AdminAction{},
 			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
-				return nil
+				return checkRequest(vptr.(*model.Activity))
 			},
 			BeforeUpdate: func(ctx *fiber.Ctx, vptr any, vals map[string]any) error {
-				return nil
+				return checkRequest(vptr.(*model.Activity))
 			},
 			Weight: 21,
 		},

@@ -47,10 +47,10 @@ func initAdminObject() []model.AdminObject {
 			},
 			Actions: []model.AdminAction{},
 			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
-				return nil
+				return checkRequest(vptr.(*model.Club))
 			},
 			BeforeUpdate: func(ctx *fiber.Ctx, vptr any, vals map[string]any) error {
-				return nil
+				return checkRequest(vptr.(*model.Club))
 			},
 			Weight: 22,
 		},
@@ -64,7 +64,7 @@ func initAdminObject() []model.AdminObject {
 			Filterables: []string{"Club", "EnterAt"},
 			Orderables:  []string{"EnterAt"},
 			Searchables: []string{"DisplayName"},
-			Requireds:   []string{"DisplayName"},
+			Requireds:   []string{"DisplayName", "Position"},
 			// Icon:        weapi.ReadIcon("/icon/piece.svg"),
 			Attributes: map[string]model.AdminAttribute{
 				"Position": {
@@ -78,10 +78,10 @@ func initAdminObject() []model.AdminObject {
 			},
 			Actions: []model.AdminAction{},
 			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
-				return nil
+				return checkMemberRequest(vptr.(*model.ClubMember))
 			},
 			BeforeUpdate: func(ctx *fiber.Ctx, vptr any, vals map[string]any) error {
-				return nil
+				return checkMemberRequest(vptr.(*model.ClubMember))
 			},
 			Weight: 23,
 		},

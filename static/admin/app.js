@@ -347,7 +347,7 @@ class EditObject {
         } catch (err) {
             console.error(err)
             Alpine.store('toasts').error(`Save Fail: ${err.toString()}`)
-            this.closeEdit(ev)
+            // this.closeEdit(ev)
         }
     }
     closeEdit(event, cancel = false) {
