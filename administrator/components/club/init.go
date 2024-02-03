@@ -33,7 +33,7 @@ func initAdminObject() []model.AdminObject {
 			Editables:   []string{"Name", "Creator", "Level", "Logo", "Description", "Notice", "Addr"},
 			Filterables: []string{"UpdatedAt"},
 			Orderables:  []string{"UpdatedAt"},
-			Searchables: []string{"name"},
+			Searchables: []string{"Name", "Description"},
 			Requireds:   []string{"Name"},
 			// Icon:        weapi.ReadIcon("/icon/piece.svg"),
 			Actions: []model.AdminAction{},
@@ -44,6 +44,27 @@ func initAdminObject() []model.AdminObject {
 				return nil
 			},
 			Weight: 22,
+		},
+		{
+			Model:       &model.ClubMember{},
+			Group:       "Activities",
+			Name:        "ClubMember",
+			Desc:        "The club member data of the website can only be in JSON format",
+			Shows:       []string{"ID", "User", "Club", "Position", "DisplayName", "EnterAt"},
+			Editables:   []string{"DisplayName", "User", "Club", "Position", "Scores"},
+			Filterables: []string{"EnterAt"},
+			Orderables:  []string{"EnterAt"},
+			Searchables: []string{"DisplayName"},
+			Requireds:   []string{"DisplayName"},
+			// Icon:        weapi.ReadIcon("/icon/piece.svg"),
+			Actions: []model.AdminAction{},
+			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
+				return nil
+			},
+			BeforeUpdate: func(ctx *fiber.Ctx, vptr any, vals map[string]any) error {
+				return nil
+			},
+			Weight: 23,
 		},
 	}
 }

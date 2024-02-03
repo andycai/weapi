@@ -42,6 +42,7 @@ var models = []any{
 	&model.Config{},
 	&model.Activity{},
 	&model.Club{},
+	&model.ClubMember{},
 }
 
 func ReadIcon(name string) *model.AdminIcon {

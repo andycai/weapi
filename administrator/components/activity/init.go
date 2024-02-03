@@ -34,7 +34,7 @@ func initAdminObject() []model.AdminObject {
 			Filterables: []string{"UpdatedAt", "BeginAt", "EndAt"},
 			Orderables:  []string{"UpdatedAt"},
 			Searchables: []string{"Name", "Description"},
-			Requireds:   []string{"Name", "Description", "BeginAt", "EndAt"},
+			Requireds:   []string{"Name", "Description", "Kind", "Type", "Quota", "BeginAt", "EndAt"},
 			// Icon:        weapi.ReadIcon("/icon/piece.svg"),
 			Actions: []model.AdminAction{},
 			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
