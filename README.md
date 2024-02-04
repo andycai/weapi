@@ -4,14 +4,20 @@ Weapi is the lightweight open-source headless CMS.
 
 Golang + Go Fiber + Gorm + Alpine.js
 
-Module include: 
+Modules include: 
 
 - Site
-- Category
-- Post
-- Page
-- Media
-- Group
-- GroupMember
-- User
-- Config
+- Content
+    - Category
+    - Post
+    - Page
+    - Media
+- Setting
+    - Group
+    - GroupMember
+    - User
+    - Config
+- Activity
+    - Activity
+    - Club
+    - ClubMember
