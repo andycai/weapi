@@ -100,7 +100,6 @@ func initAdminObject() []model.AdminObject {
 			Group:       "Settings",
 			Name:        "Group",
 			Desc:        "A group describes a group of users. One user can be part of many groups and one group can have many users", //
-			PluralName:  "Groups",
 			Shows:       []string{"ID", "Name", "Extra", "UpdatedAt", "CreatedAt"},
 			Editables:   []string{"Name", "Extra", "UpdatedAt"},
 			Orderables:  []string{"UpdatedAt"},
@@ -115,7 +114,6 @@ func initAdminObject() []model.AdminObject {
 			Group:       "Settings",
 			Name:        "GroupMember",
 			Desc:        "Group members", //
-			PluralName:  "GroupMembers",
 			Shows:       []string{"ID", "User", "Group", "Role", "CreatedAt"},
 			Filterables: []string{"Group", "Role", "CreatedAt"},
 			Editables:   []string{"User", "Group", "Role"},
@@ -137,7 +135,6 @@ func initAdminObject() []model.AdminObject {
 			Group:       "Settings",
 			Name:        "Config",
 			Desc:        "System config with database backend, You can change it in admin page, and it will take effect immediately without restarting the server", //
-			PluralName:  "Configs",
 			Shows:       []string{"Key", "Value", "Desc"},
 			Editables:   []string{"Key", "Value", "Desc"},
 			Orderables:  []string{"Key"},
