@@ -3,7 +3,7 @@ package user
 import (
 	"net/http"
 
-	"github.com/andycai/weapi/administrator/components/user"
+	"github.com/andycai/weapi/administrator/user"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/utils"
 	jwtware "github.com/gofiber/contrib/jwt"

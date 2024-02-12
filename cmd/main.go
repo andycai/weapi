@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 
 	"github.com/andycai/weapi"
-	_ "github.com/andycai/weapi/administrator/components"
-	"github.com/andycai/weapi/administrator/components/user"
-	_ "github.com/andycai/weapi/components"
+	_ "github.com/andycai/weapi/administrator"
+	"github.com/andycai/weapi/administrator/user"
+	_ "github.com/andycai/weapi/api"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/lib/authentication"

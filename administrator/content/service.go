@@ -19,7 +19,7 @@ import (
 	_ "image/jpeg"
 	_ "image/png"
 
-	"github.com/andycai/weapi/administrator/components/user"
+	"github.com/andycai/weapi/administrator/user"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/model"

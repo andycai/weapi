@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"reflect"
 
-	"github.com/andycai/weapi/administrator/components/content"
-	"github.com/andycai/weapi/administrator/components/user"
+	"github.com/andycai/weapi/administrator/content"
+	"github.com/andycai/weapi/administrator/user"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"

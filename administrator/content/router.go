@@ -2,8 +2,8 @@ package content
 
 import (
 	"github.com/andycai/weapi"
-	"github.com/andycai/weapi/administrator/components/user"
-	userapi "github.com/andycai/weapi/components/user"
+	"github.com/andycai/weapi/administrator/user"
+	userapi "github.com/andycai/weapi/api/user"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/log"

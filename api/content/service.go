@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/andycai/weapi/administrator/components/content"
-	"github.com/andycai/weapi/administrator/components/user"
+	"github.com/andycai/weapi/administrator/content"
+	"github.com/andycai/weapi/administrator/user"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/model"

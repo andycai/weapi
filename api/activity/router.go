@@ -1,7 +1,7 @@
 package site
 
 import (
-	"github.com/andycai/weapi/components/site"
+	"github.com/andycai/weapi/api/site"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
