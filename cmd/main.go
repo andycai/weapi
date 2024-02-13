@@ -10,8 +10,8 @@ import (
 	_ "github.com/andycai/weapi/administrator"
 	"github.com/andycai/weapi/administrator/user"
 	_ "github.com/andycai/weapi/api"
+	"github.com/andycai/weapi/constant"
 	"github.com/andycai/weapi/core"
-	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/lib/authentication"
 	"github.com/andycai/weapi/lib/database"
 	"github.com/andycai/weapi/log"
@@ -31,17 +31,17 @@ func main() {
 	})
 
 	var addr string
-	var logFile string = utils.GetEnv(enum.ENV_LOG_FILE)
-	var dbDriver string = utils.GetEnv(enum.ENV_DB_DRIVER)
-	var dsn string = utils.GetEnv(enum.ENV_DSN)
-	var debug bool = utils.GetEnv(enum.ENV_DEBUG) != ""
-	var staticDir string = utils.GetEnv(enum.ENV_STATIC_DIR)
-	var htmlDir string = utils.GetEnv(enum.ENV_HTML_DIR)
-	var dbActive = utils.GetIntEnv(enum.ENV_DB_ACTIVE)
-	var dbIdle = utils.GetIntEnv(enum.ENV_DB_IDLE)
-	var dbTimeout = utils.GetIntEnv(enum.ENV_DB_TIMEOUT)
-	var lang = utils.GetEnv(enum.ENV_LANG)
-	var zoneOffset = utils.GetIntEnv(enum.ENV_ZONE_OFFSET)
+	var logFile string = utils.GetEnv(constant.ENV_LOG_FILE)
+	var dbDriver string = utils.GetEnv(constant.ENV_DB_DRIVER)
+	var dsn string = utils.GetEnv(constant.ENV_DSN)
+	var debug bool = utils.GetEnv(constant.ENV_DEBUG) != ""
+	var staticDir string = utils.GetEnv(constant.ENV_STATIC_DIR)
+	var htmlDir string = utils.GetEnv(constant.ENV_HTML_DIR)
+	var dbActive = utils.GetIntEnv(constant.ENV_DB_ACTIVE)
+	var dbIdle = utils.GetIntEnv(constant.ENV_DB_IDLE)
+	var dbTimeout = utils.GetIntEnv(constant.ENV_DB_TIMEOUT)
+	var lang = utils.GetEnv(constant.ENV_LANG)
+	var zoneOffset = utils.GetIntEnv(constant.ENV_ZONE_OFFSET)
 
 	var superUserEmail string
 	var superUserPassword string

@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/andycai/weapi/constant"
 	"github.com/andycai/weapi/core"
-	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/lib/authentication"
 	"github.com/andycai/weapi/model"
 	"github.com/andycai/weapi/utils"
@@ -19,13 +19,13 @@ var configValueCache *core.ExpiredLRUCache[string, string]
 
 func init() {
 	size := 1024 // fixed size
-	v, _ := strconv.ParseInt(utils.GetEnv(enum.ENV_CONFIG_CACHE_SIZE), 10, 32)
+	v, _ := strconv.ParseInt(utils.GetEnv(constant.ENV_CONFIG_CACHE_SIZE), 10, 32)
 	if v > 0 {
 		size = int(v)
 	}
 
 	var configCacheExpired time.Duration = 10 * time.Second
-	exp, err := time.ParseDuration(utils.GetEnv(enum.ENV_CONFIG_CACHE_EXPIRED))
+	exp, err := time.ParseDuration(utils.GetEnv(constant.ENV_CONFIG_CACHE_EXPIRED))
 	if err == nil {
 		configCacheExpired = exp
 	}
@@ -37,7 +37,7 @@ func init() {
 
 func WithAdminAuth(c *fiber.Ctx) error {
 	userVo := Current(c)
-	signinURL := GetValue(enum.KEY_SITE_SIGNIN_URL)
+	signinURL := GetValue(constant.KEY_SITE_SIGNIN_URL)
 	if userVo == nil {
 		if signinURL == "" {
 			return core.Error(c, http.StatusUnauthorized, errors.New("Unauthorized"))
@@ -124,21 +124,21 @@ func UpdateFields(user *model.User, vals map[string]any) error {
 //#region config
 
 func CheckConfig() {
-	CheckValue(enum.KEY_SITE_LOGO_URL, "/static/img/logo.svg")
-	CheckValue(enum.KEY_CMS_GUEST_ACCESS_API, "true")
-	CheckValue(enum.KEY_ADMIN_DASHBOARD, "/html/dashboard.html")
-	CheckValue(enum.KEY_CMS_UPLOAD_DIR, "./data/uploads/")
-	CheckValue(enum.KEY_CMS_MEDIA_PREFIX, "/media/")
-	CheckValue(enum.KEY_CMS_MEDIA_HOST, "")
-	CheckValue(enum.KEY_CMS_API_HOST, "")
-	CheckValue(enum.KEY_CMS_RELATION_COUNT, "3")
-	CheckValue(enum.KEY_CMS_SUGGESTION_COUNT, "3")
-	CheckValue(enum.KEY_SITE_FAVICON_URL, "/static/img/favicon.png")
-	CheckValue(enum.KEY_SITE_SIGNIN_URL, "/auth/login")
-	CheckValue(enum.KEY_SITE_SIGNUP_URL, "/auth/register")
-	CheckValue(enum.KEY_SITE_LOGOUT_URL, "/auth/logout")
-	CheckValue(enum.KEY_SITE_RESET_PASSWORD_URL, "/auth/reset_password")
-	CheckValue(enum.KEY_SITE_LOGIN_NEXT, "/")
+	CheckValue(constant.KEY_SITE_LOGO_URL, "/static/img/logo.svg")
+	CheckValue(constant.KEY_CMS_GUEST_ACCESS_API, "true")
+	CheckValue(constant.KEY_ADMIN_DASHBOARD, "/html/dashboard.html")
+	CheckValue(constant.KEY_CMS_UPLOAD_DIR, "./data/uploads/")
+	CheckValue(constant.KEY_CMS_MEDIA_PREFIX, "/media/")
+	CheckValue(constant.KEY_CMS_MEDIA_HOST, "")
+	CheckValue(constant.KEY_CMS_API_HOST, "")
+	CheckValue(constant.KEY_CMS_RELATION_COUNT, "3")
+	CheckValue(constant.KEY_CMS_SUGGESTION_COUNT, "3")
+	CheckValue(constant.KEY_SITE_FAVICON_URL, "/static/img/favicon.png")
+	CheckValue(constant.KEY_SITE_SIGNIN_URL, "/auth/login")
+	CheckValue(constant.KEY_SITE_SIGNUP_URL, "/auth/register")
+	CheckValue(constant.KEY_SITE_LOGOUT_URL, "/auth/logout")
+	CheckValue(constant.KEY_SITE_RESET_PASSWORD_URL, "/auth/reset_password")
+	CheckValue(constant.KEY_SITE_LOGIN_NEXT, "/")
 }
 
 func SetValue(key, value string) {

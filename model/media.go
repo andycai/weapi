@@ -3,7 +3,7 @@ package model
 import (
 	"path/filepath"
 
-	"github.com/andycai/weapi/enum"
+	"github.com/andycai/weapi/constant"
 )
 
 type Media struct {
@@ -40,7 +40,7 @@ func (m *Media) BuildPublicUrls(mediaHost string, mediaPrefix string) {
 	}
 	m.PublicUrl = publicUrl
 
-	if m.ContentType == enum.ContentTypeImage && m.Thumbnail == "" {
+	if m.ContentType == constant.ContentTypeImage && m.Thumbnail == "" {
 		m.Thumbnail = m.PublicUrl
 	}
 }

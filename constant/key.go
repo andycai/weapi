@@ -1,4 +1,4 @@
-package enum
+package constant
 
 // session field name
 const SessionField = "weapi"

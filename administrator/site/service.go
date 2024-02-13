@@ -14,7 +14,7 @@ import (
 
 	"github.com/andycai/weapi/administrator/content"
 	"github.com/andycai/weapi/administrator/user"
-	"github.com/andycai/weapi/enum"
+	"github.com/andycai/weapi/constant"
 	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
@@ -27,25 +27,25 @@ import (
 
 func GetPageContext() map[string]any {
 	return map[string]any{
-		"siteurl":            user.GetValue(enum.KEY_SITE_URL),
-		"sitename":           user.GetValue(enum.KEY_SITE_NAME),
-		"copyright":          user.GetValue(enum.KEY_SITE_COPYRIGHT),
-		"siteadmin":          user.GetValue(enum.KEY_SITE_ADMIN),
-		"keywords":           user.GetValue(enum.KEY_SITE_KEYWORDS),
-		"description":        user.GetValue(enum.KEY_SITE_DESCRIPTION),
-		"ga":                 user.GetValue(enum.KEY_SITE_GA),
-		"logo_url":           user.GetValue(enum.KEY_SITE_LOGO_URL),
-		"favicon_url":        user.GetValue(enum.KEY_SITE_FAVICON_URL),
-		"terms_url":          user.GetValue(enum.KEY_SITE_TERMS_URL),
-		"privacy_url":        user.GetValue(enum.KEY_SITE_PRIVACY_URL),
-		"signin_url":         user.GetValue(enum.KEY_SITE_SIGNIN_URL),
-		"signup_url":         user.GetValue(enum.KEY_SITE_SIGNUP_URL),
-		"logout_url":         user.GetValue(enum.KEY_SITE_LOGOUT_URL),
-		"reset_password_url": user.GetValue(enum.KEY_SITE_RESET_PASSWORD_URL),
-		"login_next":         user.GetValue(enum.KEY_SITE_LOGIN_NEXT),
-		"slogan":             user.GetValue(enum.KEY_SITE_SLOGAN),
-		"user_id_type":       user.GetValue(enum.KEY_SITE_USER_ID_TYPE),
-		"dashboard":          user.GetValue(enum.KEY_ADMIN_DASHBOARD),
+		"siteurl":            user.GetValue(constant.KEY_SITE_URL),
+		"sitename":           user.GetValue(constant.KEY_SITE_NAME),
+		"copyright":          user.GetValue(constant.KEY_SITE_COPYRIGHT),
+		"siteadmin":          user.GetValue(constant.KEY_SITE_ADMIN),
+		"keywords":           user.GetValue(constant.KEY_SITE_KEYWORDS),
+		"description":        user.GetValue(constant.KEY_SITE_DESCRIPTION),
+		"ga":                 user.GetValue(constant.KEY_SITE_GA),
+		"logo_url":           user.GetValue(constant.KEY_SITE_LOGO_URL),
+		"favicon_url":        user.GetValue(constant.KEY_SITE_FAVICON_URL),
+		"terms_url":          user.GetValue(constant.KEY_SITE_TERMS_URL),
+		"privacy_url":        user.GetValue(constant.KEY_SITE_PRIVACY_URL),
+		"signin_url":         user.GetValue(constant.KEY_SITE_SIGNIN_URL),
+		"signup_url":         user.GetValue(constant.KEY_SITE_SIGNUP_URL),
+		"logout_url":         user.GetValue(constant.KEY_SITE_LOGOUT_URL),
+		"reset_password_url": user.GetValue(constant.KEY_SITE_RESET_PASSWORD_URL),
+		"login_next":         user.GetValue(constant.KEY_SITE_LOGIN_NEXT),
+		"slogan":             user.GetValue(constant.KEY_SITE_SLOGAN),
+		"user_id_type":       user.GetValue(constant.KEY_SITE_USER_ID_TYPE),
+		"dashboard":          user.GetValue(constant.KEY_ADMIN_DASHBOARD),
 	}
 }
 

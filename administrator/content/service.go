@@ -20,7 +20,7 @@ import (
 	_ "image/png"
 
 	"github.com/andycai/weapi/administrator/user"
-	"github.com/andycai/weapi/enum"
+	"github.com/andycai/weapi/constant"
 	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/model"
 	"github.com/andycai/weapi/utils/random"
@@ -139,7 +139,7 @@ func queryContentByTags(contentType string, form *model.QueryByTagsForm) ([]stri
 
 func NewRenderContentFromPage(page *model.Page) *model.RenderContent {
 	var data any
-	if page.ContentType == enum.ContentTypeJson {
+	if page.ContentType == constant.ContentTypeJson {
 		data = make(map[string]any)
 		err := json.Unmarshal([]byte(page.Body), &data)
 		if err != nil {
@@ -223,8 +223,8 @@ func NewRenderContentFromPost(post *model.Post, relations bool) *model.RenderCon
 	}
 
 	if relations {
-		relationCount := user.GetIntValue(enum.KEY_CMS_RELATION_COUNT, 3)
-		suggestionCount := user.GetIntValue(enum.KEY_CMS_SUGGESTION_COUNT, 3)
+		relationCount := user.GetIntValue(constant.KEY_CMS_RELATION_COUNT, 3)
+		suggestionCount := user.GetIntValue(constant.KEY_CMS_SUGGESTION_COUNT, 3)
 
 		r.Relations, _ = GetRelations(post.SiteID, post.CategoryID, post.CategoryPath, post.ID, relationCount)
 		r.Suggestions, _ = GetSuggestions(post.SiteID, post.CategoryID, post.CategoryPath, post.ID, suggestionCount)
@@ -339,7 +339,7 @@ func removeDirectory(path string) (string, error) {
 		return "", r.Error
 	}
 
-	uploadDir := user.GetValue(enum.KEY_CMS_UPLOAD_DIR)
+	uploadDir := user.GetValue(constant.KEY_CMS_UPLOAD_DIR)
 	for _, media := range files {
 		if media.Directory {
 			removeDirectory(filepath.Join(path, media.Name))
@@ -367,7 +367,7 @@ func removeDirectory(path string) (string, error) {
 
 func removeFile(path, name string) error {
 	if name == "" {
-		return enum.ErrInvalidPathAndName
+		return constant.ErrInvalidPathAndName
 	}
 
 	media, err := getMedia(path, name)
@@ -379,7 +379,7 @@ func removeFile(path, name string) error {
 		return nil
 	}
 
-	uploadDir := user.GetValue(enum.KEY_CMS_UPLOAD_DIR)
+	uploadDir := user.GetValue(constant.KEY_CMS_UPLOAD_DIR)
 	fullPath := filepath.Join(uploadDir, media.StorePath)
 	if err := os.Remove(fullPath); err != nil {
 		return err
@@ -408,9 +408,9 @@ func makeMediaPublish(siteID, path, name string, obj any, publish bool) error {
 }
 
 func prepareStoreLocalDir() (string, error) {
-	uploadDir := user.GetValue(enum.KEY_CMS_UPLOAD_DIR)
+	uploadDir := user.GetValue(constant.KEY_CMS_UPLOAD_DIR)
 	if uploadDir == "" {
-		return "", enum.ErrUploadsDirNotConfigured
+		return "", constant.ErrUploadsDirNotConfigured
 	}
 
 	if _, err := os.Stat(uploadDir); err != nil {
@@ -477,13 +477,13 @@ func uploadFile(path, name string, reader io.Reader) (*model.UploadResult, error
 		canGetDimension = true
 		fallthrough
 	case ".webp", ".svg", ".ico", ".bmp":
-		r.ContentType = enum.ContentTypeImage
+		r.ContentType = constant.ContentTypeImage
 	case ".mp3", ".wav", ".ogg", ".aac", ".flac":
-		r.ContentType = enum.ContentTypeAudio
+		r.ContentType = constant.ContentTypeAudio
 	case ".mp4", ".webm", ".avi", ".mov", ".wmv", ".mkv":
-		r.ContentType = enum.ContentTypeVideo
+		r.ContentType = constant.ContentTypeVideo
 	default:
-		r.ContentType = enum.ContentTypeFile
+		r.ContentType = constant.ContentTypeFile
 	}
 	data, err := io.ReadAll(reader)
 	if err != nil {
@@ -492,7 +492,7 @@ func uploadFile(path, name string, reader io.Reader) (*model.UploadResult, error
 
 	r.Size = int64(len(data))
 
-	externalUploader := user.GetValue(enum.KEY_CMS_EXTERNAL_UPLOADER)
+	externalUploader := user.GetValue(constant.KEY_CMS_EXTERNAL_UPLOADER)
 	if externalUploader != "" {
 		storePath, err := storeExternal(externalUploader, path, name, data)
 		if err != nil {

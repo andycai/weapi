@@ -4,8 +4,8 @@ import (
 	"github.com/andycai/weapi"
 	"github.com/andycai/weapi/administrator/user"
 	userapi "github.com/andycai/weapi/api/user"
+	"github.com/andycai/weapi/constant"
 	"github.com/andycai/weapi/core"
-	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
@@ -25,7 +25,7 @@ func initDB(dbs []*gorm.DB) {
 }
 
 func initPublicNoCheckRouter(r fiber.Router) {
-	mediaPrefix := user.GetValue(enum.KEY_CMS_MEDIA_PREFIX)
+	mediaPrefix := user.GetValue(constant.KEY_CMS_MEDIA_PREFIX)
 	if mediaPrefix == "" {
 		mediaPrefix = "/media/"
 	}
@@ -84,7 +84,7 @@ func initAdminObject() []model.AdminObject {
 				{Src: "/static/admin/js/jsoneditor-9.10.2.min.js"},
 				{Src: "/static/admin/js/cms_page.js", Onload: true}},
 			Attributes: map[string]model.AdminAttribute{
-				"ContentType": {Choices: weapi.EnabledPageContentTypes, Default: enum.ContentTypeJson},
+				"ContentType": {Choices: weapi.EnabledPageContentTypes, Default: constant.ContentTypeJson},
 				"Draft":       {Default: "{}"},
 				"IsDraft":     {Widget: "is-draft"},
 				"Published":   {Widget: "is-published"},
@@ -140,7 +140,7 @@ func initAdminObject() []model.AdminObject {
 			},
 			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
 				page := vptr.(*model.Page)
-				page.ContentType = enum.ContentTypeJson
+				page.ContentType = constant.ContentTypeJson
 				page.Creator = *user.Current(ctx)
 				page.IsDraft = true
 				return nil
@@ -181,7 +181,7 @@ func initAdminObject() []model.AdminObject {
 				{Src: "/static/admin/js/jodit.min.js"},
 				{Src: "/static/admin/js/cms_page.js", Onload: true}},
 			Attributes: map[string]model.AdminAttribute{
-				"ContentType": {Choices: weapi.EnabledPageContentTypes, Default: enum.ContentTypeHtml},
+				"ContentType": {Choices: weapi.EnabledPageContentTypes, Default: constant.ContentTypeHtml},
 				"Draft":       {Default: "Your content ..."},
 				"IsDraft":     {Widget: "is-draft"},
 				"Published":   {Widget: "is-published"},
@@ -238,7 +238,7 @@ func initAdminObject() []model.AdminObject {
 			BeforeCreate: func(ctx *fiber.Ctx, vptr any) error {
 				post := vptr.(*model.Post)
 				if post.ContentType == "" {
-					post.ContentType = enum.ContentTypeMarkdown
+					post.ContentType = constant.ContentTypeMarkdown
 				}
 				post.Creator = *user.Current(ctx)
 				post.IsDraft = true
@@ -288,8 +288,8 @@ func initAdminObject() []model.AdminObject {
 			},
 			BeforeRender: func(ctx *fiber.Ctx, vptr any) (any, error) {
 				media := vptr.(*model.Media)
-				mediaHost := user.GetValue(enum.KEY_CMS_MEDIA_HOST)
-				mediaPrefix := user.GetValue(enum.KEY_CMS_MEDIA_PREFIX)
+				mediaHost := user.GetValue(constant.KEY_CMS_MEDIA_HOST)
+				mediaPrefix := user.GetValue(constant.KEY_CMS_MEDIA_PREFIX)
 				media.BuildPublicUrls(mediaHost, mediaPrefix)
 				return vptr, nil
 			},

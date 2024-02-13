@@ -6,8 +6,8 @@ import (
 
 	"github.com/andycai/weapi/administrator/content"
 	"github.com/andycai/weapi/administrator/user"
+	"github.com/andycai/weapi/constant"
 	"github.com/andycai/weapi/core"
-	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
 )
@@ -16,7 +16,7 @@ func BeforeRenderPage(ctx *fiber.Ctx, vptr any) (any, error) {
 	draft, _ := strconv.ParseBool(ctx.Query("draft"))
 	result := vptr.(*model.Page)
 	if !draft && !result.Published {
-		return nil, core.Error(ctx, http.StatusTooEarly, enum.ErrPageIsNotPublish)
+		return nil, core.Error(ctx, http.StatusTooEarly, constant.ErrPageIsNotPublish)
 	}
 	if draft {
 		result.Body = result.Draft
@@ -28,7 +28,7 @@ func BeforeRenderPost(ctx *fiber.Ctx, vptr any) (any, error) {
 	draft, _ := strconv.ParseBool(ctx.Query("draft"))
 	result := vptr.(*model.Post)
 	if !draft && !result.Published {
-		return nil, enum.ErrPostIsNotPublish
+		return nil, constant.ErrPostIsNotPublish
 	}
 	if draft {
 		result.Body = result.Draft
@@ -63,8 +63,8 @@ func BeforeQueryRenderPost(ctx *fiber.Ctx, queryResult *model.QueryResult) (any,
 		QueryResult: queryResult,
 	}
 
-	relationCount := user.GetIntValue(enum.KEY_CMS_RELATION_COUNT, 3)
-	suggestionCount := user.GetIntValue(enum.KEY_CMS_SUGGESTION_COUNT, 3)
+	relationCount := user.GetIntValue(constant.KEY_CMS_RELATION_COUNT, 3)
+	suggestionCount := user.GetIntValue(constant.KEY_CMS_SUGGESTION_COUNT, 3)
 
 	r.Suggestions, _ = content.GetSuggestions(siteId, categoryId, categoryPath, "", relationCount)
 	r.Relations, _ = content.GetRelations(siteId, categoryId, categoryPath, "", suggestionCount)

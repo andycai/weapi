@@ -1,7 +1,7 @@
 package core
 
 import (
-	"github.com/andycai/weapi/enum"
+	"github.com/andycai/weapi/constant"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -15,7 +15,7 @@ func Msg(c *Ctx, code int, msg string) error {
 
 func Ok(c *fiber.Ctx, data interface{}) error {
 	return c.JSON(fiber.Map{
-		"code": enum.Success,
+		"code": constant.Success,
 		"data": data,
 	})
 }
@@ -23,14 +23,14 @@ func Ok(c *fiber.Ctx, data interface{}) error {
 func Push(c *fiber.Ctx, code int) error {
 	return c.JSON(fiber.Map{
 		"code": code,
-		"msg":  enum.CodeText(code),
+		"msg":  constant.CodeText(code),
 	})
 }
 
 func Err(c *Ctx, statusCode, code int) error {
 	return c.Status(statusCode).JSON(fiber.Map{
 		"code":  code,
-		"error": enum.CodeText(code),
+		"error": constant.CodeText(code),
 	})
 }
 

@@ -4,7 +4,7 @@ import (
 	"embed"
 	"path/filepath"
 
-	"github.com/andycai/weapi/enum"
+	"github.com/andycai/weapi/constant"
 	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/model"
 )
@@ -13,20 +13,20 @@ import (
 var EmbedAssets embed.FS
 
 var ContentTypes = []model.AdminSelectOption{
-	{Value: enum.ContentTypeJson, Label: "JSON"},
-	{Value: enum.ContentTypeJson, Label: "HTML"},
-	{Value: enum.ContentTypeText, Label: "PlainText"},
-	{Value: enum.ContentTypeMarkdown, Label: "Markdown"},
-	{Value: enum.ContentTypeImage, Label: "Image"},
-	{Value: enum.ContentTypeVideo, Label: "Video"},
-	{Value: enum.ContentTypeAudio, Label: "Audio"},
-	{Value: enum.ContentTypeFile, Label: "File"},
+	{Value: constant.ContentTypeJson, Label: "JSON"},
+	{Value: constant.ContentTypeJson, Label: "HTML"},
+	{Value: constant.ContentTypeText, Label: "PlainText"},
+	{Value: constant.ContentTypeMarkdown, Label: "Markdown"},
+	{Value: constant.ContentTypeImage, Label: "Image"},
+	{Value: constant.ContentTypeVideo, Label: "Video"},
+	{Value: constant.ContentTypeAudio, Label: "Audio"},
+	{Value: constant.ContentTypeFile, Label: "File"},
 }
 
 var EnabledPageContentTypes = []model.AdminSelectOption{
-	{Value: enum.ContentTypeJson, Label: "JSON"},
-	{Value: enum.ContentTypeHtml, Label: "HTML"},
-	{Value: enum.ContentTypeMarkdown, Label: "Markdown"},
+	{Value: constant.ContentTypeJson, Label: "JSON"},
+	{Value: constant.ContentTypeHtml, Label: "HTML"},
+	{Value: constant.ContentTypeMarkdown, Label: "Markdown"},
 }
 
 var models = []any{

@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/andycai/weapi/administrator/user"
+	"github.com/andycai/weapi/constant"
 	"github.com/andycai/weapi/core"
-	"github.com/andycai/weapi/enum"
 	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
@@ -54,7 +54,7 @@ func handleSaveDraft(c *fiber.Ctx, obj any) (any, error) {
 
 	draft, ok := formData["draft"]
 	if !ok {
-		return nil, enum.ErrDraftIsInvalid
+		return nil, constant.ErrDraftIsInvalid
 	}
 
 	if err := safeDraft(siteId, id, obj, draft); err != nil {
@@ -119,7 +119,7 @@ func handleMedia(c *fiber.Ctx) error {
 		return c.Redirect(img.StorePath)
 	}
 
-	uploadDir := user.GetValue(enum.KEY_CMS_UPLOAD_DIR)
+	uploadDir := user.GetValue(constant.KEY_CMS_UPLOAD_DIR)
 	filepath := filepath.Join(uploadDir, img.StorePath)
 	return c.SendFile(filepath)
 }
@@ -188,8 +188,8 @@ func handleUpload(c *fiber.Ctx, obj any) (any, error) {
 		}
 	}
 
-	mediaHost := user.GetValue(enum.KEY_CMS_MEDIA_HOST)
-	mediaPrefix := user.GetValue(enum.KEY_CMS_MEDIA_PREFIX)
+	mediaHost := user.GetValue(constant.KEY_CMS_MEDIA_HOST)
+	mediaPrefix := user.GetValue(constant.KEY_CMS_MEDIA_PREFIX)
 	media.BuildPublicUrls(mediaHost, mediaPrefix)
 
 	r.PublicUrl = media.PublicUrl
