@@ -29,6 +29,7 @@ func handleSigin(c *fiber.Ctx) error {
 		"logo_url":    "/static/img/logo.svg",
 		"favicon_url": "/static/img/favicon.png",
 		"title":       "Sign in",
+		"copyright":   "2024 Weapi",
 	}, "layout/app")
 }
 
