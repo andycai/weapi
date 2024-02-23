@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 
 	"github.com/andycai/weapi"
-	_ "github.com/andycai/weapi/administrator"
-	"github.com/andycai/weapi/administrator/user"
+	_ "github.com/andycai/weapi/admin"
+	"github.com/andycai/weapi/admin/user"
 	_ "github.com/andycai/weapi/api"
 	"github.com/andycai/weapi/constant"
 	"github.com/andycai/weapi/core"

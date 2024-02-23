@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/andycai/weapi"
-	"github.com/andycai/weapi/administrator/user"
+	"github.com/andycai/weapi/admin/user"
 	"github.com/andycai/weapi/core"
 	"github.com/andycai/weapi/lib/database"
 	"github.com/andycai/weapi/log"

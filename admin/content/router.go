@@ -2,7 +2,7 @@ package content
 
 import (
 	"github.com/andycai/weapi"
-	"github.com/andycai/weapi/administrator/user"
+	"github.com/andycai/weapi/admin/user"
 	userapi "github.com/andycai/weapi/api/user"
 	"github.com/andycai/weapi/constant"
 	"github.com/andycai/weapi/core"

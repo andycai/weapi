@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/andycai/weapi/administrator/site"
+	"github.com/andycai/weapi/admin/site"
 	"github.com/andycai/weapi/log"
 	"github.com/andycai/weapi/model"
 	"github.com/gofiber/fiber/v2"
