@@ -44,7 +44,7 @@ func handleSiginAction(c *fiber.Ctx) error {
 		return core.Err(c, http.StatusBadRequest, constant.ErrUserEmailOrPasswordError)
 	}
 
-	err, userVo := GetByEmail(loginVo.Email)
+	userVo, err := GetByEmail(loginVo.Email)
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

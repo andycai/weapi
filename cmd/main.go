@@ -108,7 +108,7 @@ func main() {
 
 	if superUserEmail != "" && superUserPassword != "" {
 		// create super user
-		err, userVo := user.GetByEmail(superUserEmail)
+		userVo, err := user.GetByEmail(superUserEmail)
 		if err == nil && userVo != nil {
 			user.UpdatePassword(userVo, superUserPassword)
 			log.Infof("password of the super user %s has been updated", superUserEmail)

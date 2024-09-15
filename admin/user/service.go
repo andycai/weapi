@@ -80,11 +80,11 @@ func Current(c *fiber.Ctx) *model.User {
 	return userVo
 }
 
-func GetByEmail(email string) (error, *model.User) {
+func GetByEmail(email string) (*model.User, error) {
 	var user model.User
 	result := db.Where("email", strings.ToLower(email)).Take(&user)
 
-	return result.Error, &user
+	return &user, result.Error
 }
 
 func Create(user *model.User) error {

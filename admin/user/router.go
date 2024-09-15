@@ -59,7 +59,7 @@ func initAdminObject() []model.AdminObject {
 			},
 			BeforeUpdate: func(c *fiber.Ctx, obj any, vals map[string]any) error {
 				userVo := obj.(*model.User)
-				if err, dbUser := GetByEmail(userVo.Email); err == nil {
+				if dbUser, err := GetByEmail(userVo.Email); err == nil {
 					if dbUser.Password != userVo.Password {
 						userVo.Password = core.HashPassword(userVo.Password)
 					}

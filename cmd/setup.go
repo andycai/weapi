@@ -242,7 +242,7 @@ func runSetupMode(addr string) {
 
 		core.SetupDatabase([]*gorm.DB{db})
 
-		err, u := user.GetByEmail(form.Username)
+		u, err := user.GetByEmail(form.Username)
 		if err == nil && u != nil {
 			user.UpdatePassword(u, form.Password)
 		} else {
